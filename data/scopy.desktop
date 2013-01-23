@@ -1,0 +1,11 @@
+#!/usr/bin/env xdg-open
+[Desktop Entry]
+Name=ScoPy
+Name[it]=ScoPy - Scopa
+Comment=The italian card game 'scopa'
+Comment[it]=Il gioco della scopa
+Exec=scopy
+Icon=/usr/share/scopy/data/icons/icona.png
+Terminal=0
+Type=Application
+Categories=Game

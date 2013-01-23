@@ -1,0 +1,255 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-05-26 20:13+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/scopy.py:39
+msgid "Player"
+msgstr ""
+
+#: src/scopy.py:40 src/scopy.py:269 src/Actions/base.py:59
+msgid "Classic scopa"
+msgstr ""
+
+#: src/scopy.py:64
+msgid "ScoPy"
+msgstr ""
+
+#: src/scopy.py:144
+msgid "Game summary"
+msgstr ""
+
+#: src/scopy.py:148 src/Actions/Multiplayer.py:68
+#: src/Actions/Multiplayer.py:71 src/Actions/Settings.py:79
+msgid "OK"
+msgstr ""
+
+#: src/scopy.py:196
+msgid "You won!"
+msgstr ""
+
+#: src/scopy.py:200
+msgid "I won!"
+msgstr ""
+
+#: src/scopy.py:265
+msgid "Computer"
+msgstr ""
+
+#: src/scopy.py:272 src/Actions/base.py:59
+msgid "Cirulla"
+msgstr ""
+
+#: src/scopy.py:275 src/Actions/base.py:59
+msgid "Cucita"
+msgstr ""
+
+#: src/scopy.py:278 src/Actions/base.py:59
+msgid "Re Bello"
+msgstr ""
+
+#: src/scopy.py:287
+msgid "Sum lower then 9"
+msgstr ""
+
+#: src/scopy.py:289
+msgid " and 3 egual cards"
+msgstr ""
+
+#: src/scopy.py:291
+msgid "3 egual cards"
+msgstr ""
+
+#: src/scopy.py:306
+msgid "What do you take?"
+msgstr ""
+
+#: src/scopy.py:463
+msgid "Remaining rounds:"
+msgstr ""
+
+#: src/scopy.py:506
+msgid "It's your turn"
+msgstr ""
+
+#: src/scopy.py:509
+msgid "I start"
+msgstr ""
+
+#: src/Actions/About.py:27 src/Actions/Help.py:27 src/Actions/Help.py:28
+msgid "Help"
+msgstr ""
+
+#: src/Actions/About.py:28 src/Actions/About.py:32
+msgid "About"
+msgstr ""
+
+#: src/Actions/About.py:42
+msgid "The italian card game \"scopa\""
+msgstr ""
+
+#: src/Actions/LastMove.py:26 src/Actions/Settings.py:26
+msgid "Edit"
+msgstr ""
+
+#: src/Actions/LastMove.py:27 src/Actions/LastMove.py:34
+msgid "Show last move"
+msgstr ""
+
+#: src/Actions/LastMove.py:49
+msgid "Hide last move"
+msgstr ""
+
+#: src/Actions/LastMove.py:50
+msgid "Computer played ... and took ..."
+msgstr ""
+
+#: src/Actions/Multiplayer.py:26 src/Actions/Quit.py:25
+#: src/Actions/Start.py:26
+msgid "File"
+msgstr ""
+
+#: src/Actions/Multiplayer.py:27
+msgid "Play online..."
+msgstr ""
+
+#: src/Actions/Multiplayer.py:39
+msgid "Online game..."
+msgstr ""
+
+#: src/Actions/Multiplayer.py:45
+msgid "Username:"
+msgstr ""
+
+#: src/Actions/Multiplayer.py:46
+msgid "Password:"
+msgstr ""
+
+#: src/Actions/Multiplayer.py:47
+msgid "Repeat password:"
+msgstr ""
+
+#: src/Actions/Multiplayer.py:48
+msgid "Remember account:"
+msgstr ""
+
+#: src/Actions/Multiplayer.py:64
+msgid "Login"
+msgstr ""
+
+#: src/Actions/Multiplayer.py:66
+msgid "Register"
+msgstr ""
+
+#: src/Actions/Multiplayer.py:92
+msgid "People"
+msgstr ""
+
+#: src/Actions/Multiplayer.py:101
+msgid "User"
+msgstr ""
+
+#: src/Actions/Multiplayer.py:105
+msgid "Won"
+msgstr ""
+
+#: src/Actions/Multiplayer.py:109
+msgid "Lost"
+msgstr ""
+
+#: src/Actions/Multiplayer.py:113
+msgid "Status"
+msgstr ""
+
+#: src/Actions/Multiplayer.py:123
+msgid "Disconnect"
+msgstr ""
+
+#: src/Actions/Multiplayer.py:238
+msgid "Account successfully created!"
+msgstr ""
+
+#: src/Actions/Multiplayer.py:242
+msgid "Registration error"
+msgstr ""
+
+#: src/Actions/Multiplayer.py:254 src/Actions/Multiplayer.py:272
+#: src/Actions/Multiplayer.py:277 src/Actions/Multiplayer.py:283
+msgid "Online game request"
+msgstr ""
+
+#: src/Actions/Multiplayer.py:256
+#, python-format
+msgid "You can't play with %(player)s because he is '%(game)s'"
+msgstr ""
+
+#: src/Actions/Multiplayer.py:274
+#, python-format
+msgid ""
+"%(player)s wants to play a \"%(game)s\" game with you.\n"
+"Do you accept the challenge?"
+msgstr ""
+
+#: src/Actions/Multiplayer.py:278 src/Actions/Start.py:71
+msgid "Start game!"
+msgstr ""
+
+#: src/Actions/Multiplayer.py:279
+#, python-format
+msgid "%s accepted your game request."
+msgstr ""
+
+#: src/Actions/Multiplayer.py:285
+#, python-format
+msgid "%s refused your game request."
+msgstr ""
+
+#: src/Actions/Quit.py:26
+msgid "Quit"
+msgstr ""
+
+#: src/Actions/Settings.py:27
+msgid "Settings"
+msgstr ""
+
+#: src/Actions/Settings.py:57
+msgid "Edit Settings"
+msgstr ""
+
+#: src/Actions/Settings.py:65
+msgid "Chose the type of cards:"
+msgstr ""
+
+#: src/Actions/Settings.py:66
+msgid "Speed:"
+msgstr ""
+
+#: src/Actions/Settings.py:67
+msgid "Background:"
+msgstr ""
+
+#: src/Actions/Start.py:27 src/Actions/Start.py:54
+msgid "New game..."
+msgstr ""
+
+#: src/Actions/Start.py:60
+msgid "Name:"
+msgstr ""
+
+#: src/Actions/Start.py:61
+msgid "Variant:"
+msgstr ""
