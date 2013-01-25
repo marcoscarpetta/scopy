@@ -98,11 +98,23 @@ class Partita():
 			self.giocatore += 1
 		else:
 			self.giocatore = 0
-
-		if self.players[self.giocatore].ai:
-			self.gioca_ai()
+		print 
+		mano_finita = True
+		for player in self.players:
+			if len(player.mano.get_list())!=0:
+				mano_finita = False
+				break
+		if mano_finita:
+			self.mano += 1
+			if len(self.carte_terra.get_list())!=0:
+				self.distribuisci_carte()
+			else:
+				self.conta_punti()
 		else:
-			self.player_can_play = True
+			if self.players[self.giocatore].ai:
+				self.gioca_ai()
+			else:
+				self.player_can_play = True
 
 	#funzione chiamata quando si clicka su una carta del giocatore
 	def play(self, card, event, data=None):
@@ -121,8 +133,11 @@ class Partita():
 	def gioca_carta(self, giocatore, carta, carte):
 		if self.players[giocatore].ai:
 			carta.draw_card()
+		else:
+			carta.disconnect_by_func(carta.enter)
+			carta.disconnect_by_func(carta.leave)
 		#se non si prende niente
-		if carte == []:
+		if len(carte) == 0:
 			self.players[giocatore].mano.move_to(carta, self.carte_terra)
 			GLib.timeout_add(2000,self.prossimo_giocatore)
 		#se si prende qualcosa

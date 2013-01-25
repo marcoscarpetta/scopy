@@ -49,10 +49,8 @@ def go_to(actor,x,y,time):
 def destroy(widget, response):
 	widget.destroy()
 
-def get_id(suit, value):
-	return 's'+str(suit)+'v'+str(value)
-	
-	
+def hide_data(event, data):
+	data.hide()
 
 #nomi dei file delle immagini delle carte
 immagini = [
@@ -90,6 +88,8 @@ class Card(Clutter.Texture):
 		self.suit = suit
 		self.value = value
 		self.id = 's'+str(suit)+'v'+str(value)
+		self.start_x = 0
+		self.start_y = 0
 
 	def get_suit():
 		return self.suit
@@ -109,12 +109,12 @@ class Card(Clutter.Texture):
 		self.connect('enter-event',self.enter)
 		self.connect('leave-event',self.leave)
 	
-	def enter(self, Obj, event):
-		effect=Clutter.ColorizeEffect.new(Clutter.Color.new(227,217,0,255))
-		self.add_effect_with_name('blur',effect)
-	
-	def leave(self, Obj, event):
-		self.remove_effect_by_name('blur')
+	def enter(self, actor, event):
+		self.start_x, self.start_y = self.get_x(),self.get_y()
+		go_to(self,self.get_x(),self.get_y()-10,100)
+
+	def leave(self, actor, event):
+		go_to(self,self.start_x,self.start_y,100)
 
 #container for Card objects, with fixed rows and columns
 class Box(Clutter.CairoTexture):
@@ -253,7 +253,7 @@ class Deck(Clutter.CairoTexture):
 				self.cards.append(Card(suit, value, cards))
 	
 	def draw(self, actor_box=0, allocation_flag=0, a=0):
-		c=len(self.cards)/4
+		c=(len(self.cards)+3)/4
 		cr = self.create()
 		n=0
 		while n<c:
@@ -277,12 +277,15 @@ class Deck(Clutter.CairoTexture):
 		return self.cards
 	
 	def add(self, actor, time=500, add_to_stage=True):
+		self.cards.append(actor)
 		y=self.get_allocation_box().get_y()
 		x=self.get_x()
 		if add_to_stage:
 			stage.add_actor(actor)
 		if time != 0:
-			go_to(actor,x,y,time)
+			animation = go_to(actor,x,y,time)
+			animation.connect('completed', hide_data, actor)
+			animation.connect('completed', self.draw)
 		else:
 			actor.set_position(x,y)
 
