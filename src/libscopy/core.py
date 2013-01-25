@@ -65,6 +65,8 @@ class Partita():
 			grid.pack(self.players[1].mano, 1,0)
 			grid.pack(self.players[0].carte_prese, 2,2)
 			grid.pack(self.players[1].carte_prese, 2,0)
+			grid.pack(self.players[0].scope, 3,2)
+			grid.pack(self.players[1].scope, 3,0)
 		self.giocatore = random.randrange(len(players))
 		self.punti_vit = 11
 		self.player_can_play = False
@@ -98,7 +100,6 @@ class Partita():
 			self.giocatore += 1
 		else:
 			self.giocatore = 0
-		print 
 		mano_finita = True
 		for player in self.players:
 			if len(player.mano.get_list())!=0:
@@ -108,6 +109,7 @@ class Partita():
 			self.mano += 1
 			if len(self.carte_terra.get_list())!=0:
 				self.distribuisci_carte()
+				GLib.timeout_add(2000,self.prossimo_giocatore)
 			else:
 				self.conta_punti()
 		else:
@@ -127,7 +129,7 @@ class Partita():
 		self.carte_terra.move_to(carta, self.players[giocatore].carte_prese)
 		for carta in carte:
 			self.carte_terra.move_to(carta, self.players[giocatore].carte_prese)
-		GLib.timeout_add(2000,self.prossimo_giocatore)
+		GLib.timeout_add(500,self.prossimo_giocatore)
 
 	#gioca la carta indicata del giocatore indicato e prende le carte indicate da terra
 	def gioca_carta(self, giocatore, carta, carte):
@@ -136,6 +138,7 @@ class Partita():
 		else:
 			carta.disconnect_by_func(carta.enter)
 			carta.disconnect_by_func(carta.leave)
+			self.player_can_play = False
 		#se non si prende niente
 		if len(carte) == 0:
 			self.players[giocatore].mano.move_to(carta, self.carte_terra)
@@ -150,7 +153,7 @@ class Partita():
 				pass
 			else:
 				if len(carte) == len(self.carte_terra.get_list()):
-					self.players[giocatore].scope.add_scopa(carta)
+					GLib.timeout_add(2500, self.players[giocatore].scope.add_scopa, carta)
 			#prende le carte da terra
 			GLib.timeout_add(2000, self.presa_da_terra,giocatore,carta,carte)
 
@@ -171,7 +174,7 @@ class Partita():
 
 		#se solo 1 giocata possibile
 		if len(giocate) == 1:
-			presa_migliore = giocate[0]
+			migliore = giocate[0]
 		#se non si puo' prendere
 		elif no_prese == 1:
 			migliore = [carte_mano[0],[],-20]
@@ -191,14 +194,14 @@ class Partita():
 				if carta_da_giocare.value != 7:
 					valore = valore + 1
 				n = 0
-				#DA RIVEDERE
-				'''
 				#carta piu' bassa
 				for carta in carte_mano:
-					if carta.value > carta_da_giocare.value:
+					if carta.value => carta_da_giocare.value:
 						n = n + 1
 				if n == len(carte_mano):
 					valore = valore + 1
+				#DA RIVEDERE
+				'''
 				#non 7 a terra
 				if len(self.prese(sette)) != 0:
 					valore = valore - 1
@@ -273,7 +276,7 @@ class Partita():
 							valore += 1
 				if valore > migliore[2]:
 					migliore[0], migliore[1], migliore[2] = giocata[0], giocata[1], valore
-			self.gioca_carta(self.giocatore,migliore[0],migliore[1])
+		self.gioca_carta(self.giocatore,migliore[0],migliore[1])
 	
 	#ritorna tutte le combinazioni di almeno 2 carte
 	def combinazioni(self, lista):

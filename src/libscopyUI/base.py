@@ -255,6 +255,8 @@ class Deck(Clutter.CairoTexture):
 	def draw(self, actor_box=0, allocation_flag=0, a=0):
 		c=(len(self.cards)+3)/4
 		cr = self.create()
+		cr.set_source_rgba(0,0,0,0)
+		cr.paint()
 		n=0
 		while n<c:
 			cr.set_source_surface(self.surface,n,n)
@@ -271,6 +273,7 @@ class Deck(Clutter.CairoTexture):
 	def pop(self):
 		card = self.cards[0]
 		del self.cards[0]
+		self.draw()
 		return card
 
 	def get_list(self):
@@ -295,16 +298,18 @@ class Scope(Clutter.CairoTexture):
 		Clutter.CairoTexture.__init__(self)
 		self.set_surface_size(2*padding+child_w+20,2*padding+child_h+20)
 		self.connect("allocation-changed",self.draw)
-		self.card = 0
+		self.card = None
 		self.scope = 0
 	
 	def draw(self, actor_box=0, allocation_flag=0, a=0):
-		if self.card != 0:
+		if self.card != None:
+			cr = self.create()
 			surface = cairo.ImageSurface.create_from_png(percorso_carte+cards+'/'+immagini[self.card.suit][self.card.value])
-			cr.set_source_surface(surface,n,n)
-		cr.paint()
-		self.invalidate()
+			cr.set_source_surface(surface,0,0)
+			cr.paint()
+			self.invalidate()
 	
 	def add_scopa(self, card, scope=1):
 		self.card = card
 		self.scope += scope
+		self.draw()
