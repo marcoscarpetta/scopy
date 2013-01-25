@@ -51,7 +51,7 @@ def main(widget,app):
 			'gikbuntu (carte Bergamasche)',
 			'mapreri (carte Trevisane)',
 			'Magog (sfondi, carte Toscane)'])
-		about.set_translator_credits('Fitoschido \nSarahSlean \nMarti Bosch \nMarc Coll Carrillo')
+		about.set_translator_credits('Adolfo Jayme Barrientos \nSarahSlean \nMarti Bosch \nMarc Coll Carrillo \nMichael Moroni \nAntonio Trande \nGenghis Khan \nStanislas Michalak \nAleksey Kabanov')
 		image = cairo.ImageSurface.create_from_png(percorso+'/data/icons/icona.png')
 		icona = Gdk.pixbuf_get_from_surface(image,0,0,100,100)
 		about.set_logo(icona)
