@@ -89,6 +89,6 @@ setup(name='ScoPy',
 		('share/scopy/src/libscopy', glob.glob('src/libscopy/*')),
 		('share/scopy/src/libscopyUI', glob.glob('src/libscopyUI/*')),
 		('share/scopy/src', ['src/scopy.py'])
-		)
+		),
 	cmdclass={'install_data': InstallData}
 	)
