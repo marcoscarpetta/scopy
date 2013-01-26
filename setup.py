@@ -69,7 +69,7 @@ setup(name='ScoPy',
 	url='http://scopy.sourceforge.net/',
 	license='GPL v3',
 	scripts=['scopy'],
-	data_files=(('share/applications', ['data/scopy.desktop']),
+	data_files=[('share/applications', ['data/scopy.desktop']),
 		('share/scopy/data/images/tappeti', glob.glob('data/images/tappeti/*')),
 		('share/scopy/data/images/carte/Siciliane', glob.glob('data/images/carte/Siciliane/*')),
 		('share/scopy/data/images/carte/Bergamasche', glob.glob('data/images/carte/Bergamasche/*')),
@@ -89,6 +89,6 @@ setup(name='ScoPy',
 		('share/scopy/src/libscopy', glob.glob('src/libscopy/*')),
 		('share/scopy/src/libscopyUI', glob.glob('src/libscopyUI/*')),
 		('share/scopy/src', ['src/scopy.py'])
-		),
+		],
 	cmdclass={'install_data': InstallData}
 	)
