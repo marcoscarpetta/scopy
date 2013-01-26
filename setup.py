@@ -61,17 +61,6 @@ class InstallData(install_data):
 
     return data_files
 
-src=[]
-def list_files(p):
-	for obj in os.listdir(p):
-		if (p+'/'+obj) not in ['./debian','./scopy','./setup.py','./po','./.bzr','./data/scopy.desktop','./gettext_files'] and (p+'/'+obj)[0:8] != './scopy-':
-			if os.path.isdir(p+'/'+obj):
-				list_files(p+'/'+obj)
-			else:
-				src.append(['share/scopy/'+p[2:],[p[2:]+'/'+obj]])
-list_files('.')
-src.append(['share/applications',['data/scopy.desktop']])
-
 setup(name='ScoPy',
 	version='0.5',
 	description="The italian card game 'scopa'",
@@ -80,6 +69,25 @@ setup(name='ScoPy',
 	url='http://scopy.sourceforge.net/',
 	license='GPL v3',
 	scripts=['scopy'],
-	data_files=src,
+	data_files=('share/applications', ['data/scopy.desktop']),
+		('share/scopy/data/images/tappeti', glob.glob('data/images/tappeti/*')),
+		('share/scopy/data/images/carte/Siciliane', glob.glob('data/images/carte/Siciliane/*')),
+		('share/scopy/data/images/carte/Bergamasche', glob.glob('data/images/carte/Bergamasche/*')),
+		('share/scopy/data/images/carte/Trevisane', glob.glob('data/images/carte/Trevisane/*')),
+		('share/scopy/data/images/carte/Scartini', glob.glob('images/carte/Scartini/*')),
+		('share/scopy/data/images/carte/Francitalia', glob.glob('data/images/carte/Francitalia/*')),
+		('share/scopy/data/images/carte/Piacentine', glob.glob('data/images/carte/Piacentine/*')),
+		('share/scopy/data/images/carte/Napoletane', glob.glob('data/images/carte/Napoletane/*')),
+		('share/scopy/data/images/carte/Poker', glob.glob('data/images/carte/Poker/*')),
+		('share/scopy/data/images/carte/Toscane', glob.glob('data/images/carte/Toscane/*')),
+		('share/scopy/data/icons', glob.glob('data/icons/*')),
+		('share/scopy/data/ui', glob.glob('data/ui/*')),
+		('share/scopy/doc/en', glob.glob('doc/en/*')),
+		('share/scopy/doc/it', glob.glob('doc/it/*')),
+		('share/scopy/doc', ['doc/Copyright']),
+		('share/scopy/src/Actions', glob.glob('src/Actions/*')),
+		('share/scopy/src/libscopy', glob.glob('src/libscopy/*')),
+		('share/scopy/src/libscopyUI', glob.glob('src/libscopyUI/*')),
+		('share/scopy/src', ['src/scopy.py']),
 	cmdclass={'install_data': InstallData}
 	)
