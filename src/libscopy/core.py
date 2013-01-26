@@ -196,7 +196,7 @@ class Partita():
 				n = 0
 				#carta piu' bassa
 				for carta in carte_mano:
-					if carta.value => carta_da_giocare.value:
+					if carta.value >= carta_da_giocare.value:
 						n = n + 1
 				if n == len(carte_mano):
 					valore = valore + 1

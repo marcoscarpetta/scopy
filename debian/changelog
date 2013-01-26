@@ -1,4 +1,4 @@
-scopy (0.4.2) oneiric; urgency=low
+scopy (0.5) precise; urgency=low
 
   * 0.4.2
   * Removed WebKit dependencies

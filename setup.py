@@ -73,11 +73,11 @@ list_files('.')
 src.append(['share/applications',['data/scopy.desktop']])
 
 setup(name='ScoPy',
-	version='0.2',
+	version='0.5',
 	description="The italian card game 'scopa'",
 	author='Marco Scarpetta',
-	author_email='marcoscarpetta02@gmail.com',
-	url='http://scopyfreesoftware.wordpress.com/',
+	author_email='marcoscarpetta@mailoo.org',
+	url='http://scopy.sourceforge.net/',
 	license='GPL v3',
 	scripts=['scopy'],
 	data_files=src,

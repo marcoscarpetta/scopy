@@ -24,7 +24,7 @@ from gi.repository import Gtk,Clutter,GLib
 import cairo
 import random
 
-APP_VERSION = '0.4.3'
+APP_VERSION = '0.5'
 APP_NAME = 'scopy'
 
 #setting up gettext
