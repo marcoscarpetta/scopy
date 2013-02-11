@@ -77,8 +77,8 @@ class main_win():
 		self.window.add(table)
 		#alcune variabili di controllo 
 		self.time = times[int(float(self.opzioni['speed']))]
-		#creazione varie finestre
-		self.crea_riepilogo()
+		self.partita = None
+		#creazione menu
 		menu=MenuCreator.create_menu(self)
 		self.vbox.pack_start(menu,True,True,0)
 		self.window.show_all()
@@ -101,66 +101,6 @@ class main_win():
 		#self.window.resize(self.actor.get_width(),self.actor.get_height())
 		self.width, self.height = self.embed.get_allocated_width(), self.embed.get_allocated_height()
 		self.back_img.set_size(self.width, self.height)
-
-	### CREAZIONE FINESTRE ####
-	def crea_riepilogo(self):
-		self.rie = Gtk.Dialog()
-		self.rie.set_title(_('Game summary'))
-		self.rie.set_transient_for(self.window)
-		self.rie.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)
-		self.rie.set_border_width(10)
-		self.rie.add_button(_('OK'), 0)
-		self.rie.set_default_response(0)
-		self.rie.connect('response', self.end_riepilogo)
-		hbox = self.rie.get_content_area()
-		box=Gtk.HBox()
-		hbox.pack_start(box,True,True,5)
-		box.set_spacing(5)
-		self.rie_labels=[Gtk.Label(),Gtk.Label(),Gtk.Label()]
-		box.pack_start(self.rie_labels[0],True,True,5)
-		box.pack_start(self.rie_labels[1],True,True,5)
-		box.pack_start(self.rie_labels[2],True,True,5)
-	### FUNZIONI CHE MOSRTANO LE FINESTRE ALLE RISPETTIVE PRESSIONI DELLE VOCI DEI MENU ####
-	def show_riepilogo(self, colonne=None):
-		for obj in self.carte.carte:
-			obj.object.destroy()
-		self.boxes['prese_c'].clean()
-		self.boxes['prese_g'].clean()
-		self.boxes['scope_c'].clean()
-		self.boxes['scope_g'].clean()
-		self.boxes['terra'].clean()
-		self.carte = Carte()
-		if colonne == None:
-			punti = self.partita.conta_punti()
-			colonne = ['\n',self.partita.giocatore[0].nome+'\n','Computer'+'\n']
-			for voce in punti:
-				if voce != 'Parziale':
-					colonne[0] = colonne[0] + voce + '\n'
-					colonne[1] = colonne[1] + str(punti[voce][0]) + '\n'
-					colonne[2] = colonne[2] + str(punti[voce][1]) + '\n'
-			colonne[0] = colonne[0] + 'Parziale' + '\n'
-			colonne[1] = colonne[1] + str(punti['Parziale'][0]) + '\n'
-			colonne[2] = colonne[2] + str(punti['Parziale'][1]) + '\n'
-			colonne[0] = colonne[0] + 'Punti'
-			colonne[1] = colonne[1] + str(self.partita.giocatore[0].punti)
-			colonne[2] = colonne[2] + str(self.partita.giocatore[1].punti)
-		self.rie_labels[0].set_text(colonne[0])
-		self.rie_labels[1].set_text(colonne[1])
-		self.rie_labels[2].set_text(colonne[2])
-		self.rie.show_all()
-	#nasconde la finestra di riepilogo e procede con il gioco
-	def end_riepilogo(self, widget=None, data=None):
-		self.hide(self.rie)
-		if self.partita.giocatore[0].punti >= self.partita.punti_vit or self.partita.giocatore[1].punti >= self.partita.punti_vit and self.partita.giocatore[0].punti != self.partita.giocatore[1].punti:
-			if self.partita.giocatore[0].punti > self.partita.giocatore[1].punti:
-				self.comunica(_('You won!'), 2000)
-			else:
-				self.comunica(_('I won!'), 2000)
-			GLib.timeout_add(2000, Start.main, None, self)
-		else:
-			self.partita.azzera()
-			self.dichiara(self.partita.dai_carte())
-			self.sposta_carte()
 
 	#nasconde 'widget'
 	def hide(self, widget, data=None):
@@ -218,12 +158,14 @@ class main_win():
 	def crea_partita(self, nc=None):
 		if nc==None:
 			nc=_('Computer')
+		if self.partita != None:
+			self.partita.destroy()
 		if self.opzioni['variante'] == None:
 			from libscopy import classica
 			self.partita = classica.partita(self.opzioni['nome'],nc)
 		if self.opzioni['variante'] == _('Classic scopa'):
 			from libscopy import core
-			self.partita = core.Partita(self.grid, (self.opzioni['nome'],nc))
+			self.partita = core.Partita(self.grid, self.stage, (self.opzioni['nome'],nc), self.show_start_win)
 		if self.opzioni['variante'] == _('Cirulla'):
 			from libscopy import cirulla
 			self.partita = cirulla.partita(self.opzioni['nome'],nc)
@@ -233,92 +175,10 @@ class main_win():
 		if self.opzioni['variante'] == _('Re Bello'):
 			from libscopy import re_bello
 			self.partita = re_bello.partita(self.opzioni['nome'],nc)
+	
+	def show_start_win(self):
+		Start.main(None, self)
 
-	#dichiara le combinazioni di carte, es. nella Cirulla
-	def dichiara(self, dichiarazione):
-		for n in range(2):
-			if dichiarazione != None:
-				testo=''
-				if 0 in dichiarazione[n]:
-					testo = _('Sum lower then 9')
-					if 1 in dichiarazione[n]:
-						testo = testo + _(' and 3 egual cards')
-				elif 1 in dichiarazione[n]:
-						testo = testo + _('3 egual cards')
-				if testo != '':
-					testo = self.partita.giocatore[n].nome+': '+testo
-					self.comunica(testo, 5000)
-
-	#funzione che mostra l'interfaccia per scegliere una presa
-	def scelta_presa(self, obj, prese_possibili):
-		i=self.stage.get_n_children()
-		n=0
-		while n<i:
-			if self.stage.get_nth_child(n) != self.back_img:
-				self.stage.get_nth_child(n).hide()
-			n=n+1
-		index = self.comunica(_('What do you take?'),0)
-		w, h = self.carte.carte[0].object.get_width(), self.carte.carte[0].object.get_height()
-		box=[]
-		n=0
-		while n<len(prese_possibili):			
-			if n != 0:
-				box.append(Box(self.stage,1,len(prese_possibili[n]),0,box[n-1].get_height()+box[n-1].get_y(),20,10,w,h))
-			else:
-				box.append(Box(self.stage,1,len(prese_possibili[n]),0,0,20,10,w,h))
-			i=0
-			while i < len(prese_possibili[n]):
-				carta = self.partita.carte_terra[prese_possibili[n][i]]
-				actor = Clutter.Texture.new_from_file(percorso_carte+self.opzioni['carte']+'/'+immagini[carta.palo][carta.valore])
-				box[n].add(actor,0)
-				actor.set_reactive(True)
-				actor.connect('button-press-event',self.scelta_fatta,box,obj,n,index)
-				i=i+1
-			n=n+1
-	#funzione eseguita quando si è scelta una presa
-	def scelta_fatta(self, actor,data,oggetti,obj,n,index):
-		self.delete(index)
-		for box in oggetti:
-			box.destroy()
-		i=self.stage.get_n_children()
-		g=0
-		while g<i:
-			self.stage.get_nth_child(g).show()
-			g=g+1
-		self.set_giocatore_can_play()
-		self.gioca_giocatore(obj,data, n)
-
-	#scrive 'messaggio' al centro dello schermo per 'time' ms
-	def comunica(self, messaggio, time):
-		sur = cairo.ImageSurface(cairo.FORMAT_ARGB32,500,500)
-		tmp = cairo.Context(sur)
-		tmp.set_source_rgba(0,0,0,0.5)
-		tmp.paint()
-		tmp.set_source_rgb(1,1,1)
-		tmp.set_font_size(15)
-		xb, yb, w, h, xadvance, yadvance = (tmp.text_extents(messaggio))
-		tmp.move_to(10,10+h)
-		tmp.show_text(messaggio)
-		i=0
-		while self.mesg[i] != 0:
-			i=i+1
-		text=Clutter.CairoTexture.new(w+20,h+20)
-		text.set_position(self.window.get_size()[0]-w-30,10+i*(h+30))
-		self.stage.add_actor(text)
-		self.mesg[i] = text
-		cr = text.create()
-		cr.set_source_surface(sur,0,0)
-		cr.paint()
-		text.invalidate()
-		if time != 0:
-			GLib.timeout_add(time, self.delete, i)
-		else:
-			return i
-	#cancella il messaggio con indice 'index'
-	def delete(self, index):
-		act = self.mesg[index]
-		self.mesg[index]=0
-		act.destroy()
 main_win = main_win()
-Start.main(None, main_win)
+main_win.show_start_win()
 Gtk.main()

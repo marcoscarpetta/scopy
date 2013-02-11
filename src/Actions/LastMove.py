@@ -30,45 +30,15 @@ def main():
 	pass
 
 #nasconde l'ultima presa
-def nascondi_ultima_presa(actor, event, app, widget, oggetti, index):
-	app.delete(index)
+def nascondi_ultima_presa(actor, event, app, widget):
+	app.partita.hide_last_move()
 	widget.set_label(_('Show last move'))
 	widget.disconnect_by_func(nascondi_ultima_presa)
 	widget.connect('activate', main, app)
-	for obj in oggetti:
-		obj.destroy()
-	i=app.stage.get_n_children()
-	n=0
-	while n<i:
-		app.stage.get_nth_child(n).show()
-		n=n+1
 
 #mostra l'ultima presa
 def main(widget,app):
-	if app.ultima_presa[0] != 0:
+	if app.partita.show_last_move() == 0:
 		widget.set_label(_('Hide last move'))
-		i=app.stage.get_n_children()
-		n=0
-		while n<i:
-			if app.stage.get_nth_child(n) != app.back_img:
-				app.stage.get_nth_child(n).hide()
-			n=n+1
-		index = app.comunica(_('Computer played ... and took ...'),0)
-		oggetti=[]
-		actor = Clutter.Texture.new_from_file(percorso_carte+app.opzioni['carte']+'/'+immagini[app.ultima_presa[0][0]][app.ultima_presa[0][1]])
-		actor.set_position(10,10)
-		actor.set_reactive(True)
-		app.stage.add_actor(actor)
-		actor.connect('button-press-event',nascondi_ultima_presa,app,widget,oggetti)
-		oggetti.append(actor)
-		i=0
-		while i < len(app.ultima_presa[1]):
-			actor = Clutter.Texture.new_from_file(percorso_carte+app.opzioni['carte']+'/'+immagini[app.ultima_presa[1][i][0]][app.ultima_presa[1][i][1]])
-			actor.set_position(10+i*70,160)
-			actor.set_reactive(True)
-			app.stage.add_actor(actor)
-			actor.connect('button-press-event',nascondi_ultima_presa,app,widget,oggetti,index)
-			oggetti.append(actor)
-			i=i+1
 		widget.disconnect_by_func(main)
-		widget.connect('activate', nascondi_ultima_presa,None,app,widget,oggetti,index)
+		widget.connect('activate',nascondi_ultima_presa,None,app,widget)

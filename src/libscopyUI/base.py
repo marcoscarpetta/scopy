@@ -83,7 +83,7 @@ sfondi.sort()
 cards='Napoletane'
 
 class Card(Clutter.Texture):
-	def __init__(self, suit, value, cards):
+	def __init__(self, suit, value, cards='Napoletane'):
 		Clutter.Texture.__init__(self)
 		self.suit = suit
 		self.value = value
@@ -97,7 +97,7 @@ class Card(Clutter.Texture):
 	def get_value():
 		return self.value
 	
-	def draw_card(self, retro=0):
+	def draw_card(self, retro=False):
 		if retro:
 			self.set_from_file(percorso_carte+cards+'/'+immagini[1][0])
 		else:
@@ -229,15 +229,26 @@ class Box(Clutter.CairoTexture):
 				i=i+1
 			n=n+1
 	
-	def destroy(self):
-		n=0
-		while n<self.rows:
-			i=0
-			while i<self.cols:
-				self.children[n][i].destroy()
-				i=i+1
-			n=n+1
+	def hide_all(self):
+		for row in range(self.rows):
+			for col in range(self.cols):
+				if self.children[row][col] != 0:
+					self.children[row][col].hide()
+		self.hide()
+	
+	def destroy_all(self):
+		for row in range(self.rows):
+			for col in range(self.cols):
+				if self.children[row][col] != 0:
+					self.children[row][col].destroy()
 		self.destroy()
+	
+	def show_all(self):
+		for row in range(self.rows):
+			for col in range(self.cols):
+				if self.children[row][col] != 0:
+					self.children[row][col].show()
+		self.show()
 
 class Deck(Clutter.CairoTexture):
 	def __init__(self, padding=5, child_w=100, child_h=100):
@@ -253,6 +264,7 @@ class Deck(Clutter.CairoTexture):
 				self.cards.append(Card(suit, value, cards))
 	
 	def draw(self, actor_box=0, allocation_flag=0, a=0):
+		self.clear()
 		c=(len(self.cards)+3)/4
 		cr = self.create()
 		cr.set_source_rgba(0,0,0,0)
@@ -264,7 +276,7 @@ class Deck(Clutter.CairoTexture):
 			n=n+1
 		self.invalidate()
 	
-	def mischia(self):
+	def mix(self):
 		num_carte = len(self.cards)
 		for i in range(num_carte):
 			j = random.randrange(0, num_carte)
@@ -291,6 +303,12 @@ class Deck(Clutter.CairoTexture):
 			animation.connect('completed', self.draw)
 		else:
 			actor.set_position(x,y)
+	
+	def reset(self):
+		for card in self.cards:
+			card.destroy()
+		self.cards = []
+		self.draw()
 
 #container for clutter actor
 class Scope(Clutter.CairoTexture):
@@ -313,3 +331,67 @@ class Scope(Clutter.CairoTexture):
 		self.card = card
 		self.scope += scope
 		self.draw()
+	
+	def reset(self):
+		self.scope=0
+		self.card = None
+		self.clear()
+
+class NotificationSystem():
+	def __init__(self, stage):
+		self.stage = stage
+		self.mesg = [0,0,0,0]
+
+	def notify(self, messaggio, time):
+		sur = cairo.ImageSurface(cairo.FORMAT_ARGB32,500,100)
+		tmp = cairo.Context(sur)
+		tmp.set_source_rgba(0,0,0,0.5)
+		tmp.paint()
+		tmp.set_source_rgb(1,1,1)
+		tmp.set_font_size(15)
+		xb, yb, w, h, xadvance, yadvance = (tmp.text_extents(messaggio))
+		tmp.move_to(10,10+h)
+		tmp.show_text(messaggio)
+		i=0
+		while self.mesg[i] != 0:
+			i=i+1
+		text=Clutter.CairoTexture.new(w+20,h+20)
+		text.set_position(self.stage.get_size()[0]-w-30,10+i*(h+30))
+		self.stage.add_actor(text)
+		self.mesg[i] = text
+		cr = text.create()
+		cr.set_source_surface(sur,0,0)
+		cr.paint()
+		text.invalidate()
+		if time != 0:
+			GLib.timeout_add(time, self.delete, i)
+		else:
+			return i
+	
+	#cancella il messaggio con indice 'index'
+	def delete(self, index):
+		act = self.mesg[index]
+		self.mesg[index]=0
+		act.destroy()
+
+def destroy_summary(window, event, callback):
+	window.destroy()
+	callback()
+
+def show_summary(callback, *cols):
+	window = Gtk.Dialog()
+	window.set_title(_('Game summary'))
+	#window.set_transient_for(self.window)
+	#window.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)
+	window.set_border_width(10)
+	window.add_button(_('OK'), 0)
+	window.set_default_response(0)
+	window.connect('response', destroy_summary, callback)
+	box = window.get_content_area()
+	hbox=Gtk.HBox()
+	box.pack_start(hbox,True,True,5)
+	hbox.set_spacing(5)
+	for col in cols:
+		hbox.pack_start(Gtk.Label(col),True,True,5)
+	window.show_all()
+	

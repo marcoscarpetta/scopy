@@ -23,6 +23,7 @@ import random
 from gi.repository import Clutter,GLib
 from libscopyUI import base
 import itertools
+from gettext import gettext as _
 
 pali_str = ["denari", "coppe", "bastoni", "spade"]
 valori_str = ["", "asso", "2", "3", "4", "5", "6", "7", "donna", "cavallo" ,"re"]
@@ -48,18 +49,21 @@ class Ai(Player):
 		self.ai=True
 
 class Partita():
-	def __init__(self, grid, players):		
+	def __init__(self, grid, stage, players, end):		
 		if len(players) not in (2,4):
 			raise Exception('Numero di giocatori sbagliato')
 		if len(players)==2:
 			self.players = [Player(players[0],base.Box(1,3))]
 			self.players.append(Ai(players[1],base.Box(1,3)))
+			self.teams = (
+				(self.players[0].name,self.players[0]),
+				(self.players[1].name,self.players[1]))
 			self.carte_terra = base.Box(2,5)
 			self.mazzo = base.Deck()
 			grid.pack(self.mazzo, 0,0)
 			self.mazzo.populate()
 			self.mazzo.draw()
-			self.mazzo.mischia()
+			self.mazzo.mix()
 			grid.pack(self.carte_terra,1,1)
 			grid.pack(self.players[0].mano, 1,2)
 			grid.pack(self.players[1].mano, 1,0)
@@ -67,11 +71,14 @@ class Partita():
 			grid.pack(self.players[1].carte_prese, 2,0)
 			grid.pack(self.players[0].scope, 3,2)
 			grid.pack(self.players[1].scope, 3,0)
+		self.stage = stage
+		self.notifiche = base.NotificationSystem(stage)
 		self.giocatore = random.randrange(len(players))
 		self.punti_vit = 11
 		self.player_can_play = False
 		self.mano = 0
 		self.ultimo_prende = 0
+		self.end = end
 
 	def start(self):
 		self.distribuisci_carte()
@@ -93,13 +100,13 @@ class Partita():
 				card=self.mazzo.pop()
 				card.draw_card()
 				self.carte_terra.add(card)
+			if self.giocatore == 0:
+				self.notifiche.notify(_("It's your turn"),2000)
+			else:
+				self.notifiche.notify(_("%s starts"%self.players[self.giocatore].name),2000)
 	
 	#calcola il prossimo giocatore e lo fa giocare
 	def prossimo_giocatore(self):
-		if self.giocatore+1<len(self.players):
-			self.giocatore += 1
-		else:
-			self.giocatore = 0
 		mano_finita = True
 		for player in self.players:
 			if len(player.mano.get_list())!=0:
@@ -107,7 +114,7 @@ class Partita():
 				break
 		if mano_finita:
 			self.mano += 1
-			if len(self.carte_terra.get_list())!=0:
+			if len(self.mazzo.get_list())!=0:
 				self.distribuisci_carte()
 				GLib.timeout_add(2000,self.prossimo_giocatore)
 			else:
@@ -117,12 +124,59 @@ class Partita():
 				self.gioca_ai()
 			else:
 				self.player_can_play = True
+			if self.giocatore+1<len(self.players):
+				self.giocatore += 1
+			else:
+				self.giocatore = 0
 
 	#funzione chiamata quando si clicka su una carta del giocatore
 	def play(self, card, event, data=None):
 		if self.player_can_play:
 			prese_possibili = self.prese(card)
-			self.gioca_carta(0, card, prese_possibili[0])
+			if len(prese_possibili) == 1:
+				self.gioca_carta(0, card, prese_possibili[0])
+			else:
+				self.scelta_presa(card, prese_possibili)
+	
+	#funzione che mostra l'interfaccia per scegliere una presa
+	def scelta_presa(self, carta, prese_possibili):
+		self.mazzo.hide()
+		self.carte_terra.hide_all()
+		for player in self.players:
+			player.mano.hide_all()
+			player.carte_prese.hide()
+			player.scope.hide()
+		index = self.notifiche.notify(_('What do you take?'),0)
+		boxes=[]
+		n=0
+		while n<len(prese_possibili):			
+			h=100
+			box = base.Box(1,len(prese_possibili[n]))
+			box.set_position(10,10+n*(h+10))
+			self.stage.add_actor(box)
+			boxes.append(box)
+			i=0
+			while i < len(prese_possibili[n]):
+				card = base.Card(prese_possibili[n][i].suit,prese_possibili[n][i].value)
+				card.set_reactive(True)
+				card.connect('button-press-event',self.scelta_fatta,boxes,carta,prese_possibili[n],index)
+				card.draw_card()
+				box.add(card,0)
+				i=i+1
+			n=n+1
+
+	#funzione eseguita quando si è scelta una presa
+	def scelta_fatta(self,actor,event,oggetti,carta,presa,index):
+		self.notifiche.delete(index)
+		for box in oggetti:
+			box.destroy_all()
+		self.mazzo.show()
+		self.carte_terra.show_all()
+		for player in self.players:
+			player.mano.show_all()
+			player.carte_prese.show()
+			player.scope.show()
+		self.gioca_carta(0,carta,presa)
 	
 	#prende le carte da terra e le sposta nelle carte prese dal giocatore
 	def presa_da_terra(self, giocatore, carta, carte):
@@ -312,85 +366,117 @@ class Partita():
 	#conta i punti alla fine della partita
 	def conta_punti(self):
 		#trasferisce le carte rimaste a terra a l'ultimo giocatore a prendere
-		for carta in self.carte_terra.carte:
-			self.giocatore[self.ult_prende].carte_prese.carte.append(carta)
+		for carta in self.carte_terra.get_list():
+			self.carte_terra.move_to(carta, self.players[self.ult_prende].carte_prese)
 		#conta i punti
-		ritorno = {}
-		#assegna le carte a lunga
-		parziale = [0,0]
-		if len(self.giocatore[0].carte_prese.carte) > len(self.giocatore[1].carte_prese.carte):
-			self.giocatore[0].punti = self.giocatore[0].punti + 1
-			parziale[0] = parziale[0] + 1
-		elif len(self.giocatore[1].carte_prese.carte) > len(self.giocatore[0].carte_prese.carte):
-			self.giocatore[1].punti = self.giocatore[1].punti + 1
-			parziale[1] = parziale[1] + 1
-		ritorno['Carte'] = [len(self.giocatore[0].carte_prese.carte), len(self.giocatore[1].carte_prese.carte)]
-		#assegna la settanta
-		valori_pali = [[0,0,0,0],[0,0,0,0]]
-		n = 0
-		while n < 2:
+		legenda = '\n'+_('Carte')+'\n'+\
+			_('Primiera')+'\n'+\
+			_('Sette Bello')+'\n'+\
+			_('Denari')+'\n'+\
+			_('Scope')+'\n'+\
+			_('Parziale')+'\n'+\
+			_('Totale')
+		punti=[]
+		n=0
+		while n<len(self.teams):
+			carte_prese = self.teams[n][1].carte_prese.get_list()
+			punti.append([])
+			
+			punti[n].append(len(carte_prese))
+
+			valori_pali = [0,0,0,0]
 			i = 0
 			while i < 4:
-				for carta in self.giocatore[n].carte_prese.carte:
-					if carta.palo == i:
-						if valori_set[carta.valore] > valori_pali[n][i]:
-							valori_pali[n][i] = valori_set[carta.valore]
-				i = i+1
-			n = n+1
-		somma = [0,0]
-		somma[0] = valori_pali[0][0]+valori_pali[0][1]+valori_pali[0][2]+valori_pali[0][3]
-		somma[1] = valori_pali[1][0]+valori_pali[1][1]+valori_pali[1][2]+valori_pali[1][3]
-		if somma[0] > somma[1]:
-			self.giocatore[0].punti = self.giocatore[0].punti + 1
-			parziale[0] = parziale[0] + 1
-		elif somma[1] > somma[0]:
-			self.giocatore[1].punti = self.giocatore[1].punti + 1
-			parziale[1] = parziale[1] + 1
-		ritorno['Primiera'] = somma
-		#assegna il 7 bello
-		for carta in self.giocatore[0].carte_prese.carte:
-			if carta.palo == 0 and carta.valore == 7:
-				self.giocatore[0].punti = self.giocatore[0].punti + 1
-				parziale[0] = parziale[0] + 1
-				ritorno['Sette Bello'] = [1,0]
-		for carta in self.giocatore[1].carte_prese.carte:
-			if carta.palo == 0 and carta.valore == 7:
-				self.giocatore[1].punti = self.giocatore[1].punti + 1
-				parziale[1] = parziale[1] + 1
-				ritorno['Sette Bello'] = [0,1]
-		#assegna i denari
-		denari = [0,0]
-		n = 0
-		while n < 2:
-			for carta in self.giocatore[n].carte_prese.carte:
-				if carta.palo == 0 :
-					denari[n] = denari[n] + 1
-			n = n+1
-		if denari[0] > denari[1]:
-			self.giocatore[0].punti = self.giocatore[0].punti + 1
-			parziale[0] = parziale[0] + 1
-		elif denari[1] > denari[0]:
-			self.giocatore[1].punti = self.giocatore[1].punti + 1
-			parziale[1] = parziale[1] + 1
-		ritorno['Denari'] = denari
-		#assegna le scope
-		self.giocatore[0].punti = self.giocatore[0].punti + self.giocatore[0].scope
-		parziale[0] = parziale[0] + self.giocatore[0].scope
-		self.giocatore[1].punti = self.giocatore[1].punti + self.giocatore[1].scope
-		parziale[1] = parziale[1] + self.giocatore[1].scope
-		ritorno['Scope'] = [self.giocatore[0].scope, self.giocatore[1].scope]
-		ritorno['Parziale'] = parziale
-		return ritorno
+				for carta in carte_prese:
+					if carta.suit == i:
+						if valori_set[carta.value] > valori_pali[i]:
+							valori_pali[i] = valori_set[carta.value]
+				i += 1
+			punti[n].append(sum(valori_pali))
+			
+			punti[n].append(0)
+			punti[n].append(0)
+			for carta in carte_prese:
+				if carta.suit == 0:
+					punti[n][3] += 1
+					if carta.value == 7:
+						punti[n][2] = 1
+			n += 1
+		
+		n=0
+		while n < len(self.teams):
+			self.teams[n][1].punti += self.teams[n][1].scope.scope
+			punti[n].append(self.teams[n][1].scope.scope)
+			punti[n].append(self.teams[n][1].scope.scope)
+			n += 1
+
+		i=0
+		while i<4:
+			massimo = 0
+			pari = 0
+			n=1
+			while n<len(self.teams):
+				if punti[n][i] >= punti[massimo][i]:
+					pari = 0
+					if punti[n][i] == punti[massimo][i]:
+						pari = 1
+					massimo = n	
+				n += 1
+			if pari == 0:
+				self.teams[massimo][1].punti += 1
+				punti[massimo][5] += 1
+			i += 1
+		
+		colonne = []
+		n=0
+		while n<len(self.teams):
+			colonne.append(self.teams[n][0]+'\n')
+			for punto in punti[n]:
+				colonne[n] += str(punto)+'\n'
+			colonne[n] += str(self.teams[n][1].punti)
+			n += 1
+
+		base.show_summary(self.azzera, legenda, *colonne)
+	
+	def show_last_move(self):
+		return 0
+		
+	def hide_last_move(self):
+		pass
 
 	#azzera la partita quando si finisce il mazzo
 	def azzera(self):
-		self.mazzo = mazzo(40)
-		self.mazzo.mischia()
-		self.carte_terra = mazzo()
-		for giocatore in self.giocatore:
-			giocatore.mano = mazzo()
-			giocatore.carte_prese = mazzo()
-			giocatore.scope = 0
-			giocatore.ult_scopa = [0, 0]
-		self.ide = altro(self.ide)
+		self.mazzo.populate()
+		self.mazzo.mix()
+		for giocatore in self.players:
+			giocatore.carte_prese.reset()
+			giocatore.scope.reset()
+		if self.giocatore+1 < len(self.players):
+			self.giocatore += 1
+		else:
+			self.giocatore = 0
 		self.mano = 0
+		massimo_punti = 0
+		giocatore = -1
+		n=0
+		while n<len(self.teams):
+			if self.teams[n][1].punti >= self.punti_vit:
+				if self.teams[n][1].punti > massimo_punti:
+					massimo_punti=self.teams[n][1].punti
+					giocatore=n
+				elif self.teams[n][1].punti == massimo_punti:
+					giocatore=-1
+			n+=1
+		if giocatore >= 0:
+			self.notifiche.notify(_('%s won!')%self.teams[giocatore][0],2000)
+			self.end()
+		else:
+			self.start()
+	
+	def destroy(self):
+		self.mazzo.destroy()
+		self.carte_terra.destroy_all()
+		for player in self.players:
+			player.mano.destroy_all()
+			player.carte_prese.destroy()
+			player.scope.destroy()
