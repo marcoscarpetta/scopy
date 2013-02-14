@@ -1,9 +1,9 @@
 # coding: utf-8
 
 ##
-# Project: ScoPy
+# Project: ScoPy - The italian card game 'scopa'
 # Author: Marco Scarpetta <marcoscarpetta@mailoo.org>
-# Copyright: 2012 Marco Scarpetta
+# Copyright: 2011-2013 Marco Scarpetta
 # License: GPL-3+
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -21,20 +21,20 @@
 
 from gettext import gettext as _
 from gi.repository import Gtk
-from libscopyUI.base import *
+from libscopyUI import base
 
 Path=_('File')
 Name=_('New game...')
 	
 def inizia_partita(widget,app,name_entry,var_combo,win_inizio):
-		app.opzioni['nome']=name_entry.get_text()
-		app.opzioni['variante']=varianti[var_combo.get_active()]
+		base.settings['nome']=name_entry.get_text()
+		base.settings['variante']=base.varianti[var_combo.get_active()]
 		'''for obj in app.carte.carte:
 			obj.object.destroy()
 		for box in app.boxes:
 			app.boxes[box].clean()
 		app.carte = Carte()'''
-		app.save()
+		base.settings.save()
 		win_inizio.destroy()
 		app.crea_partita()
 		#app.dichiara(app.partita.dai_carte())
@@ -47,7 +47,7 @@ def main(widget, app):
 	win_inizio.set_transient_for(app.window)
 	win_inizio.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)
 	win_inizio.set_border_width(10)
-	win_inizio.connect('delete-event', destroy)
+	win_inizio.connect('delete-event', base.destroy)
 	table=Gtk.Table(2,3,False)
 	table.attach(Gtk.Label(_('Name:')),0,1,0,1,Gtk.AttachOptions(0),Gtk.AttachOptions(0))
 	table.attach(Gtk.Label(_('Variant:')),0,1,1,2,Gtk.AttachOptions(0),Gtk.AttachOptions(0))
@@ -55,7 +55,7 @@ def main(widget, app):
 	table.set_col_spacings(5)
 	name_entry=Gtk.Entry()
 	var_combo=Gtk.ComboBoxText()
-	for variante in varianti:
+	for variante in base.varianti:
 		var_combo.append_text(variante)
 	table.attach(name_entry,1,2,0,1,Gtk.AttachOptions(4),Gtk.AttachOptions(4))
 	table.attach(var_combo,1,2,1,2,Gtk.AttachOptions(4),Gtk.AttachOptions(4))
@@ -72,6 +72,6 @@ def main(widget, app):
 	#onlineb.set_label(_('Online game...'))
 	#onlineb.connect('pressed',app.show_win_online)
 	#table.attach(onlineb,0,1,2,3,Gtk.AttachOptions(0),Gtk.AttachOptions(0))
-	var_combo.set_active(varianti.index(app.opzioni['variante']))
-	name_entry.set_text(app.opzioni['nome'])
+	var_combo.set_active(base.varianti.index(base.settings['variante']))
+	name_entry.set_text(base.settings['nome'])
 	win_inizio.show_all()

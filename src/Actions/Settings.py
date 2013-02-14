@@ -1,9 +1,9 @@
 # coding: utf-8
 
 ##
-# Project: ScoPy
+# Project: ScoPy - The italian card game 'scopa'
 # Author: Marco Scarpetta <marcoscarpetta@mailoo.org>
-# Copyright: 2012 Marco Scarpetta
+# Copyright: 2011-2013 Marco Scarpetta
 # License: GPL-3+
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -28,20 +28,14 @@ Name=_('Settings')
 	
 #modifica le preferenze in base ai valori dati dall'utente
 def modifica_preferenze(widget,app,carte_combo,velocita,sfondi_combo,win_pre):
-	if app.opzioni['carte'] != tipi_di_carte[carte_combo.get_active()]:
-		app.opzioni['carte'] = tipi_di_carte[carte_combo.get_active()]
-		app.carte_modificate()
-		for carta in app.partita.carte_terra.carte:
-			app.carte[carta.uid].set_from_file(percorso_carte+app.opzioni['carte']+'/'+immagini[carta.palo][carta.valore])
-		for carta in app.partita.giocatore[0].mano.carte:
-			app.carte[carta.uid].set_from_file(percorso_carte+app.opzioni['carte']+'/'+immagini[carta.palo][carta.valore])
-		for carta in app.partita.giocatore[1].mano.carte:
-			app.carte[carta.uid].set_from_file(percorso_carte+app.opzioni['carte']+'/'+immagini[1][0])
-	app.opzioni['speed']=str(velocita.get_value())
-	app.time = times[int(float(app.opzioni['speed']))]
-	app.opzioni['sfondo']=sfondi[sfondi_combo.get_active()]
-	app.back_img.set_from_file(percorso_tap+app.opzioni['sfondo']+'.png')
-	app.save()
+	if settings['cards'] != tipi_di_carte[carte_combo.get_active()]:
+		settings['cards'] = tipi_di_carte[carte_combo.get_active()]
+		if app.partita != None:
+			app.partita.update_cards()
+	settings['speed']=str(velocita.get_value())
+	settings['sfondo']=sfondi[sfondi_combo.get_active()]
+	app.back_img.set_from_file(percorso_tap+settings['sfondo']+'.png')
+	settings.save()
 	win_pre.destroy()
 
 def main(widget, app):
@@ -72,7 +66,7 @@ def main(widget, app):
 	button.connect('pressed',modifica_preferenze,app,carte_combo,velocita,sfondi_combo,win_pre)
 	table.attach(button,1,2,4,5,Gtk.AttachOptions(0),Gtk.AttachOptions(0))
 	win_pre.add(table)
-	carte_combo.set_active(tipi_di_carte.index(app.opzioni['carte']))
-	sfondi_combo.set_active(sfondi.index(app.opzioni['sfondo']))
-	velocita.set_value(int(float(app.opzioni['speed'])))
+	carte_combo.set_active(tipi_di_carte.index(settings['cards']))
+	sfondi_combo.set_active(sfondi.index(settings['sfondo']))
+	velocita.set_value(int(float(settings['speed'])))
 	win_pre.show_all()

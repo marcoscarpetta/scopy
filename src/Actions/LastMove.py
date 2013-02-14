@@ -1,9 +1,9 @@
 # coding: utf-8
 
 ##
-# Project: ScoPy
+# Project: ScoPy - The italian card game 'scopa'
 # Author: Marco Scarpetta <marcoscarpetta@mailoo.org>
-# Copyright: 2012 Marco Scarpetta
+# Copyright: 2011-2013 Marco Scarpetta
 # License: GPL-3+
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free

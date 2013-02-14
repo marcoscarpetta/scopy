@@ -1,9 +1,9 @@
 # coding: utf-8
 
 ##
-# Project: ScoPy
+# Project: ScoPy - The italian card game 'scopa'
 # Author: Marco Scarpetta <marcoscarpetta@mailoo.org>
-# Copyright: 2012 Marco Scarpetta
+# Copyright: 2011-2013 Marco Scarpetta
 # License: GPL-3+
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -22,19 +22,22 @@
 from gettext import gettext as _
 import os
 import webbrowser
-from libscopyUI.base import *
+from libscopyUI.base import percorso_doc
 
 Path=_('Help')
 Name=_('Help')
 	
 #caricamento help
-lang = os.environ['LANG'][0:2]
+try:
+	lang = os.environ['LANG'][0:2]
+except:
+	lang = 'en'
 
 def get_path():
 	if os.path.exists(percorso_doc+lang+'/index.html'):
 		return 'file://'+percorso_doc+lang+'/index.html'
 	else:
-		return 'file://'+percorso_doc+'it/index.html'
+		return 'file://'+percorso_doc+'en/index.html'
 
 def main(widget,app):
 	webbrowser.open(get_path(),2,True)

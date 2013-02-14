@@ -1,9 +1,9 @@
 # coding: utf-8
 
 ##
-# Project: ScoPy
+# Project: ScoPy - The italian card game 'scopa'
 # Author: Marco Scarpetta <marcoscarpetta@mailoo.org>
-# Copyright: 2012 Marco Scarpetta
+# Copyright: 2011-2013 Marco Scarpetta
 # License: GPL-3+
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -38,7 +38,7 @@ def main(widget,app):
 		about.connect('response', destroy)
 		about.set_program_name('ScoPy')
 		about.set_version(APP_VERSION)
-		about.set_copyright('Copyright © 2011-2012 Marco Scarpetta <marcoscarpetta@mailoo.org>')
+		about.set_copyright('Copyright © 2011-2013 Marco Scarpetta <marcoscarpetta@mailoo.org>')
 		about.set_comments(_('The italian card game "scopa"'))
 		about.set_license_type(Gtk.License.GPL_3_0)
 		about.set_website('http://scopy.sourceforge.net')

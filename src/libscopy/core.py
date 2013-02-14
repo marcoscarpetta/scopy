@@ -1,9 +1,9 @@
 # coding: utf-8
 
 ##
-# Project: ScoPy
+# Project: ScoPy - The italian card game 'scopa'
 # Author: Marco Scarpetta <marcoscarpetta@mailoo.org>
-# Copyright: 2012 Marco Scarpetta
+# Copyright: 2011-2013 Marco Scarpetta
 # License: GPL-3+
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -21,7 +21,7 @@
 
 import random
 from gi.repository import Clutter,GLib
-from libscopyUI import base
+from libscopyUI import base,widgets
 import itertools
 from gettext import gettext as _
 
@@ -36,9 +36,9 @@ class Player():
 		else:
 			self.name = name
 		self.mano = mano
-		self.carte_prese = base.Deck()
+		self.carte_prese = widgets.Deck()
 		self.punti = 0
-		self.scope = base.Scope()
+		self.scope = widgets.Scope()
 		self.ult_scopa = [0,0]
 		self.scoperte = 0
 		self.ai=False
@@ -53,13 +53,13 @@ class Partita():
 		if len(players) not in (2,4):
 			raise Exception('Numero di giocatori sbagliato')
 		if len(players)==2:
-			self.players = [Player(players[0],base.Box(1,3))]
-			self.players.append(Ai(players[1],base.Box(1,3)))
+			self.players = [Player(players[0],widgets.Box(1,3))]
+			self.players.append(Ai(players[1],widgets.Box(1,3)))
 			self.teams = (
 				(self.players[0].name,self.players[0]),
 				(self.players[1].name,self.players[1]))
-			self.carte_terra = base.Box(2,5)
-			self.mazzo = base.Deck()
+			self.carte_terra = widgets.Box(2,5)
+			self.mazzo = widgets.Deck()
 			grid.pack(self.mazzo, 0,0)
 			self.mazzo.populate()
 			self.mazzo.draw()
@@ -72,7 +72,7 @@ class Partita():
 			grid.pack(self.players[0].scope, 3,2)
 			grid.pack(self.players[1].scope, 3,0)
 		self.stage = stage
-		self.notifiche = base.NotificationSystem(stage)
+		self.notifiche = widgets.NotificationSystem(stage)
 		self.giocatore = random.randrange(len(players))
 		self.punti_vit = 11
 		self.player_can_play = False
@@ -151,13 +151,13 @@ class Partita():
 		n=0
 		while n<len(prese_possibili):			
 			h=100
-			box = base.Box(1,len(prese_possibili[n]))
+			box = widgets.Box(1,len(prese_possibili[n]))
 			box.set_position(10,10+n*(h+10))
 			self.stage.add_actor(box)
 			boxes.append(box)
 			i=0
 			while i < len(prese_possibili[n]):
-				card = base.Card(prese_possibili[n][i].suit,prese_possibili[n][i].value)
+				card = widgets.Card(prese_possibili[n][i].suit,prese_possibili[n][i].value)
 				card.set_reactive(True)
 				card.connect('button-press-event',self.scelta_fatta,boxes,carta,prese_possibili[n],index)
 				card.draw_card()
@@ -436,7 +436,7 @@ class Partita():
 			colonne[n] += str(self.teams[n][1].punti)
 			n += 1
 
-		base.show_summary(self.azzera, legenda, *colonne)
+		widgets.show_summary(self.azzera, legenda, *colonne)
 	
 	def show_last_move(self):
 		return 0
@@ -472,6 +472,16 @@ class Partita():
 			self.end()
 		else:
 			self.start()
+	
+	def update_cards(self):
+		self.mazzo.updated_cards()
+		for card in self.carte_terra.get_list():
+			card.draw_card()
+		for player in self.players:
+			player.scope.draw()
+			player.carte_prese.updated_cards()
+			for card in player.mano.get_list():
+				card.draw_card(player.ai)
 	
 	def destroy(self):
 		self.mazzo.destroy()
