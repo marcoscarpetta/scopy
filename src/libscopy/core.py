@@ -369,13 +369,13 @@ class Partita():
 		for carta in self.carte_terra.get_list():
 			self.carte_terra.move_to(carta, self.players[self.ult_prende].carte_prese)
 		#conta i punti
-		legenda = '\n'+_('Carte')+'\n'+\
+		legenda = '\n'+_('Cards')+'\n'+\
 			_('Primiera')+'\n'+\
-			_('Sette Bello')+'\n'+\
-			_('Denari')+'\n'+\
+			_('Seven of Coins')+'\n'+\
+			_('Coins')+'\n'+\
 			_('Scope')+'\n'+\
-			_('Parziale')+'\n'+\
-			_('Totale')
+			_('Partial')+'\n'+\
+			_('Total')
 		punti=[]
 		n=0
 		while n<len(self.teams):
