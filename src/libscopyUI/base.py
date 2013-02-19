@@ -20,6 +20,7 @@
 ##
 
 import sys, os
+import cairo
 
 APP_VERSION = '0.5'
 APP_NAME = 'scopy'
@@ -44,6 +45,10 @@ def destroy(widget, response):
 def hide_data(event, data):
 	data.hide()
 
+#hides the given widget
+def hide(widget, response):
+	widget.hide()
+
 #nomi dei file delle immagini delle carte
 immagini = [
 	["0.png", "1d.png", "2d.png", "3d.png", "4d.png", "5d.png", "6d.png", "7d.png", "8d.png", "9d.png", "10d.png"],
@@ -54,6 +59,23 @@ immagini = [
 
 #varianti
 varianti = [_('Classic scopa'), _('Cirulla'), _('Cucita'), _('Re Bello')]
+
+def import_variant(variant):
+	if variant == _('Classic scopa'):
+		from libscopy import core as variant_module
+	if variant == _('Cirulla'):
+		from libscopy import cirulla as variant_module
+	if variant == _('Cucita'):
+		from libscopy import cucita as variant_module
+	if variant == _('Re Bello'):
+		from libscopy import re_bello as variant_module
+	#else:
+	#	from libscopy import core as variant_module
+	return variant_module
+
+def get_number_of_players(variant_name):
+	variant = import_variant(variant_name)
+	return variant.n_players
 
 #tempo in ms da aspettare dopo che una carta viene giocata
 times=[1,3000,2000,1000]
@@ -79,6 +101,7 @@ default = {
 			'speed':'3',
 			'cards':'Napoletane',
 			'sfondo':'verde',
+			'players':'2'
 			}
 
 class Settings():
@@ -105,14 +128,14 @@ class Settings():
 		else:
 			try:
 				f = open(os.path.expanduser('~')+"/.scopy/settings.conf")
-				line = f.readline()
+				line = 'first'
 				while line != '':
+					line = f.readline()
 					try:
 						pos_uguale = line.index('=')
+						self[line[0:pos_uguale]]=line[pos_uguale+1:-1]
 					except:
-						break
-					self[line[0:pos_uguale]]=line[pos_uguale+1:-1]
-					line = f.readline()
+						continue
 				for key in default:
 					if not key in self.settings:
 						self[key] = default[key]
@@ -133,7 +156,19 @@ class Settings():
 	def save(self):
 		config = open(os.path.expanduser('~')+"/.scopy/settings.conf", 'w')
 		for key in self.settings:
-			config.write(key+'='+self[key]+'\n')
+			config.write(key+'='+str(self[key])+'\n')
 		config.close()
 
 settings=Settings()
+
+def get_card_size():
+	card=cairo.ImageSurface.create_from_png(percorso_carte+settings['cards']+'/'+immagini[0][1])
+	return card.get_width(), card.get_height()
+
+def create_match(grid, stage, end):
+	players=[settings['nome']]
+	n_players=int(settings['players'])
+	for p in range(n_players-1):
+		players.append(_('CPU')+' '+str(p+1))
+	variant = import_variant(settings['variante'])
+	return variant.Partita(grid, stage, players, end)

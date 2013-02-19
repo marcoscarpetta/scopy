@@ -81,26 +81,11 @@ class main_win():
 		self.back_img.set_size(self.width, self.height)
 
 	#crea una nuova partita in base ai dati in self.opzioni
-	def crea_partita(self, nc=None):
-		if nc==None:
-			nc=_('Computer')
+	def nuova_partita(self):
 		if self.partita != None:
 			self.partita.destroy()
-		if base.settings['variante'] == None:
-			from libscopy import classica
-			self.partita = classica.partita(base.settings['nome'],nc)
-		if base.settings['variante'] == _('Classic scopa'):
-			from libscopy import core
-			self.partita = core.Partita(self.grid, self.stage, (base.settings['nome'],nc), self.show_start_win)
-		if base.settings['variante'] == _('Cirulla'):
-			from libscopy import cirulla
-			self.partita = cirulla.partita(base.settings['nome'],nc)
-		if base.settings['variante'] == _('Cucita'):
-			from libscopy import cucita
-			self.partita = cucita.partita(base.settings['nome'],nc)
-		if base.settings['variante'] == _('Re Bello'):
-			from libscopy import re_bello
-			self.partita = re_bello.partita(base.settings['nome'],nc)
+		self.partita = base.create_match(self.grid,self.stage,self.show_start_win)
+		self.partita.start()
 	
 	def show_start_win(self):
 		Start.main(None, self)

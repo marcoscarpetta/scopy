@@ -28,49 +28,77 @@ from gettext import gettext as _
 pali_str = ["denari", "coppe", "bastoni", "spade"]
 valori_str = ["", "asso", "2", "3", "4", "5", "6", "7", "donna", "cavallo" ,"re"]
 valori_set = [0, 16, 12, 13, 14, 15, 18, 21, 10, 10, 10]
+n_players = (2,3,4)
 
 class Player():
-	def __init__(self, name, mano):
+	def __init__(self, name, mano, carte_prese=None, scope=None):
 		if name == '':
 			self.name = 'Giocatore'
 		else:
 			self.name = name
 		self.mano = mano
-		self.carte_prese = widgets.Deck()
+		if carte_prese:
+			self.carte_prese=carte_prese
+		else:
+			self.carte_prese = widgets.Deck()
+		if scope:
+			self.scope=scope
+		else:
+			self.scope = widgets.Scope()
 		self.punti = 0
-		self.scope = widgets.Scope()
-		self.ult_scopa = [0,0]
 		self.scoperte = 0
 		self.ai=False
 
 class Ai(Player):
-	def __init__(self, name, mano):
-		Player.__init__(self, name, mano)
+	def __init__(self, name, mano, carte_prese=None, scope=None):
+		Player.__init__(self, name, mano, carte_prese, scope)
 		self.ai=True
 
 class Partita():
-	def __init__(self, grid, stage, players, end):		
-		if len(players) not in (2,4):
+	def __init__(self, table, stage, players, end):		
+		if len(players) not in n_players:
 			raise Exception('Numero di giocatori sbagliato')
+		self.mazzo = widgets.Deck()
+		self.carte_terra = widgets.Box(2,5)
+		self.players = [Player(players[0],widgets.Box(1,3))]
+		table.pack(self.mazzo,0,0)
+		table.pack(self.carte_terra,1,1)
+		table.pack(self.players[0].mano, 1,2)
+		self.mazzo.populate()
+		self.mazzo.draw()
+		self.mazzo.mix()
 		if len(players)==2:
-			self.players = [Player(players[0],widgets.Box(1,3))]
 			self.players.append(Ai(players[1],widgets.Box(1,3)))
 			self.teams = (
 				(self.players[0].name,self.players[0]),
 				(self.players[1].name,self.players[1]))
-			self.carte_terra = widgets.Box(2,5)
-			self.mazzo = widgets.Deck()
-			grid.pack(self.mazzo, 0,0)
-			self.mazzo.populate()
-			self.mazzo.draw()
-			self.mazzo.mix()
-			grid.pack(self.carte_terra,1,1)
-			grid.pack(self.players[0].mano, 1,2)
-			grid.pack(self.players[1].mano, 1,0)
-			grid.pack(self.players[0].carte_prese, 2,2)
-			grid.pack(self.players[1].carte_prese, 2,0)
-			grid.pack(self.players[0].scope, 3,2)
-			grid.pack(self.players[1].scope, 3,0)
+			table.pack(self.players[1].mano, 1,0)
+			table.pack(self.players[0].carte_prese, 2,2)
+			table.pack(self.players[1].carte_prese, 2,0)
+			table.pack(self.players[0].scope, 3,2)
+			table.pack(self.players[1].scope, 3,0)
+		if len(players)==4:
+			self.players.append(Ai(players[1],widgets.Box(3,1)))
+			self.players.append(Ai(players[2],widgets.Box(1,3),self.players[0].carte_prese,self.players[0].scope))
+			self.players.append(Ai(players[3],widgets.Box(3,1),self.players[1].carte_prese,self.players[1].scope))
+			self.teams = (
+				(players[0]+'/'+players[2],self.players[0]),
+				(players[1]+'/'+players[3],self.players[1]))
+			table.pack(self.players[1].mano, 2,1)
+			table.pack(self.players[2].mano, 1,0)
+			table.pack(self.players[3].mano, 0,1)
+			table.pack(self.players[0].carte_prese, 2,2)
+			table.pack(self.players[1].carte_prese, 2,0)
+			table.pack(self.players[0].scope, 3,2)
+			table.pack(self.players[1].scope, 3,0)
+			h=stage.get_height()-2*self.players[0].mano.get_height()
+			self.players[1].mano.set_max_height(h)
+			self.players[3].mano.set_max_height(h)
+		table.set_fill(self.carte_terra,False,False)
+		for player in self.players:
+			table.set_fill(player.mano,False,False)
+			table.set_fill(player.carte_prese,False,False)
+			table.set_fill(player.scope,False,False)
 		self.stage = stage
 		self.notifiche = widgets.NotificationSystem(stage)
 		self.giocatore = random.randrange(len(players))
@@ -150,9 +178,8 @@ class Partita():
 		boxes=[]
 		n=0
 		while n<len(prese_possibili):			
-			h=100
 			box = widgets.Box(1,len(prese_possibili[n]))
-			box.set_position(10,10+n*(h+10))
+			box.set_position(10,n*(box.get_height()+10))
 			self.stage.add_actor(box)
 			boxes.append(box)
 			i=0
@@ -254,7 +281,7 @@ class Partita():
 						n = n + 1
 				if n == len(carte_mano):
 					valore = valore + 1
-				#DA RIVEDERE
+				#FIXME
 				'''
 				#non 7 a terra
 				if len(self.prese(sette)) != 0:
@@ -477,11 +504,13 @@ class Partita():
 		self.mazzo.updated_cards()
 		for card in self.carte_terra.get_list():
 			card.draw_card()
+		self.carte_terra.set_children_coords()
 		for player in self.players:
 			player.scope.draw()
 			player.carte_prese.updated_cards()
 			for card in player.mano.get_list():
 				card.draw_card(player.ai)
+			player.mano.set_children_coords()
 	
 	def destroy(self):
 		self.mazzo.destroy()
