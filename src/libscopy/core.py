@@ -223,7 +223,10 @@ class Partita():
 		#se non si prende niente
 		if len(carte) == 0:
 			self.players[giocatore].mano.move_to(carta, self.carte_terra)
-			GLib.timeout_add(2000,self.prossimo_giocatore)
+			if self.giocatore+1 < len(self.players):
+				GLib.timeout_add(2000,self.prossimo_giocatore)
+			else:
+				GLib.timeout_add(500,self.prossimo_giocatore)
 		#se si prende qualcosa
 		else:
 			self.ult_prende = giocatore
@@ -281,17 +284,14 @@ class Partita():
 						n = n + 1
 				if n == len(carte_mano):
 					valore = valore + 1
-				#FIXME
-				'''
 				#non 7 a terra
-				if len(self.prese(sette)) != 0:
+				if len(self.prese(widgets.Card(0,7),carte_terra+[carta_da_giocare])) != 0:
 					valore = valore - 1
 				#presa dopo
 				for carta in carte_mano:
-					if carta != carte_mano[ide_carta]:
-						if len(self.prese(carta)) != 0:
+					if carta != carta_da_giocare:
+						if len(self.prese(carta,carte_terra+[carta_da_giocare])) != 0:
 							valore = valore + 1
-				'''
 				#scopa avversario
 				valore_terra = 0
 				for carta in carte_terra:
@@ -369,8 +369,8 @@ class Partita():
 		return combinazioni
 
 	#ritorna tutte le prese effetuabili con la carta
-	def prese(self, card, carte=0):
-		if carte == 0:
+	def prese(self, card, carte=None):
+		if carte == None:
 			carte = self.carte_terra.get_list()
 		prese = []
 		for carta in carte:

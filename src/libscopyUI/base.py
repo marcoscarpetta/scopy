@@ -58,7 +58,7 @@ immagini = [
 ]
 
 #varianti
-varianti = [_('Classic scopa'), _('Cirulla'), _('Cucita'), _('Re Bello')]
+varianti = [_('Classic scopa'), _('Cirulla'), _('Cucita'), _('Re Bello'),_('Scopone')]
 
 def import_variant(variant):
 	if variant == _('Classic scopa'):
@@ -69,8 +69,10 @@ def import_variant(variant):
 		from libscopy import cucita as variant_module
 	if variant == _('Re Bello'):
 		from libscopy import re_bello as variant_module
-	#else:
-	#	from libscopy import core as variant_module
+	if variant == _('Scopone'):
+		from libscopy import scopone as variant_module
+	else:
+		from libscopy import core as variant_module
 	return variant_module
 
 def get_number_of_players(variant_name):
