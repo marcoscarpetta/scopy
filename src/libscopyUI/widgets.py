@@ -73,6 +73,8 @@ class Box(Clutter.CairoTexture):
 			self.set_x_expand(False)
 			self.set_y_expand(False)
 		self.set_surface_size(cols*self.child_w+(cols+1)*spacing,rows*self.child_h+(rows+1)*spacing)
+		self.max_height = 0
+		self.max_width = 0
 		self.rows = rows
 		self.cols = cols
 		self.spacing = spacing
@@ -109,8 +111,16 @@ class Box(Clutter.CairoTexture):
 		self.invalidate()
 	
 	def set_children_coords(self):
-		#self.child_w,self.child_h = base.get_card_size()
-		print self.child_h
+		child_w,child_h = base.get_card_size()
+		self.child_w,self.child_h = child_w,child_h
+		if self.max_height>0 and self.rows>1:
+			self.child_h = int((self.max_height-(self.rows+1)*self.spacing-base.get_card_size()[1])/(self.rows-1))
+		if self.max_width>0 and self.cols>1:
+			self.child_w = int((self.max_width-(self.cols+1)*self.spacing-base.get_card_size()[1])/(self.cols-1))
+		h=(self.rows+1)*self.spacing+child_h+(self.rows-1)*self.child_h
+		w=(self.cols+1)*self.spacing+child_w+(self.cols-1)*self.child_w
+		self.set_size(w,h)
+		self.draw_rect()
 		r=0
 		while r<self.rows:
 			c=0
@@ -120,13 +130,13 @@ class Box(Clutter.CairoTexture):
 					 self.children[r][c].set_y(self.get_y()+r*(self.child_h+self.spacing)+self.spacing)
 				c+=1
 			r+=1
-		w,h=self.cols*self.child_w+(self.cols+1)*self.spacing,self.rows*self.child_h+(self.rows+1)*self.spacing
-		self.set_size(w,h)
-		self.draw_rect()
 	
 	def set_max_height(self, height):
-		print height
-		self.child_h = int((height-2*self.spacing)/self.rows)
+		self.max_height = height
+		self.set_children_coords()
+	
+	def set_max_width(self, width):
+		self.max_width = width
 		self.set_children_coords()
 
 	def add(self, actor, time=500, add_to_stage=True):

@@ -91,7 +91,7 @@ class Partita():
 			table.pack(self.players[1].carte_prese, 2,0)
 			table.pack(self.players[0].scope, 3,2)
 			table.pack(self.players[1].scope, 3,0)
-			h=stage.get_height()-2*self.players[0].mano.get_height()
+			h=stage.get_height()-2*self.players[0].mano.get_height()-65
 			self.players[1].mano.set_max_height(h)
 			self.players[3].mano.set_max_height(h)
 		table.set_fill(self.carte_terra,False,False)
