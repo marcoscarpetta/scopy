@@ -23,6 +23,7 @@ from gi.repository import Gtk,Clutter,GLib
 from libscopyUI import base
 import cairo
 import random
+from gettext import gettext as _
 
 #funzione per spostamenti
 def go_to(actor,x,y,time):
@@ -65,14 +66,16 @@ class Card(Clutter.Texture):
 
 #container for Card objects, with fixed rows and columns
 class Box(Clutter.CairoTexture):
-	def __init__(self, rows, cols, spacing=5, child_w=100, child_h=100):
+	def __init__(self, rows, cols, spacing=15):
 		Clutter.CairoTexture.__init__(self)
-		self.set_surface_size(cols*child_w+(cols-1)*spacing,rows*child_h+(rows-1)*spacing)
+		self.child_w,self.child_h = base.get_card_size()
+		if Clutter.VERSION > 1.10:
+			self.set_x_expand(False)
+			self.set_y_expand(False)
+		self.set_surface_size(cols*self.child_w+(cols+1)*spacing,rows*self.child_h+(rows+1)*spacing)
 		self.rows = rows
 		self.cols = cols
 		self.spacing = spacing
-		self.child_w = child_w
-		self.child_h = child_h
 		self.draw_rect()
 		self.children = []
 		n=0
@@ -93,8 +96,7 @@ class Box(Clutter.CairoTexture):
 		return iterable
 		
 	def draw_rect(self):
-		w,h=self.get_width(),self.get_height()
-		self.set_surface_size(w,h)
+		w,h=self.get_surface_size()
 		self.clear()
 		cr = self.create()
 		cr.set_source_rgba(1,1,1,0.1)
@@ -107,16 +109,26 @@ class Box(Clutter.CairoTexture):
 		self.invalidate()
 	
 	def set_children_coords(self):
-		n=0
-		while n<self.rows:
-			i=0
-			while i<self.cols:
-				if self.children[n][i] != 0:
-					 self.children[n][i].set_x(self.x+i*(self.child_w+self.spacing))
-					 self.children[n][i].set_y(self.y+n*(self.child_h+self.spacing))
-				i=i+1
-			n=n+1
+		#self.child_w,self.child_h = base.get_card_size()
+		print self.child_h
+		r=0
+		while r<self.rows:
+			c=0
+			while c<self.cols:
+				if self.children[r][c] != 0:
+					 self.children[r][c].set_x(self.get_allocation_box().get_x()+c*(self.child_w+self.spacing)+self.spacing)
+					 self.children[r][c].set_y(self.get_y()+r*(self.child_h+self.spacing)+self.spacing)
+				c+=1
+			r+=1
+		w,h=self.cols*self.child_w+(self.cols+1)*self.spacing,self.rows*self.child_h+(self.rows+1)*self.spacing
+		self.set_size(w,h)
+		self.draw_rect()
 	
+	def set_max_height(self, height):
+		print height
+		self.child_h = int((height-2*self.spacing)/self.rows)
+		self.set_children_coords()
+
 	def add(self, actor, time=500, add_to_stage=True):
 		self.get_allocation_box().get_y()
 		r,c=-1,-1
@@ -130,8 +142,8 @@ class Box(Clutter.CairoTexture):
 				i=i+1
 			n=n+1
 		self.children[r][c]=actor
-		x=self.get_x()+c*(self.child_w+self.spacing)
-		y=self.get_y()+r*(self.child_h+self.spacing)
+		x=self.get_x()+c*(self.child_w+self.spacing)+self.spacing
+		y=self.get_y()+r*(self.child_h+self.spacing)+self.spacing
 		if add_to_stage:
 			base.stage.add_actor(actor)
 		if time != 0:
@@ -198,9 +210,14 @@ class Box(Clutter.CairoTexture):
 		self.show()
 
 class Deck(Clutter.CairoTexture):
-	def __init__(self, padding=5, child_w=100, child_h=100):
+	def __init__(self, padding=15):
 		Clutter.CairoTexture.__init__(self)
-		self.set_surface_size(2*padding+child_w+20,2*padding+child_h+20)
+		self.child_w,self.child_h = base.get_card_size()
+		if Clutter.VERSION > 1.10:
+			self.set_x_expand(False)
+			self.set_y_expand(False)
+		self.set_surface_size(2*padding+self.child_w+20,2*padding+self.child_h+20)
+		self.padding = padding
 		self.connect("allocation-changed",self.draw)
 		self.surface = cairo.ImageSurface.create_from_png(base.percorso_carte+base.settings['cards']+'/'+base.immagini[1][0])
 		self.cards = []
@@ -214,11 +231,9 @@ class Deck(Clutter.CairoTexture):
 		self.clear()
 		c=(len(self.cards)+3)/4
 		cr = self.create()
-		cr.set_source_rgba(0,0,0,0)
-		cr.paint()
 		n=0
 		while n<c:
-			cr.set_source_surface(self.surface,n,n)
+			cr.set_source_surface(self.surface,n+self.padding,n+self.padding)
 			cr.paint()
 			n=n+1
 		self.invalidate()
@@ -249,7 +264,7 @@ class Deck(Clutter.CairoTexture):
 		if add_to_stage:
 			base.stage.add_actor(actor)
 		if time != 0:
-			animation = go_to(actor,x,y,time)
+			animation = go_to(actor,x+self.padding,y+self.padding,time)
 			animation.connect('completed', base.hide_data, actor)
 			animation.connect('completed', self.draw)
 		else:
@@ -263,9 +278,14 @@ class Deck(Clutter.CairoTexture):
 
 #container for clutter actor
 class Scope(Clutter.CairoTexture):
-	def __init__(self, padding=5, child_w=100, child_h=100):
+	def __init__(self, padding=15):
 		Clutter.CairoTexture.__init__(self)
-		self.set_surface_size(2*padding+child_w+20,2*padding+child_h+20)
+		self.child_w,self.child_h = base.get_card_size()
+		if Clutter.VERSION > 1.10:
+			self.set_x_expand(False)
+			self.set_y_expand(False)
+		self.set_surface_size(2*padding+self.child_w,2*padding+self.child_h)
+		self.padding = padding
 		self.connect("allocation-changed",self.draw)
 		self.card = None
 		self.scope = 0
@@ -274,19 +294,39 @@ class Scope(Clutter.CairoTexture):
 		if self.card != None:
 			cr = self.create()
 			surface = cairo.ImageSurface.create_from_png(base.percorso_carte+base.settings['cards']+'/'+base.immagini[self.card.suit][self.card.value])
-			cr.set_source_surface(surface,0,0)
+			cr.set_source_surface(surface,self.padding,self.padding)
+			cr.paint()
+		if self.scope!=0:
+			cr = self.create()
+			cr.set_font_size(15)
+			xb, yb, w, h, xadvance, yadvance = (cr.text_extents(str(self.scope)))
+			w,h=int(w),int(h)
+			sur = cairo.ImageSurface(cairo.FORMAT_ARGB32,w+10,h+10)
+			tmp = cairo.Context(sur)
+			tmp.set_source_rgb(0,0,0)
+			tmp.paint()
+			tmp.set_source_rgb(1,1,1)
+			tmp.set_font_size(15)
+			tmp.move_to(5,h+5)
+			tmp.show_text(str(self.scope))
+			cr.set_source_surface(sur,self.get_width()-w-10-self.padding,self.padding)
 			cr.paint()
 			self.invalidate()
 	
-	def add_scopa(self, card, scope=1):
-		self.card = card
-		self.scope += scope
+	def add_scopa(self, card=None, scope=None):
+		if card != None:
+			self.card = card
+			if scope == None:
+				self.scope += 1
+		if scope != None:
+			self.scope += scope
 		self.draw()
 	
 	def reset(self):
 		self.scope=0
 		self.card = None
 		self.clear()
+		self.invalidate()
 
 class NotificationSystem():
 	def __init__(self, stage):
