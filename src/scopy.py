@@ -79,12 +79,16 @@ class main_win():
 		#self.window.resize(self.actor.get_width(),self.actor.get_height())
 		self.width, self.height = self.embed.get_allocated_width(), self.embed.get_allocated_height()
 		self.back_img.set_size(self.width, self.height)
+		
+	def update_status_bar(self, text):
+		c_id = self.status_bar.get_context_id('situazione')
+		self.status_bar.push(c_id, text)
 
 	#crea una nuova partita in base ai dati in self.opzioni
 	def nuova_partita(self):
 		if self.partita != None:
 			self.partita.destroy()
-		self.partita = base.create_match(self.grid,self.stage,self.show_start_win)
+		self.partita = base.create_match(self.grid,self.stage,self.show_start_win,self.update_status_bar)
 		self.partita.start()
 	
 	def show_start_win(self):

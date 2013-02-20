@@ -33,6 +33,10 @@ class Partita(core.Partita):
 
 	#distribuisce le carte ai giocatori e a terra se è la prima mano
 	def distribuisci_carte(self):
+		situazione = ''
+		for team in self.teams:
+			situazione += team[0]+': '+str(team[1].punti)+'       '
+		self.update_status_bar(situazione)
 		for player in self.players:
 			carte = []
 			player.scoperte = 0

@@ -55,7 +55,7 @@ class Ai(Player):
 		self.ai=True
 
 class Partita():
-	def __init__(self, table, stage, players, end):		
+	def __init__(self, table, stage, players, end, update_status_bar):		
 		if len(players) not in n_players:
 			raise Exception('Numero di giocatori sbagliato')
 		self.mazzo = widgets.Deck()
@@ -99,6 +99,7 @@ class Partita():
 			table.set_fill(player.mano,False,False)
 			table.set_fill(player.carte_prese,False,False)
 			table.set_fill(player.scope,False,False)
+		self.update_status_bar = update_status_bar
 		self.stage = stage
 		self.notifiche = widgets.NotificationSystem(stage)
 		self.giocatore = random.randrange(len(players))
@@ -107,6 +108,7 @@ class Partita():
 		self.mano = 0
 		self.ultimo_prende = 0
 		self.end = end
+		self.ultima_presa = []
 
 	def start(self):
 		self.distribuisci_carte()
@@ -114,6 +116,10 @@ class Partita():
 	
 	#distribuisce le carte ai giocatori e a terra se è la prima mano
 	def distribuisci_carte(self):
+		situazione = ''
+		for team in self.teams:
+			situazione += team[0]+': '+str(team[1].punti)+'       '
+		self.update_status_bar(situazione)
 		for player in self.players:
 			for n in range(3):
 				card=self.mazzo.pop()
@@ -217,6 +223,7 @@ class Partita():
 
 	#gioca la carta indicata del giocatore indicato e prende le carte indicate da terra
 	def gioca_carta(self, giocatore, carta, carte):
+		self.ultima_presa = [[carta],carte]
 		if self.players[giocatore].ai:
 			carta.draw_card()
 		else:
@@ -227,7 +234,7 @@ class Partita():
 		if len(carte) == 0:
 			self.players[giocatore].mano.move_to(carta, self.carte_terra)
 			if self.next() != 0:
-				GLib.timeout_add(2000,self.prossimo_giocatore)
+				GLib.timeout_add(2000+base.get_pause(),self.prossimo_giocatore)
 			else:
 				GLib.timeout_add(500,self.prossimo_giocatore)
 		#se si prende qualcosa
@@ -240,9 +247,9 @@ class Partita():
 				pass
 			else:
 				if len(carte) == len(self.carte_terra.get_list()):
-					GLib.timeout_add(2500, self.players[giocatore].scope.add_scopa, carta)
+					GLib.timeout_add(2500+base.get_pause(), self.players[giocatore].scope.add_scopa, carta)
 			#prende le carte da terra
-			GLib.timeout_add(2000, self.presa_da_terra,giocatore,carta,carte)
+			GLib.timeout_add(2000+base.get_pause(), self.presa_da_terra,giocatore,carta,carte)
 
 	#valuta la migliore presa che il computer puo' fare
 	def gioca_ai(self):
@@ -468,10 +475,42 @@ class Partita():
 		widgets.show_summary(self.azzera, legenda, *colonne)
 	
 	def show_last_move(self):
-		return 0
-		
-	def hide_last_move(self):
-		pass
+		if self.giocatore == 1:
+			self.mazzo.hide()
+			self.carte_terra.hide_all()
+			for player in self.players:
+				player.mano.hide_all()
+				player.carte_prese.hide()
+				player.scope.hide()
+			index = self.notifiche.notify(_('%s played ... and took ...'%self.players[-1].name),0)
+			boxes=[]
+			n=0
+			while n<len(self.ultima_presa):			
+				box = widgets.Box(1,len(self.ultima_presa[n]))
+				box.set_position(10,n*(box.get_height()+10))
+				self.stage.add_actor(box)
+				boxes.append(box)
+				i=0
+				while i < len(self.ultima_presa[n]):
+					card = widgets.Card(self.ultima_presa[n][i].suit,self.ultima_presa[n][i].value)
+					card.set_reactive(True)
+					card.connect('button-press-event',self.hide_last_move,boxes,index)
+					card.draw_card()
+					box.add(card,0)
+					i=i+1
+				n=n+1
+			return 1
+
+	def hide_last_move(self,actor,event,oggetti,index):
+		self.notifiche.delete(index)
+		for box in oggetti:
+			box.destroy_all()
+		self.mazzo.show()
+		self.carte_terra.show_all()
+		for player in self.players:
+			player.mano.show_all()
+			player.carte_prese.show()
+			player.scope.show()
 
 	#azzera la partita quando si finisce il mazzo
 	def azzera(self):

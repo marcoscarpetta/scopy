@@ -80,7 +80,7 @@ def get_number_of_players(variant_name):
 	return variant.n_players
 
 #tempo in ms da aspettare dopo che una carta viene giocata
-times=[1,3000,2000,1000]
+times=[1,2000,1000,0]
 
 #caricamento tipi di carte
 tipi_di_carte = []
@@ -167,10 +167,13 @@ def get_card_size():
 	card=cairo.ImageSurface.create_from_png(percorso_carte+settings['cards']+'/'+immagini[0][1])
 	return card.get_width(), card.get_height()
 
-def create_match(grid, stage, end):
+def create_match(grid, stage, end, update_status_bar):
 	players=[settings['nome']]
 	n_players=int(settings['players'])
 	for p in range(n_players-1):
 		players.append(_('CPU')+' '+str(p+1))
 	variant = import_variant(settings['variante'])
-	return variant.Partita(grid, stage, players, end)
+	return variant.Partita(grid, stage, players, end, update_status_bar)
+
+def get_pause():
+	return times[int(float(settings['speed']))]
