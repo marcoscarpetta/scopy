@@ -30,7 +30,7 @@ Player=core.Player
 Ai=core.Ai
 
 class Partita(core.Partita):
-	def __init__(self, table, stage, players, end):
+	def __init__(self, table, stage, players, end, update_status_bar):
 		if len(players) not in n_players:
 			raise Exception('Numero di giocatori sbagliato')
 		self.mazzo = widgets.Deck()
@@ -67,6 +67,7 @@ class Partita(core.Partita):
 			table.set_fill(player.mano,False,False)
 			table.set_fill(player.carte_prese,False,False)
 			table.set_fill(player.scope,False,False)
+		self.update_status_bar = update_status_bar
 		self.stage = stage
 		self.notifiche = widgets.NotificationSystem(stage)
 		self.giocatore = random.randrange(len(players))
