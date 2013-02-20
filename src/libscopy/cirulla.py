@@ -23,7 +23,7 @@ from libscopy import core
 from gettext import gettext as _
 import random
 
-n_players = (2,3,4)
+n_players = (2,4)
 
 class Partita(core.Partita):
 	def __init__(self, grid, stage, players, end):

@@ -63,13 +63,13 @@ varianti = [_('Classic scopa'), _('Cirulla'), _('Cucita'), _('Re Bello'),_('Scop
 def import_variant(variant):
 	if variant == _('Classic scopa'):
 		from libscopy import core as variant_module
-	if variant == _('Cirulla'):
+	elif variant == _('Cirulla'):
 		from libscopy import cirulla as variant_module
-	if variant == _('Cucita'):
+	elif variant == _('Cucita'):
 		from libscopy import cucita as variant_module
-	if variant == _('Re Bello'):
+	elif variant == _('Re Bello'):
 		from libscopy import re_bello as variant_module
-	if variant == _('Scopone'):
+	elif variant == _('Scopone'):
 		from libscopy import scopone as variant_module
 	else:
 		from libscopy import core as variant_module

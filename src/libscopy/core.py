@@ -28,7 +28,7 @@ from gettext import gettext as _
 pali_str = ["denari", "coppe", "bastoni", "spade"]
 valori_str = ["", "asso", "2", "3", "4", "5", "6", "7", "donna", "cavallo" ,"re"]
 valori_set = [0, 16, 12, 13, 14, 15, 18, 21, 10, 10, 10]
-n_players = (2,3,4)
+n_players = (2,4)
 
 class Player():
 	def __init__(self, name, mano, carte_prese=None, scope=None):
@@ -133,6 +133,12 @@ class Partita():
 			else:
 				self.notifiche.notify(_("%s starts"%self.players[self.giocatore].name),2000)
 	
+	def next(self):
+		if self.giocatore+1<len(self.players):
+			return self.giocatore+1
+		else:
+			return 0
+
 	#calcola il prossimo giocatore e lo fa giocare
 	def prossimo_giocatore(self):
 		mano_finita = True
@@ -152,10 +158,7 @@ class Partita():
 				self.gioca_ai()
 			else:
 				self.player_can_play = True
-			if self.giocatore+1<len(self.players):
-				self.giocatore += 1
-			else:
-				self.giocatore = 0
+			self.giocatore = self.next()
 
 	#funzione chiamata quando si clicka su una carta del giocatore
 	def play(self, card, event, data=None):
@@ -223,7 +226,7 @@ class Partita():
 		#se non si prende niente
 		if len(carte) == 0:
 			self.players[giocatore].mano.move_to(carta, self.carte_terra)
-			if self.giocatore+1 < len(self.players):
+			if self.next() != 0:
 				GLib.timeout_add(2000,self.prossimo_giocatore)
 			else:
 				GLib.timeout_add(500,self.prossimo_giocatore)
@@ -293,10 +296,9 @@ class Partita():
 						if len(self.prese(carta,carte_terra+[carta_da_giocare])) != 0:
 							valore = valore + 1
 				#scopa avversario
-				valore_terra = 0
+				valore_terra = carta_da_giocare.value
 				for carta in carte_terra:
 					valore_terra += carta.value
-				valore_terra += carta_da_giocare.value
 				if valore_terra <= 10:
 					valore -= 6
 				if valore > migliore[2]:
