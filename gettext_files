@@ -2,7 +2,7 @@ src/scopy.py
 src/libscopy/re_bello.py 
 src/libscopy/cirulla.py
 src/libscopy/cucita.py
-src/libscopy/classica.py	 
+src/libscopy/scopone.py	 
 src/libscopy/core.py
 src/Actions/About.py
 src/Actions/Help.py      
@@ -12,3 +12,4 @@ src/Actions/Settings.py
 src/Actions/Start.py
 src/libscopyUI/base.py
 src/libscopyUI/MenuCreator.py
+src/libscopyUI/widgets.py

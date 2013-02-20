@@ -22,7 +22,7 @@
 import sys, os
 import cairo
 
-APP_VERSION = '0.5'
+APP_VERSION = '1.0 beta1'
 APP_NAME = 'scopy'
 
 #setting up gettext

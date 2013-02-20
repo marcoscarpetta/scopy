@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-14 19:27+0100\n"
+"POT-Creation-Date: 2013-02-20 19:15+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -21,68 +21,83 @@ msgstr ""
 msgid "ScoPy"
 msgstr ""
 
-#: src/scopy.py:86
-msgid "Computer"
+#: src/libscopy/re_bello.py:164 src/libscopy/cirulla.py:276
+#: src/libscopy/core.py:408
+msgid "Cards"
 msgstr ""
 
-#: src/scopy.py:92 src/libscopyUI/base.py:56 src/libscopyUI/base.py:78
-msgid "Classic scopa"
+#: src/libscopy/re_bello.py:165 src/libscopy/cirulla.py:277
+#: src/libscopy/core.py:409
+msgid "Primiera"
 msgstr ""
 
-#: src/scopy.py:95 src/libscopyUI/base.py:56
-msgid "Cirulla"
+#: src/libscopy/re_bello.py:166 src/libscopy/cirulla.py:278
+#: src/libscopy/core.py:410
+msgid "Seven of Coins"
 msgstr ""
 
-#: src/scopy.py:98 src/libscopyUI/base.py:56
-msgid "Cucita"
+#: src/libscopy/re_bello.py:167
+msgid "Beautiful King"
 msgstr ""
 
-#: src/scopy.py:101 src/libscopyUI/base.py:56
-msgid "Re Bello"
+#: src/libscopy/re_bello.py:168 src/libscopy/cirulla.py:279
+#: src/libscopy/core.py:411
+msgid "Coins"
 msgstr ""
 
-#: src/libscopy/core.py:104
+#: src/libscopy/re_bello.py:169 src/libscopy/cirulla.py:280
+#: src/libscopy/core.py:412
+msgid "Scope"
+msgstr ""
+
+#: src/libscopy/re_bello.py:170 src/libscopy/cirulla.py:281
+#: src/libscopy/core.py:413
+msgid "Partial"
+msgstr ""
+
+#: src/libscopy/re_bello.py:171 src/libscopy/cirulla.py:282
+#: src/libscopy/core.py:414
+msgid "Total"
+msgstr ""
+
+#: src/libscopy/cirulla.py:60 src/libscopy/cirulla.py:65
+#: src/libscopy/cucita.py:55
+#, python-format
+msgid "The sum of %s's cards is minor then 10"
+msgstr ""
+
+#: src/libscopy/cirulla.py:70 src/libscopy/cirulla.py:75
+#: src/libscopy/cucita.py:63
+#, python-format
+msgid "%s has 3 equals cards"
+msgstr ""
+
+#: src/libscopy/cirulla.py:92 src/libscopy/cucita.py:80
+#: src/libscopy/scopone.py:96 src/libscopy/core.py:138
 msgid "It's your turn"
 msgstr ""
 
-#: src/libscopy/core.py:106
+#: src/libscopy/cirulla.py:94 src/libscopy/cucita.py:82
+#: src/libscopy/scopone.py:98 src/libscopy/core.py:140
 #, python-format
 msgid "%s starts"
 msgstr ""
 
-#: src/libscopy/core.py:149
+#: src/libscopy/cucita.py:59
+#, python-format
+msgid "%s has 2 equals cards"
+msgstr ""
+
+#: src/libscopy/core.py:186
 msgid "What do you take?"
 msgstr ""
 
-#: src/libscopy/core.py:372
-msgid "Cards"
+#: src/libscopy/core.py:485
+#, python-format
+msgid "%s played ... and took ..."
 msgstr ""
 
-#: src/libscopy/core.py:373
-msgid "Primiera"
-msgstr ""
-
-#: src/libscopy/core.py:374
-msgid "Seven of Coins"
-msgstr ""
-
-#: src/libscopy/core.py:375
-msgid "Coins"
-msgstr ""
-
-#: src/libscopy/core.py:376
-msgid "Scope"
-msgstr ""
-
-#: src/libscopy/core.py:377
-msgid "Partial"
-msgstr ""
-
-#: src/libscopy/core.py:378
-msgid "Total"
-msgstr ""
-
-#: src/libscopy/core.py:471
+#: src/libscopy/core.py:539
 #, python-format
 msgid "%s won!"
 msgstr ""
@@ -139,26 +154,59 @@ msgstr ""
 msgid "Background:"
 msgstr ""
 
-#: src/Actions/Settings.py:65
+#: src/Actions/Settings.py:65 src/libscopyUI/widgets.py:388
 msgid "OK"
 msgstr ""
 
-#: src/Actions/Start.py:27 src/Actions/Start.py:46
+#: src/Actions/Start.py:27 src/Actions/Start.py:30
 msgid "New game..."
 msgstr ""
 
-#: src/Actions/Start.py:52
+#: src/Actions/Start.py:34
 msgid "Name:"
 msgstr ""
 
-#: src/Actions/Start.py:53
+#: src/Actions/Start.py:35
 msgid "Variant:"
 msgstr ""
 
-#: src/Actions/Start.py:63
+#: src/Actions/Start.py:36
+msgid "Number of players:"
+msgstr ""
+
+#: src/Actions/Start.py:48
 msgid "Start game!"
 msgstr ""
 
-#: src/libscopyUI/base.py:77
+#: src/libscopyUI/base.py:61 src/libscopyUI/base.py:64
+#: src/libscopyUI/base.py:102
+msgid "Classic scopa"
+msgstr ""
+
+#: src/libscopyUI/base.py:61 src/libscopyUI/base.py:66
+msgid "Cirulla"
+msgstr ""
+
+#: src/libscopyUI/base.py:61 src/libscopyUI/base.py:68
+msgid "Cucita"
+msgstr ""
+
+#: src/libscopyUI/base.py:61 src/libscopyUI/base.py:70
+msgid "Re Bello"
+msgstr ""
+
+#: src/libscopyUI/base.py:61 src/libscopyUI/base.py:72
+msgid "Scopone"
+msgstr ""
+
+#: src/libscopyUI/base.py:101
 msgid "Player"
+msgstr ""
+
+#: src/libscopyUI/base.py:174
+msgid "CPU"
+msgstr ""
+
+#: src/libscopyUI/widgets.py:384
+msgid "Game summary"
 msgstr ""

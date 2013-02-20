@@ -1,12 +1,15 @@
-scopy (0.5) precise; urgency=low
+scopy (0.99+1.0b1) precise; urgency=low
 
+  * 1.0
+  * Added Scopone variant
+  * Added 'Number of players' options
   * 0.4.2
   * Removed WebKit dependencies
   * Added boxes to contain groups of cards
   * On window resize, background is repeated and boxes are moved
   * 0.4.1
   * New animation when mouse is over player's cards
-  * New notifing system
+  * New notification system
   * (temporarily) Removed multiplayer
 
  -- Marco Scarpetta <marco@marco-desktop>  Mon, 27 Jun 2011 11:55:08 +0200

@@ -62,7 +62,7 @@ class InstallData(install_data):
     return data_files
 
 setup(name='ScoPy',
-	version='0.5',
+	version='1.0',
 	description="The italian card game 'scopa'",
 	author='Marco Scarpetta',
 	author_email='marcoscarpetta@mailoo.org',
