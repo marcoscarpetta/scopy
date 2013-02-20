@@ -7,89 +7,101 @@ msgid ""
 msgstr ""
 "Project-Id-Version: scopy 0.4.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-05-26 20:13+0200\n"
-"PO-Revision-Date: 2013-01-24 08:35+0200\n"
-"Last-Translator: Isratine Citizen <genghiskhan@gmx.ca>\n"
+"POT-Creation-Date: 2013-02-20 19:15+0100\n"
+"PO-Revision-Date: 2013-01-26 19:23+0000\n"
+"Last-Translator: GenghisKhan <genghiskhan@gmx.ca>\n"
 "Language-Team: Rahut\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Launchpad-Export-Date: 2013-02-20 19:12+0000\n"
+"X-Generator: Launchpad (build 16491)\n"
 "Language: he\n"
 
-#: src/scopy.py:39
-msgid "Player"
-msgstr "שחקן"
-
-#: src/scopy.py:40 src/scopy.py:269 src/Actions/base.py:59
-msgid "Classic scopa"
-msgstr "סקופא קלאסי"
-
-#: src/scopy.py:64
-#, fuzzy
+#: src/scopy.py:63
 msgid "ScoPy"
-msgstr "trademark"
+msgstr "ScoPy"
 
-#: src/scopy.py:144
-msgid "Game summary"
-msgstr "סיכם משחק"
+#: src/libscopy/re_bello.py:164 src/libscopy/cirulla.py:276
+#: src/libscopy/core.py:408
+msgid "Cards"
+msgstr ""
 
-#: src/scopy.py:148 src/Actions/Multiplayer.py:68
-#: src/Actions/Multiplayer.py:71 src/Actions/Settings.py:79
-msgid "OK"
-msgstr "אישור"
+#: src/libscopy/re_bello.py:165 src/libscopy/cirulla.py:277
+#: src/libscopy/core.py:409
+msgid "Primiera"
+msgstr ""
 
-#: src/scopy.py:196
-msgid "You won!"
-msgstr "ניצחת!"
+#: src/libscopy/re_bello.py:166 src/libscopy/cirulla.py:278
+#: src/libscopy/core.py:410
+msgid "Seven of Coins"
+msgstr ""
 
-#: src/scopy.py:200
-msgid "I won!"
-msgstr "ניצחתי!"
+#: src/libscopy/re_bello.py:167
+msgid "Beautiful King"
+msgstr ""
 
-#: src/scopy.py:265
-msgid "Computer"
-msgstr "מחשב"
+#: src/libscopy/re_bello.py:168 src/libscopy/cirulla.py:279
+#: src/libscopy/core.py:411
+msgid "Coins"
+msgstr ""
 
-#: src/scopy.py:272 src/Actions/base.py:59
-msgid "Cirulla"
-msgstr "קירולה"
+#: src/libscopy/re_bello.py:169 src/libscopy/cirulla.py:280
+#: src/libscopy/core.py:412
+msgid "Scope"
+msgstr ""
 
-#: src/scopy.py:275 src/Actions/base.py:59
-msgid "Cucita"
-msgstr "קוציתה"
+#: src/libscopy/re_bello.py:170 src/libscopy/cirulla.py:281
+#: src/libscopy/core.py:413
+msgid "Partial"
+msgstr ""
 
-#: src/scopy.py:278 src/Actions/base.py:59
-msgid "Re Bello"
-msgstr "ריבלו"
+#: src/libscopy/re_bello.py:171 src/libscopy/cirulla.py:282
+#: src/libscopy/core.py:414
+msgid "Total"
+msgstr ""
 
-#: src/scopy.py:287
-msgid "Sum lower then 9"
-msgstr "סכום כולל נמוך יותר מן 9"
+#: src/libscopy/cirulla.py:60 src/libscopy/cirulla.py:65
+#: src/libscopy/cucita.py:55
+#, python-format
+msgid "The sum of %s's cards is minor then 10"
+msgstr ""
 
-#: src/scopy.py:289
-msgid " and 3 egual cards"
-msgstr " וגם 3 קלפי איגואל"
+#: src/libscopy/cirulla.py:70 src/libscopy/cirulla.py:75
+#: src/libscopy/cucita.py:63
+#, python-format
+msgid "%s has 3 equals cards"
+msgstr ""
 
-#: src/scopy.py:291
-msgid "3 egual cards"
-msgstr "3 קלפי איגואל"
-
-#: src/scopy.py:306
-msgid "What do you take?"
-msgstr "מה אתה לוקח?"
-
-#: src/scopy.py:463
-msgid "Remaining rounds:"
-msgstr "סיבובים נותרים:"
-
-#: src/scopy.py:506
+#: src/libscopy/cirulla.py:92 src/libscopy/cucita.py:80
+#: src/libscopy/scopone.py:96 src/libscopy/core.py:138
 msgid "It's your turn"
 msgstr "עכשיו תורך"
 
-#: src/scopy.py:509
-msgid "I start"
-msgstr "אני מתחיל"
+#: src/libscopy/cirulla.py:94 src/libscopy/cucita.py:82
+#: src/libscopy/scopone.py:98 src/libscopy/core.py:140
+#, python-format
+msgid "%s starts"
+msgstr ""
+
+#: src/libscopy/cucita.py:59
+#, python-format
+msgid "%s has 2 equals cards"
+msgstr ""
+
+#: src/libscopy/core.py:186
+msgid "What do you take?"
+msgstr "מה אתה לוקח?"
+
+#: src/libscopy/core.py:485
+#, python-format
+msgid "%s played ... and took ..."
+msgstr ""
+
+#: src/libscopy/core.py:539
+#, python-format
+msgid "%s won!"
+msgstr ""
 
 #: src/Actions/About.py:27 src/Actions/Help.py:27 src/Actions/Help.py:28
 msgid "Help"
@@ -107,120 +119,17 @@ msgstr "משחק הקלפים האיטלקי \"סקופא\""
 msgid "Edit"
 msgstr "עריכה"
 
-#: src/Actions/LastMove.py:27 src/Actions/LastMove.py:34
+#: src/Actions/LastMove.py:27 src/Actions/LastMove.py:35
 msgid "Show last move"
 msgstr "הצג תור אחרון"
 
-#: src/Actions/LastMove.py:49
+#: src/Actions/LastMove.py:42
 msgid "Hide last move"
 msgstr "הסתר תור אחרון"
 
-#: src/Actions/LastMove.py:50
-msgid "Computer played ... and took ..."
-msgstr "מחשב שיחק ... ולקח ..."
-
-#: src/Actions/Multiplayer.py:26 src/Actions/Quit.py:25
-#: src/Actions/Start.py:26
+#: src/Actions/Quit.py:25 src/Actions/Start.py:26
 msgid "File"
 msgstr "קובץ"
-
-#: src/Actions/Multiplayer.py:27
-msgid "Play online..."
-msgstr "שחק אונליין..."
-
-#: src/Actions/Multiplayer.py:39
-msgid "Online game..."
-msgstr "משחק אונליין..."
-
-#: src/Actions/Multiplayer.py:45
-msgid "Username:"
-msgstr "שם משתמש:"
-
-#: src/Actions/Multiplayer.py:46
-msgid "Password:"
-msgstr "סיסמה:"
-
-#: src/Actions/Multiplayer.py:47
-msgid "Repeat password:"
-msgstr "חזור על סיסמה:"
-
-#: src/Actions/Multiplayer.py:48
-msgid "Remember account:"
-msgstr "זכור סיסמה:"
-
-#: src/Actions/Multiplayer.py:64
-msgid "Login"
-msgstr "התחבר"
-
-#: src/Actions/Multiplayer.py:66
-msgid "Register"
-msgstr "הרשם"
-
-#: src/Actions/Multiplayer.py:92
-msgid "People"
-msgstr "אנשים"
-
-#: src/Actions/Multiplayer.py:101
-msgid "User"
-msgstr "משתמש"
-
-#: src/Actions/Multiplayer.py:105
-msgid "Won"
-msgstr "ניצח"
-
-#: src/Actions/Multiplayer.py:109
-msgid "Lost"
-msgstr "הפסיד"
-
-#: src/Actions/Multiplayer.py:113
-msgid "Status"
-msgstr "מצב"
-
-#: src/Actions/Multiplayer.py:123
-msgid "Disconnect"
-msgstr "התנתק"
-
-#: src/Actions/Multiplayer.py:238
-msgid "Account successfully created!"
-msgstr "חשבון נוצר בהצלחה!"
-
-#: src/Actions/Multiplayer.py:242
-msgid "Registration error"
-msgstr "שגיאת רישום"
-
-#: src/Actions/Multiplayer.py:254 src/Actions/Multiplayer.py:272
-#: src/Actions/Multiplayer.py:277 src/Actions/Multiplayer.py:283
-msgid "Online game request"
-msgstr "בקשת משחק אונליין"
-
-# אין ביכולתך
-#: src/Actions/Multiplayer.py:256
-#, python-format
-msgid "You can't play with %(player)s because he is '%(game)s'"
-msgstr "אתה לא יכול לשחק עם %(player)s מכיוון שהוא '%(game)s'"
-
-#: src/Actions/Multiplayer.py:274
-#, python-format
-msgid ""
-"%(player)s wants to play a \"%(game)s\" game with you.\n"
-"Do you accept the challenge?"
-msgstr ""
-"‏%(player)s רוצה לשחק משחק \"%(game)s\" עמך.\n"
-"האם ברצונך לקבל את האתגר?"
-
-#: src/Actions/Multiplayer.py:278 src/Actions/Start.py:71
-msgid "Start game!"
-msgstr "התחל משחק!"
-
-#: src/Actions/Multiplayer.py:279
-#, python-format
-msgid "%s accepted your game request."
-msgstr "‏%s קיבל את בקשת המשחק שלך."
-
-#: src/Actions/Multiplayer.py:285
-#, python-format
-msgid "%s refused your game request."
-msgstr "‏%s סירב לבקשת המשחק שלך."
 
 #: src/Actions/Quit.py:26
 msgid "Quit"
@@ -230,30 +139,174 @@ msgstr "יציאה"
 msgid "Settings"
 msgstr "הגדרות"
 
-#: src/Actions/Settings.py:57
+#: src/Actions/Settings.py:43
 msgid "Edit Settings"
 msgstr "ערוך הגדרות"
 
-#: src/Actions/Settings.py:65
+#: src/Actions/Settings.py:51
 msgid "Chose the type of cards:"
 msgstr "בחר טיפוס של קלפים:"
 
-#: src/Actions/Settings.py:66
+#: src/Actions/Settings.py:52
 msgid "Speed:"
 msgstr "מהירות:"
 
-#: src/Actions/Settings.py:67
+#: src/Actions/Settings.py:53
 msgid "Background:"
 msgstr "רקע אחורי:"
 
-#: src/Actions/Start.py:27 src/Actions/Start.py:54
+#: src/Actions/Settings.py:65 src/libscopyUI/widgets.py:388
+msgid "OK"
+msgstr "אישור"
+
+#: src/Actions/Start.py:27 src/Actions/Start.py:30
 msgid "New game..."
 msgstr "משחק חדש..."
 
-#: src/Actions/Start.py:60
+#: src/Actions/Start.py:34
 msgid "Name:"
 msgstr "שם:"
 
-#: src/Actions/Start.py:61
+#: src/Actions/Start.py:35
 msgid "Variant:"
 msgstr "גרסא:"
+
+#: src/Actions/Start.py:36
+msgid "Number of players:"
+msgstr ""
+
+#: src/Actions/Start.py:48
+msgid "Start game!"
+msgstr "התחל משחק!"
+
+#: src/libscopyUI/base.py:61 src/libscopyUI/base.py:64
+#: src/libscopyUI/base.py:102
+msgid "Classic scopa"
+msgstr "סקופא קלאסי"
+
+#: src/libscopyUI/base.py:61 src/libscopyUI/base.py:66
+msgid "Cirulla"
+msgstr "קירולה"
+
+#: src/libscopyUI/base.py:61 src/libscopyUI/base.py:68
+msgid "Cucita"
+msgstr "קוציתה"
+
+#: src/libscopyUI/base.py:61 src/libscopyUI/base.py:70
+msgid "Re Bello"
+msgstr "ריבלו"
+
+#: src/libscopyUI/base.py:61 src/libscopyUI/base.py:72
+msgid "Scopone"
+msgstr ""
+
+#: src/libscopyUI/base.py:101
+msgid "Player"
+msgstr "שחקן"
+
+#: src/libscopyUI/base.py:174
+msgid "CPU"
+msgstr ""
+
+#: src/libscopyUI/widgets.py:384
+msgid "Game summary"
+msgstr "סיכם משחק"
+
+#~ msgid "You won!"
+#~ msgstr "ניצחת!"
+
+#~ msgid "I won!"
+#~ msgstr "ניצחתי!"
+
+#~ msgid "Computer"
+#~ msgstr "מחשב"
+
+#~ msgid "Sum lower then 9"
+#~ msgstr "סכום כולל נמוך יותר מן 9"
+
+#~ msgid " and 3 egual cards"
+#~ msgstr " וגם 3 קלפי איגואל"
+
+#~ msgid "3 egual cards"
+#~ msgstr "3 קלפי איגואל"
+
+#~ msgid "Remaining rounds:"
+#~ msgstr "סיבובים נותרים:"
+
+#~ msgid "I start"
+#~ msgstr "אני מתחיל"
+
+#~ msgid "Computer played ... and took ..."
+#~ msgstr "מחשב שיחק ... ולקח ..."
+
+#~ msgid "Play online..."
+#~ msgstr "שחק אונליין..."
+
+#~ msgid "Online game..."
+#~ msgstr "משחק אונליין..."
+
+#~ msgid "Username:"
+#~ msgstr "שם משתמש:"
+
+#~ msgid "Password:"
+#~ msgstr "סיסמה:"
+
+#~ msgid "Repeat password:"
+#~ msgstr "חזור על סיסמה:"
+
+#~ msgid "Remember account:"
+#~ msgstr "זכור סיסמה:"
+
+#~ msgid "Login"
+#~ msgstr "התחבר"
+
+#~ msgid "Register"
+#~ msgstr "הרשם"
+
+#~ msgid "People"
+#~ msgstr "אנשים"
+
+#~ msgid "User"
+#~ msgstr "משתמש"
+
+#~ msgid "Won"
+#~ msgstr "ניצח"
+
+#~ msgid "Lost"
+#~ msgstr "הפסיד"
+
+#~ msgid "Status"
+#~ msgstr "מצב"
+
+#~ msgid "Disconnect"
+#~ msgstr "התנתק"
+
+#~ msgid "Account successfully created!"
+#~ msgstr "חשבון נוצר בהצלחה!"
+
+#~ msgid "Registration error"
+#~ msgstr "שגיאת רישום"
+
+#~ msgid "Online game request"
+#~ msgstr "בקשת משחק אונליין"
+
+# אין ביכולתך
+#, python-format
+#~ msgid "You can't play with %(player)s because he is '%(game)s'"
+#~ msgstr "אתה לא יכול לשחק עם %(player)s מכיוון שהוא '%(game)s'"
+
+#, python-format
+#~ msgid ""
+#~ "%(player)s wants to play a \"%(game)s\" game with you.\n"
+#~ "Do you accept the challenge?"
+#~ msgstr ""
+#~ "‏%(player)s רוצה לשחק משחק \"%(game)s\" עמך.\n"
+#~ "האם ברצונך לקבל את האתגר?"
+
+#, python-format
+#~ msgid "%s accepted your game request."
+#~ msgstr "‏%s קיבל את בקשת המשחק שלך."
+
+#, python-format
+#~ msgid "%s refused your game request."
+#~ msgstr "‏%s סירב לבקשת המשחק שלך."

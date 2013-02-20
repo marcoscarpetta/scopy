@@ -67,7 +67,7 @@ def import_variant(variant):
 		from libscopy import cirulla as variant_module
 	elif variant == _('Cucita'):
 		from libscopy import cucita as variant_module
-	elif variant == _('Re Bello'):
+	elif variant == _('Beautiful King'):
 		from libscopy import re_bello as variant_module
 	elif variant == _('Scopone'):
 		from libscopy import scopone as variant_module

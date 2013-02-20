@@ -7,88 +7,100 @@ msgid ""
 msgstr ""
 "Project-Id-Version: scopy\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-05-26 20:13+0200\n"
-"PO-Revision-Date: 2012-02-14 09:41+0000\n"
+"POT-Creation-Date: 2013-02-20 19:15+0100\n"
+"PO-Revision-Date: 2013-01-23 17:10+0000\n"
 "Last-Translator: Stanislas Michalak <stanislas.michalak@live.fr>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2012-06-15 04:55+0000\n"
-"X-Generator: Launchpad (build 15414)\n"
+"X-Launchpad-Export-Date: 2013-02-20 19:12+0000\n"
+"X-Generator: Launchpad (build 16491)\n"
 
-#: src/scopy.py:39
-msgid "Player"
-msgstr "Joueur"
-
-#: src/scopy.py:40 src/scopy.py:269 src/Actions/base.py:59
-msgid "Classic scopa"
-msgstr ""
-
-#: src/scopy.py:64
+#: src/scopy.py:63
 msgid "ScoPy"
 msgstr ""
 
-#: src/scopy.py:144
-msgid "Game summary"
-msgstr "Résumé du jeu"
-
-#: src/scopy.py:148 src/Actions/Multiplayer.py:68
-#: src/Actions/Multiplayer.py:71 src/Actions/Settings.py:79
-msgid "OK"
-msgstr "OK"
-
-#: src/scopy.py:196
-msgid "You won!"
-msgstr "Vous avez gagné !"
-
-#: src/scopy.py:200
-msgid "I won!"
-msgstr "J'ai gagné!"
-
-#: src/scopy.py:265
-msgid "Computer"
-msgstr "Ordinateur"
-
-#: src/scopy.py:272 src/Actions/base.py:59
-msgid "Cirulla"
+#: src/libscopy/re_bello.py:164 src/libscopy/cirulla.py:276
+#: src/libscopy/core.py:408
+msgid "Cards"
 msgstr ""
 
-#: src/scopy.py:275 src/Actions/base.py:59
-msgid "Cucita"
+#: src/libscopy/re_bello.py:165 src/libscopy/cirulla.py:277
+#: src/libscopy/core.py:409
+msgid "Primiera"
 msgstr ""
 
-#: src/scopy.py:278 src/Actions/base.py:59
-msgid "Re Bello"
+#: src/libscopy/re_bello.py:166 src/libscopy/cirulla.py:278
+#: src/libscopy/core.py:410
+msgid "Seven of Coins"
 msgstr ""
 
-#: src/scopy.py:287
-msgid "Sum lower then 9"
+#: src/libscopy/re_bello.py:167
+msgid "Beautiful King"
 msgstr ""
 
-#: src/scopy.py:289
-msgid " and 3 egual cards"
+#: src/libscopy/re_bello.py:168 src/libscopy/cirulla.py:279
+#: src/libscopy/core.py:411
+msgid "Coins"
 msgstr ""
 
-#: src/scopy.py:291
-msgid "3 egual cards"
+#: src/libscopy/re_bello.py:169 src/libscopy/cirulla.py:280
+#: src/libscopy/core.py:412
+msgid "Scope"
 msgstr ""
 
-#: src/scopy.py:306
-msgid "What do you take?"
-msgstr "Que prenez-vous?"
+#: src/libscopy/re_bello.py:170 src/libscopy/cirulla.py:281
+#: src/libscopy/core.py:413
+msgid "Partial"
+msgstr ""
 
-#: src/scopy.py:463
-msgid "Remaining rounds:"
-msgstr "Tours restants:"
+#: src/libscopy/re_bello.py:171 src/libscopy/cirulla.py:282
+#: src/libscopy/core.py:414
+msgid "Total"
+msgstr ""
 
-#: src/scopy.py:506
+#: src/libscopy/cirulla.py:60 src/libscopy/cirulla.py:65
+#: src/libscopy/cucita.py:55
+#, python-format
+msgid "The sum of %s's cards is minor then 10"
+msgstr ""
+
+#: src/libscopy/cirulla.py:70 src/libscopy/cirulla.py:75
+#: src/libscopy/cucita.py:63
+#, python-format
+msgid "%s has 3 equals cards"
+msgstr ""
+
+#: src/libscopy/cirulla.py:92 src/libscopy/cucita.py:80
+#: src/libscopy/scopone.py:96 src/libscopy/core.py:138
 msgid "It's your turn"
 msgstr "C'est votre tour"
 
-#: src/scopy.py:509
-msgid "I start"
-msgstr "je commence"
+#: src/libscopy/cirulla.py:94 src/libscopy/cucita.py:82
+#: src/libscopy/scopone.py:98 src/libscopy/core.py:140
+#, python-format
+msgid "%s starts"
+msgstr ""
+
+#: src/libscopy/cucita.py:59
+#, python-format
+msgid "%s has 2 equals cards"
+msgstr ""
+
+#: src/libscopy/core.py:186
+msgid "What do you take?"
+msgstr "Que prenez-vous?"
+
+#: src/libscopy/core.py:485
+#, python-format
+msgid "%s played ... and took ..."
+msgstr ""
+
+#: src/libscopy/core.py:539
+#, python-format
+msgid "%s won!"
+msgstr ""
 
 #: src/Actions/About.py:27 src/Actions/Help.py:27 src/Actions/Help.py:28
 msgid "Help"
@@ -106,117 +118,17 @@ msgstr "Le jeu de cartes italien \"scopa\""
 msgid "Edit"
 msgstr "Modifier"
 
-#: src/Actions/LastMove.py:27 src/Actions/LastMove.py:34
+#: src/Actions/LastMove.py:27 src/Actions/LastMove.py:35
 msgid "Show last move"
 msgstr "Voir le dernier coup"
 
-#: src/Actions/LastMove.py:49
+#: src/Actions/LastMove.py:42
 msgid "Hide last move"
 msgstr ""
 
-#: src/Actions/LastMove.py:50
-msgid "Computer played ... and took ..."
-msgstr "Ordinateur joué ... et a pris ..."
-
-#: src/Actions/Multiplayer.py:26 src/Actions/Quit.py:25
-#: src/Actions/Start.py:26
+#: src/Actions/Quit.py:25 src/Actions/Start.py:26
 msgid "File"
 msgstr "Fichier"
-
-#: src/Actions/Multiplayer.py:27
-msgid "Play online..."
-msgstr ""
-
-#: src/Actions/Multiplayer.py:39
-msgid "Online game..."
-msgstr "Jeu en ligne..."
-
-#: src/Actions/Multiplayer.py:45
-msgid "Username:"
-msgstr "Nom d'utilisateur :"
-
-#: src/Actions/Multiplayer.py:46
-msgid "Password:"
-msgstr "Mot de passe:"
-
-#: src/Actions/Multiplayer.py:47
-msgid "Repeat password:"
-msgstr "Répéter le mot de passe:"
-
-#: src/Actions/Multiplayer.py:48
-msgid "Remember account:"
-msgstr "Se souvenir du compte:"
-
-#: src/Actions/Multiplayer.py:64
-msgid "Login"
-msgstr ""
-
-#: src/Actions/Multiplayer.py:66
-msgid "Register"
-msgstr ""
-
-#: src/Actions/Multiplayer.py:92
-msgid "People"
-msgstr ""
-
-#: src/Actions/Multiplayer.py:101
-msgid "User"
-msgstr "Utilisateur"
-
-#: src/Actions/Multiplayer.py:105
-msgid "Won"
-msgstr "Gagné"
-
-#: src/Actions/Multiplayer.py:109
-msgid "Lost"
-msgstr "Perdu"
-
-#: src/Actions/Multiplayer.py:113
-msgid "Status"
-msgstr ""
-
-#: src/Actions/Multiplayer.py:123
-msgid "Disconnect"
-msgstr "Se déconnecter"
-
-#: src/Actions/Multiplayer.py:238
-msgid "Account successfully created!"
-msgstr "Compte créé avec succès!"
-
-#: src/Actions/Multiplayer.py:242
-msgid "Registration error"
-msgstr "Erreur d'enregistrement"
-
-#: src/Actions/Multiplayer.py:254 src/Actions/Multiplayer.py:272
-#: src/Actions/Multiplayer.py:277 src/Actions/Multiplayer.py:283
-msgid "Online game request"
-msgstr "Demande de jeux en ligne"
-
-#: src/Actions/Multiplayer.py:256
-#, python-format
-msgid "You can't play with %(player)s because he is '%(game)s'"
-msgstr ""
-
-#: src/Actions/Multiplayer.py:274
-#, python-format
-msgid ""
-"%(player)s wants to play a \"%(game)s\" game with you.\n"
-"Do you accept the challenge?"
-msgstr ""
-
-#: src/Actions/Multiplayer.py:278 src/Actions/Start.py:71
-msgid "Start game!"
-msgstr "Commencer à jouer!"
-
-#: src/Actions/Multiplayer.py:279
-#, python-format
-msgid "%s accepted your game request."
-msgstr "%s a accepté votre demande de match."
-
-#: src/Actions/Multiplayer.py:285
-#, python-format
-msgid "%s refused your game request."
-msgstr "% s refusé votre demande de match."
 
 #: src/Actions/Quit.py:26
 msgid "Quit"
@@ -226,30 +138,137 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: src/Actions/Settings.py:57
+#: src/Actions/Settings.py:43
 msgid "Edit Settings"
 msgstr "Modifier les paramètres"
 
-#: src/Actions/Settings.py:65
+#: src/Actions/Settings.py:51
 msgid "Chose the type of cards:"
 msgstr "Choisissez le type de cartes:"
 
-#: src/Actions/Settings.py:66
+#: src/Actions/Settings.py:52
 msgid "Speed:"
-msgstr "Vitesse:"
+msgstr "Vitesse :"
 
-#: src/Actions/Settings.py:67
+#: src/Actions/Settings.py:53
 msgid "Background:"
 msgstr "Arrière-plan :"
 
-#: src/Actions/Start.py:27 src/Actions/Start.py:54
+#: src/Actions/Settings.py:65 src/libscopyUI/widgets.py:388
+msgid "OK"
+msgstr "OK"
+
+#: src/Actions/Start.py:27 src/Actions/Start.py:30
 msgid "New game..."
 msgstr "Nouveau jeu..."
 
-#: src/Actions/Start.py:60
+#: src/Actions/Start.py:34
 msgid "Name:"
 msgstr "Nom:"
 
-#: src/Actions/Start.py:61
+#: src/Actions/Start.py:35
 msgid "Variant:"
 msgstr "Variante :"
+
+#: src/Actions/Start.py:36
+msgid "Number of players:"
+msgstr ""
+
+#: src/Actions/Start.py:48
+msgid "Start game!"
+msgstr "Commencer à jouer!"
+
+#: src/libscopyUI/base.py:61 src/libscopyUI/base.py:64
+#: src/libscopyUI/base.py:102
+msgid "Classic scopa"
+msgstr ""
+
+#: src/libscopyUI/base.py:61 src/libscopyUI/base.py:66
+msgid "Cirulla"
+msgstr ""
+
+#: src/libscopyUI/base.py:61 src/libscopyUI/base.py:68
+msgid "Cucita"
+msgstr ""
+
+#: src/libscopyUI/base.py:61 src/libscopyUI/base.py:70
+msgid "Re Bello"
+msgstr ""
+
+#: src/libscopyUI/base.py:61 src/libscopyUI/base.py:72
+msgid "Scopone"
+msgstr ""
+
+#: src/libscopyUI/base.py:101
+msgid "Player"
+msgstr "Joueur"
+
+#: src/libscopyUI/base.py:174
+msgid "CPU"
+msgstr ""
+
+#: src/libscopyUI/widgets.py:384
+msgid "Game summary"
+msgstr "Résumé du jeu"
+
+#~ msgid "User"
+#~ msgstr "Utilisateur"
+
+#~ msgid "Lost"
+#~ msgstr "Perdu"
+
+#~ msgid "Won"
+#~ msgstr "Gagné"
+
+#~ msgid "Password:"
+#~ msgstr "Mot de passe:"
+
+#~ msgid "Repeat password:"
+#~ msgstr "Répéter le mot de passe:"
+
+#~ msgid "You won!"
+#~ msgstr "Vous avez gagné !"
+
+#~ msgid "Computer"
+#~ msgstr "Ordinateur"
+
+#~ msgid "Username:"
+#~ msgstr "Nom d'utilisateur :"
+
+#~ msgid "Online game..."
+#~ msgstr "Jeu en ligne..."
+
+#~ msgid "Remember account:"
+#~ msgstr "Se souvenir du compte:"
+
+#~ msgid "Account successfully created!"
+#~ msgstr "Compte créé avec succès!"
+
+#~ msgid "Registration error"
+#~ msgstr "Erreur d'enregistrement"
+
+#, python-format
+#~ msgid "%s accepted your game request."
+#~ msgstr "%s a accepté votre demande de match."
+
+#~ msgid "Online game request"
+#~ msgstr "Demande de jeux en ligne"
+
+#~ msgid "Disconnect"
+#~ msgstr "Se déconnecter"
+
+#~ msgid "Remaining rounds:"
+#~ msgstr "Tours restants:"
+
+#~ msgid "Computer played ... and took ..."
+#~ msgstr "Ordinateur joué ... et a pris ..."
+
+#~ msgid "I start"
+#~ msgstr "je commence"
+
+#, python-format
+#~ msgid "%s refused your game request."
+#~ msgstr "% s refusé votre demande de match."
+
+#~ msgid "I won!"
+#~ msgstr "J'ai gagné!"

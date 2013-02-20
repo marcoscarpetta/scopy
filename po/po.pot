@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-20 19:15+0100\n"
+"POT-Creation-Date: 2013-02-20 20:10+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,7 +36,7 @@ msgstr ""
 msgid "Seven of Coins"
 msgstr ""
 
-#: src/libscopy/re_bello.py:167
+#: src/libscopy/re_bello.py:167 src/libscopyUI/base.py:70
 msgid "Beautiful King"
 msgstr ""
 
@@ -191,7 +191,7 @@ msgstr ""
 msgid "Cucita"
 msgstr ""
 
-#: src/libscopyUI/base.py:61 src/libscopyUI/base.py:70
+#: src/libscopyUI/base.py:61
 msgid "Re Bello"
 msgstr ""
 
