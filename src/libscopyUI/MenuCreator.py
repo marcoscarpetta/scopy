@@ -44,19 +44,22 @@ modules = [
 #returns the Gtk.MenuBar with all the menus
 def create_menu(app):
 	menubar = Gtk.MenuBar()
+	classes = {}
 	for module in modules:
 		path = re.split(':',module.Path)
-		add(menubar,path,module.main,module.Name,app)
-	return menubar
+		main_class = module.Main(app)
+		classes[module.Name] = main_class
+		add(menubar,path,main_class.main,module.Name)
+	return menubar, classes
 
-def add(menu,path,func,name,app):
+def add(menu,path,func,name):
 	if len(path) > 0:
 		items = menu.get_children()
 		for item in items:		
 			if item.get_label() == path[0]:
 				if item.get_submenu() != None:
 					submenu = item.get_submenu()
-					add(submenu,path[1:],func,name,app)
+					add(submenu,path[1:],func,name)
 					break
 		else:
 			submenu = Gtk.Menu()
@@ -64,9 +67,9 @@ def add(menu,path,func,name,app):
 			menuitem.set_label(path[0])
 			menuitem.set_submenu(submenu)
 			menu.append(menuitem)
-			add(submenu,path[1:],func,name,app)
+			add(submenu,path[1:],func,name)
 	else:
 		menuitem = Gtk.MenuItem()
 		menuitem.set_label(name)
-		menuitem.connect('activate', func, app)
+		menuitem.connect('activate', func)
 		menu.append(menuitem)

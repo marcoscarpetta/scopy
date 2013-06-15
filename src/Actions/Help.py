@@ -39,5 +39,9 @@ def get_path():
 	else:
 		return 'file://'+percorso_doc+'en/index.html'
 
-def main(widget,app):
-	webbrowser.open(get_path(),2,True)
+class Main():
+	def __init__(self, app):
+		pass
+
+	def main(self, widget):
+		webbrowser.open(get_path(),2,True)

@@ -48,6 +48,7 @@ def hide_data(event, data):
 #hides the given widget
 def hide(widget, response):
 	widget.hide()
+	return True
 
 #nomi dei file delle immagini delle carte
 immagini = [

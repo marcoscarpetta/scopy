@@ -499,7 +499,7 @@ class Partita():
 					box.add(card,0)
 					i=i+1
 				n=n+1
-			return 1
+			return boxes,index
 
 	def hide_last_move(self,actor,event,oggetti,index):
 		self.notifiche.delete(index)

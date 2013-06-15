@@ -341,7 +341,7 @@ class Scope(Clutter.CairoTexture):
 class NotificationSystem():
 	def __init__(self, stage):
 		self.stage = stage
-		self.mesg = [0,0,0,0]
+		self.mesg = [0,0,0,0,0,0]
 
 	def notify(self, messaggio, time):
 		sur = cairo.ImageSurface(cairo.FORMAT_ARGB32,500,100)

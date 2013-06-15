@@ -21,52 +21,62 @@
 
 from gettext import gettext as _
 from gi.repository import Gtk
-from libscopyUI.base import *
+from libscopyUI import base
 
 Path=_('Edit')
 Name=_('Settings')
-	
-#modifica le preferenze in base ai valori dati dall'utente
-def modifica_preferenze(widget,app,carte_combo,velocita,sfondi_combo,win_pre):
-	if settings['cards'] != tipi_di_carte[carte_combo.get_active()]:
-		settings['cards'] = tipi_di_carte[carte_combo.get_active()]
-		if app.partita != None:
-			app.partita.update_cards()
-	settings['speed']=str(velocita.get_value())
-	settings['sfondo']=sfondi[sfondi_combo.get_active()]
-	app.back_img.set_from_file(percorso_tap+settings['sfondo']+'.png')
-	settings.save()
-	win_pre.destroy()
 
-def main(widget, app):
-	win_pre = Gtk.Window()
-	win_pre.set_title(_('Edit Settings'))
-	win_pre.set_transient_for(app.window)
-	win_pre.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)
-	win_pre.set_border_width(10)
-	win_pre.connect('delete-event', destroy)
-	table=Gtk.Table(2,5,False)
-	table.set_row_spacings(5)
-	table.set_col_spacings(5)
-	table.attach(Gtk.Label(_('Chose the type of cards:')),0,1,0,1,Gtk.AttachOptions(0),Gtk.AttachOptions(0))
-	table.attach(Gtk.Label(_('Speed:')),0,1,1,2,Gtk.AttachOptions(0),Gtk.AttachOptions(0))
-	table.attach(Gtk.Label(_('Background:')),0,1,2,3,Gtk.AttachOptions(0),Gtk.AttachOptions(0))
-	carte_combo=Gtk.ComboBoxText()
-	for tipo in tipi_di_carte:
-		carte_combo.append_text(tipo)
-	sfondi_combo=Gtk.ComboBoxText()
-	for sfondo in sfondi:
-		sfondi_combo.append_text(sfondo)
-	velocita=Gtk.HScale.new_with_range(1,3,1)
-	table.attach(carte_combo,1,2,0,1,Gtk.AttachOptions(4),Gtk.AttachOptions(4))
-	table.attach(velocita,1,2,1,2,Gtk.AttachOptions(4),Gtk.AttachOptions(4))
-	table.attach(sfondi_combo,1,2,2,3,Gtk.AttachOptions(4),Gtk.AttachOptions(4))
-	button=Gtk.Button()
-	button.set_label(_('OK'))
-	button.connect('pressed',modifica_preferenze,app,carte_combo,velocita,sfondi_combo,win_pre)
-	table.attach(button,1,2,4,5,Gtk.AttachOptions(0),Gtk.AttachOptions(0))
-	win_pre.add(table)
-	carte_combo.set_active(tipi_di_carte.index(settings['cards']))
-	sfondi_combo.set_active(sfondi.index(settings['sfondo']))
-	velocita.set_value(int(float(settings['speed'])))
-	win_pre.show_all()
+class Main():
+	def __init__(self, app):
+		self.dialog = Gtk.Window()
+		self.dialog.set_title(_('Edit Settings'))
+		self.dialog.set_transient_for(app.window)
+		self.dialog.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)
+		self.dialog.set_border_width(10)
+		self.dialog.connect('delete-event', base.hide)
+	
+		grid=Gtk.Grid()
+		grid.set_row_spacing(5)
+		grid.set_column_spacing(5)
+		self.dialog.add(grid)
+	
+		grid.attach(Gtk.Label(_('Chose the type of cards:')),0,0,1,1)
+		grid.attach(Gtk.Label(_('Speed:')),0,1,1,1)
+		grid.attach(Gtk.Label(_('Background:')),0,2,1,1)
+	
+		self.carte_combo=Gtk.ComboBoxText()
+		for tipo in base.tipi_di_carte:
+			self.carte_combo.append_text(tipo)
+		self.sfondi_combo=Gtk.ComboBoxText()
+		for sfondo in base.sfondi:
+			self.sfondi_combo.append_text(sfondo)
+		self.velocita=Gtk.HScale.new_with_range(1,3,1)
+	
+		grid.attach(self.carte_combo,1,0,1,1)
+		grid.attach(self.velocita,1,1,1,1)
+		grid.attach(self.sfondi_combo,1,2,1,1)
+	
+		button=Gtk.Button()
+		button.set_label(_('OK'))
+		button.connect('pressed', self.modifica_preferenze)
+		grid.attach(button,1,3,1,1)
+	
+		self.carte_combo.set_active(base.tipi_di_carte.index(base.settings['cards']))
+		self.sfondi_combo.set_active(base.sfondi.index(base.settings['sfondo']))
+		self.velocita.set_value(int(float(base.settings['speed'])))
+		self.app = app
+		
+	#modifica le preferenze in base ai valori dati dall'utente
+	def modifica_preferenze(self, widget):
+		if base.settings['cards'] != base.tipi_di_carte[self.carte_combo.get_active()]:
+			base.settings['cards'] = base.tipi_di_carte[self.carte_combo.get_active()]
+			if self.app.partita != None:
+				self.app.partita.update_cards()
+		base.settings['speed']=str(self.velocita.get_value())
+		base.settings['sfondo']=base.sfondi[self.sfondi_combo.get_active()]
+		self.app.back_img.set_from_file(base.percorso_tap+base.settings['sfondo']+'.png')
+		base.settings.save()
+		self.dialog.hide()
+
+	def main(self, widget):
+		self.dialog.show_all()

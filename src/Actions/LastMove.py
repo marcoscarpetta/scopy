@@ -26,19 +26,21 @@ from libscopyUI.base import *
 Path=_('Edit')
 Name=_('Show last move')
 
-def main():
-	pass
+class Main():
+	def __init__(self, app):
+		self.app = app
 
-#nasconde l'ultima presa
-def nascondi_ultima_presa(actor, event, app, widget):
-	app.partita.hide_last_move()
-	widget.set_label(_('Show last move'))
-	widget.disconnect_by_func(nascondi_ultima_presa)
-	widget.connect('activate', main, app)
+	#nasconde l'ultima presa
+	def nascondi_ultima_presa(self, actor, event, widget, args):
+		self.app.partita.hide_last_move(None,None,*args)
+		widget.set_label(_('Show last move'))
+		widget.disconnect_by_func(self.nascondi_ultima_presa)
+		widget.connect('activate', self.main)
 
-#mostra l'ultima presa
-def main(widget,app):
-	if app.partita.show_last_move() == 0:
-		widget.set_label(_('Hide last move'))
-		widget.disconnect_by_func(main)
-		widget.connect('activate',nascondi_ultima_presa,None,app,widget)
+	#mostra l'ultima presa
+	def main(self, widget):
+		args = self.app.partita.show_last_move()
+		if args:
+			widget.set_label(_('Hide last move'))
+			widget.disconnect_by_func(self.main)
+			widget.connect('activate', self.nascondi_ultima_presa, None, widget, args)

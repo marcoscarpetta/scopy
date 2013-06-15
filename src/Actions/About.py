@@ -21,29 +21,30 @@
 
 from gettext import gettext as _
 from gi.repository import Gtk,Gdk
-from libscopyUI.base import *
+from libscopyUI import base
 import cairo
 
 Path=_('Help')
 Name=_('About')
-	
-def main(widget,app):
-		about = Gtk.AboutDialog()
-		about.set_title(_('About'))
-		about.set_transient_for(app.window)
-		about.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)
-		about.set_border_width(10)
-		about.connect('delete-event', destroy)
-		about.connect('close', destroy)
-		about.connect('response', destroy)
-		about.set_program_name('ScoPy')
-		about.set_version(APP_VERSION)
-		about.set_copyright('Copyright © 2011-2013 Marco Scarpetta <marcoscarpetta@mailoo.org>')
-		about.set_comments(_('The italian card game "scopa"'))
-		about.set_license_type(Gtk.License.GPL_3_0)
-		about.set_website('http://scopy.sourceforge.net')
-		about.set_authors(['Marco Scarpetta','Si ringrazia la comunità ubuntu-it e archlinux italia'])
-		about.set_artists(['Marco Scarpetta',
+
+class Main():
+	def __init__(self, app):
+		self.dialog = Gtk.AboutDialog()
+		self.dialog.set_title(_('About'))
+		self.dialog.set_transient_for(app.window)
+		self.dialog.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)
+		self.dialog.set_border_width(10)
+		self.dialog.connect('delete-event', base.hide)
+		self.dialog.connect('close', base.hide)
+		self.dialog.connect('response', base.hide)
+		self.dialog.set_program_name('ScoPy')
+		self.dialog.set_version(base.APP_VERSION)
+		self.dialog.set_copyright('Copyright © 2011-2013 Marco Scarpetta <marcoscarpetta@mailoo.org>')
+		self.dialog.set_comments(_('The italian card game "scopa"'))
+		self.dialog.set_license_type(Gtk.License.GPL_3_0)
+		self.dialog.set_website('http://scopy.sourceforge.net')
+		self.dialog.set_authors(['Marco Scarpetta','Si ringrazia la comunità ubuntu-it e archlinux italia'])
+		self.dialog.set_artists(['Marco Scarpetta',
 			'crx (carte Piacentine)',
 			'Scio Nescire (carte da Poker)',
 			"00 ubuntu (carte 'Francitalia' e 'Scartini')",
@@ -51,8 +52,10 @@ def main(widget,app):
 			'gikbuntu (carte Bergamasche)',
 			'mapreri (carte Trevisane)',
 			'Magog (sfondi, carte Toscane)'])
-		about.set_translator_credits('Adolfo Jayme Barrientos \nSarahSlean \nMarti Bosch \nMarc Coll Carrillo \nMichael Moroni \nAntonio Trande \nGenghis Khan \nStanislas Michalak \nAleksey Kabanov')
-		image = cairo.ImageSurface.create_from_png(percorso+'/data/icons/icona.png')
+		self.dialog.set_translator_credits('Adolfo Jayme Barrientos \nSarahSlean \nMarti Bosch \nMarc Coll Carrillo \nMichael Moroni \nAntonio Trande \nGenghis Khan \nStanislas Michalak \nAleksey Kabanov')
+		image = cairo.ImageSurface.create_from_png(base.percorso+'/data/icons/icona.png')
 		icona = Gdk.pixbuf_get_from_surface(image,0,0,100,100)
-		about.set_logo(icona)
-		about.show()
+		self.dialog.set_logo(icona)
+
+	def main(self, widget):
+		self.dialog.show()

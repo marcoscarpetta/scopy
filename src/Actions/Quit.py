@@ -24,6 +24,10 @@ from gi.repository import Gtk
 
 Path=_('File')
 Name=_('Quit')
-	
-def main(widget,app):
-	Gtk.main_quit()
+
+class Main():
+	def __init__(self, app):
+		pass
+
+	def main(self, widget):
+		Gtk.main_quit()

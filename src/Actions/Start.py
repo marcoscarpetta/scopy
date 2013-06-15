@@ -26,55 +26,66 @@ from libscopyUI import base
 Path=_('File')
 Name=_('New game...')
 
-win_inizio = Gtk.Window()
-win_inizio.set_title(_('New game...'))
-win_inizio.set_border_width(10)
-win_inizio.connect('delete-event', base.hide)
-table=Gtk.Table(2,4,False)
-table.attach(Gtk.Label(_('Name:')),0,1,0,1,Gtk.AttachOptions(0),Gtk.AttachOptions(0))
-table.attach(Gtk.Label(_('Variant:')),0,1,1,2,Gtk.AttachOptions(0),Gtk.AttachOptions(0))
-table.attach(Gtk.Label(_('Number of players:')),0,1,2,3,Gtk.AttachOptions(0),Gtk.AttachOptions(0))
-table.set_row_spacings(5)
-table.set_col_spacings(5)
-name_entry=Gtk.Entry()
-var_combo=Gtk.ComboBoxText()
-for variante in base.varianti:
-	var_combo.append(variante,variante)
-n_players=Gtk.ComboBoxText()
-table.attach(name_entry,1,2,0,1,Gtk.AttachOptions(4),Gtk.AttachOptions(4))
-table.attach(var_combo,1,2,1,2,Gtk.AttachOptions(4),Gtk.AttachOptions(4))
-table.attach(n_players,1,2,2,3,Gtk.AttachOptions(4),Gtk.AttachOptions(4))
-button=Gtk.Button()
-button.set_label(_('Start game!'))
-table.attach(button,1,2,3,4,Gtk.AttachOptions(0),Gtk.AttachOptions(0))
-win_inizio.add(table)
-name_entry.set_property("activates-default",True)
-button.set_can_default(True)
-button.grab_default()
+class Main():
+	def __init__(self, app):
+		self.app = app
+		
+		self.dialog = Gtk.Window()
+
+		self.dialog.set_title(_('New game...'))
+		self.dialog.set_border_width(10)
+		self.dialog.connect('delete-event', base.hide)
+
+		grid=Gtk.Grid()
+		grid.set_row_spacing(5)
+		grid.set_column_spacing(5)
+		self.dialog.add(grid)
+
+		grid.attach(Gtk.Label(_('Name:')),0,0,1,1)
+		grid.attach(Gtk.Label(_('Variant:')),0,1,1,1)
+		grid.attach(Gtk.Label(_('Number of players:')),0,2,1,1)
+
+		self.name_entry=Gtk.Entry()
+		self.var_combo=Gtk.ComboBoxText()
+		for variante in base.varianti:
+			self.var_combo.append(variante,variante)
+		self.n_players=Gtk.ComboBoxText()
+
+		grid.attach(self.name_entry,1,0,1,1)
+		grid.attach(self.var_combo,1,1,1,1)
+		grid.attach(self.n_players,1,2,1,1)
+
+		self.button=Gtk.Button()
+		self.button.set_label(_('Start game!'))
+		grid.attach(self.button,1,3,1,1)
+
+		self.name_entry.set_property("activates-default",True)
+		self.button.set_can_default(True)
+		self.button.grab_default()
 	
-def set_n_players(widget=None):
-	n_players.remove_all()
-	for n in base.get_number_of_players(var_combo.get_active_id()):
-		n_players.append(str(n),str(n))
-	try:
-		n_players.set_active_id(base.settings['players'])
-	except:
-		pass
+	def set_n_players(self, widget=None):
+		self.n_players.remove_all()
+		for n in base.get_number_of_players(self.var_combo.get_active_id()):
+			self.n_players.append(str(n),str(n))
+		try:
+			self.n_players.set_active_id(base.settings['players'])
+		except:
+			pass
 
-def inizia_partita(widget,app):
-	base.settings['nome']=name_entry.get_text()
-	base.settings['variante']=var_combo.get_active_id()
-	base.settings['players']=n_players.get_active_id()
-	base.settings.save()
-	win_inizio.hide()
-	app.nuova_partita()
+	def inizia_partita(self, widget=None):
+		base.settings['nome']=self.name_entry.get_text()
+		base.settings['variante']=self.var_combo.get_active_id()
+		base.settings['players']=self.n_players.get_active_id()
+		base.settings.save()
+		self.dialog.hide()
+		self.app.nuova_partita()
 
-def main(widget, app):
-	win_inizio.set_transient_for(app.window)
-	win_inizio.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)
-	button.connect('pressed',inizia_partita,app)
-	button.connect('activate',inizia_partita,app)
-	var_combo.connect('changed',set_n_players)
-	var_combo.set_active_id(base.settings['variante'])
-	name_entry.set_text(base.settings['nome'])
-	win_inizio.show_all()
+	def main(self, widget=None):
+		self.dialog.set_transient_for(self.app.window)
+		self.dialog.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)
+		self.button.connect('pressed',self.inizia_partita)
+		self.button.connect('activate',self.inizia_partita)
+		self.var_combo.connect('changed',self.set_n_players)
+		self.var_combo.set_active_id(base.settings['variante'])
+		self.name_entry.set_text(base.settings['nome'])
+		self.dialog.show_all()
