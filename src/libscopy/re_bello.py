@@ -26,7 +26,7 @@ import random
 
 n_players = (2,4)
 
-class Partita(core.Partita):
+class Match(core.Match):
 
 	#valuta la migliore presa che il computer puo' fare
 	def gioca_ai(self):

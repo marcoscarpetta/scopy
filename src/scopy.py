@@ -58,10 +58,10 @@ class Application():
 		self.actor = Clutter.Actor()
 		self.back_img = Clutter.Texture.new_from_file(base.percorso_tap+base.settings['sfondo']+'.png')
 		self.back_img.set_repeat(True,True)
-		self.grid = Clutter.TableLayout()
-		self.grid.set_row_spacing(10)
-		self.grid.set_column_spacing(10)
-		self.actor.set_layout_manager(self.grid)
+		self.table = Clutter.TableLayout()
+		self.table.set_row_spacing(10)
+		self.table.set_column_spacing(10)
+		self.actor.set_layout_manager(self.table)
 		self.stage.add_actor(self.back_img)
 		self.stage.add_actor(self.actor)
 		self.actor.connect('notify::allocation',self.window_resized)
@@ -71,8 +71,9 @@ class Application():
 
 		#alcune variabili di controllo
 		self.start_function = classes[_('New game...')].main
+		self.hide_last_move = classes[_('Show last move')].hide_last_move
 		self.time = base.times[int(float(base.settings['speed']))]
-		self.partita = None
+		self.match = None
 		self.window.show_all()
 
 	#controlla che lo sfondo copra tutta la finestra
@@ -86,11 +87,11 @@ class Application():
 		self.status_bar.push(c_id, text)
 
 	#crea una nuova partita in base ai dati in self.opzioni
-	def nuova_partita(self):
-		if self.partita != None:
-			self.partita.destroy()
-		self.partita = base.create_match(self.grid,self.stage,self.start_function,self.update_status_bar)
-		self.partita.start()
+	def new_match(self):
+		if self.match != None:
+			self.match.destroy()
+		self.match = base.create_match(self)
+		self.match.start()
 
 
 app = Application()

@@ -26,9 +26,9 @@ import random
 
 n_players = (2,4)
 
-class Partita(core.Partita):
-	def __init__(self, grid, stage, players, end, update_status_bar):
-		core.Partita.__init__(self, grid, stage, players, end, update_status_bar)
+class Match(core.Match):
+	def __init__(self, app, players):
+		core.Match.__init__(self, app, players)
 		self.punti_vit = 51
 
 	#distribuisce le carte ai giocatori e a terra se è la prima mano
@@ -36,7 +36,7 @@ class Partita(core.Partita):
 		situazione = ''
 		for team in self.teams:
 			situazione += team[0]+': '+str(team[1].punti)+'       '
-		self.update_status_bar(situazione)
+		self.app.update_status_bar(situazione)
 		for player in self.players:
 			carte = []
 			player.scoperte = 0

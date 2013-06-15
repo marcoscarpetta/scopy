@@ -54,16 +54,17 @@ class Ai(Player):
 		Player.__init__(self, name, mano, carte_prese, scope)
 		self.ai=True
 
-class Partita():
-	def __init__(self, table, stage, players, end, update_status_bar):		
+class Match():
+	def __init__(self, app, players):
+		self.app = app
 		if len(players) not in n_players:
 			raise Exception('Numero di giocatori sbagliato')
 		self.mazzo = widgets.Deck()
 		self.carte_terra = widgets.Box(2,5)
 		self.players = [Player(players[0],widgets.Box(1,3))]
-		table.pack(self.mazzo,0,0)
-		table.pack(self.carte_terra,1,1)
-		table.pack(self.players[0].mano, 1,2)
+		app.table.pack(self.mazzo,0,0)
+		app.table.pack(self.carte_terra,1,1)
+		app.table.pack(self.players[0].mano, 1,2)
 		self.mazzo.populate()
 		self.mazzo.draw()
 		self.mazzo.mix()
@@ -72,11 +73,11 @@ class Partita():
 			self.teams = (
 				(self.players[0].name,self.players[0]),
 				(self.players[1].name,self.players[1]))
-			table.pack(self.players[1].mano, 1,0)
-			table.pack(self.players[0].carte_prese, 2,2)
-			table.pack(self.players[1].carte_prese, 2,0)
-			table.pack(self.players[0].scope, 3,2)
-			table.pack(self.players[1].scope, 3,0)
+			app.table.pack(self.players[1].mano, 1,0)
+			app.table.pack(self.players[0].carte_prese, 2,2)
+			app.table.pack(self.players[1].carte_prese, 2,0)
+			app.table.pack(self.players[0].scope, 3,2)
+			app.table.pack(self.players[1].scope, 3,0)
 		if len(players)==4:
 			self.players.append(Ai(players[1],widgets.Box(3,1)))
 			self.players.append(Ai(players[2],widgets.Box(1,3),self.players[0].carte_prese,self.players[0].scope))
@@ -84,30 +85,27 @@ class Partita():
 			self.teams = (
 				(players[0]+'/'+players[2],self.players[0]),
 				(players[1]+'/'+players[3],self.players[1]))
-			table.pack(self.players[1].mano, 2,1)
-			table.pack(self.players[2].mano, 1,0)
-			table.pack(self.players[3].mano, 0,1)
-			table.pack(self.players[0].carte_prese, 2,2)
-			table.pack(self.players[1].carte_prese, 2,0)
-			table.pack(self.players[0].scope, 3,2)
-			table.pack(self.players[1].scope, 3,0)
-			h=stage.get_height()-2*self.players[0].mano.get_height()-65
+			app.table.pack(self.players[1].mano, 2,1)
+			app.table.pack(self.players[2].mano, 1,0)
+			app.table.pack(self.players[3].mano, 0,1)
+			app.table.pack(self.players[0].carte_prese, 2,2)
+			app.table.pack(self.players[1].carte_prese, 2,0)
+			app.table.pack(self.players[0].scope, 3,2)
+			app.table.pack(self.players[1].scope, 3,0)
+			h=app.stage.get_height()-2*self.players[0].mano.get_height()-65
 			self.players[1].mano.set_max_height(h)
 			self.players[3].mano.set_max_height(h)
-		table.set_fill(self.carte_terra,False,False)
+		app.table.set_fill(self.carte_terra,False,False)
 		for player in self.players:
-			table.set_fill(player.mano,False,False)
-			table.set_fill(player.carte_prese,False,False)
-			table.set_fill(player.scope,False,False)
-		self.update_status_bar = update_status_bar
-		self.stage = stage
-		self.notifiche = widgets.NotificationSystem(stage)
+			app.table.set_fill(player.mano,False,False)
+			app.table.set_fill(player.carte_prese,False,False)
+			app.table.set_fill(player.scope,False,False)
+		self.notifiche = widgets.NotificationSystem(app.stage)
 		self.giocatore = random.randrange(len(players))
 		self.punti_vit = 11
 		self.player_can_play = False
 		self.mano = 0
 		self.ultimo_prende = 0
-		self.end = end
 		self.ultima_presa = []
 
 	def start(self):
@@ -119,7 +117,7 @@ class Partita():
 		situazione = ''
 		for team in self.teams:
 			situazione += team[0]+': '+str(team[1].punti)+'       '
-		self.update_status_bar(situazione)
+		self.app.update_status_bar(situazione)
 		for player in self.players:
 			for n in range(3):
 				card=self.mazzo.pop()
@@ -189,7 +187,7 @@ class Partita():
 		while n<len(prese_possibili):			
 			box = widgets.Box(1,len(prese_possibili[n]))
 			box.set_position(10,n*(box.get_height()+10))
-			self.stage.add_actor(box)
+			self.app.stage.add_actor(box)
 			boxes.append(box)
 			i=0
 			while i < len(prese_possibili[n]):
@@ -488,13 +486,13 @@ class Partita():
 			while n<len(self.ultima_presa):			
 				box = widgets.Box(1,len(self.ultima_presa[n]))
 				box.set_position(10,n*(box.get_height()+10))
-				self.stage.add_actor(box)
+				self.app.stage.add_actor(box)
 				boxes.append(box)
 				i=0
 				while i < len(self.ultima_presa[n]):
 					card = widgets.Card(self.ultima_presa[n][i].suit,self.ultima_presa[n][i].value)
 					card.set_reactive(True)
-					card.connect('button-press-event',self.hide_last_move,boxes,index)
+					card.connect('button-press-event',self.app.hide_last_move,None,(boxes,index))
 					card.draw_card()
 					box.add(card,0)
 					i=i+1
@@ -537,7 +535,7 @@ class Partita():
 			n+=1
 		if giocatore >= 0:
 			self.notifiche.notify(_('%s won!')%self.teams[giocatore][0],2000)
-			self.end()
+			self.app.new_match()
 		else:
 			self.start()
 	

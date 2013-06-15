@@ -20,8 +20,6 @@
 ##
 
 from gettext import gettext as _
-from gi.repository import Clutter
-from libscopyUI.base import *
 
 Path=_('Edit')
 Name=_('Show last move')
@@ -29,18 +27,21 @@ Name=_('Show last move')
 class Main():
 	def __init__(self, app):
 		self.app = app
+		self.widget = None
 
 	#nasconde l'ultima presa
-	def nascondi_ultima_presa(self, actor, event, widget, args):
+	def hide_last_move(self, actor, event, widget, args):
 		self.app.partita.hide_last_move(None,None,*args)
+		if widget == None: widget=self.widget
 		widget.set_label(_('Show last move'))
-		widget.disconnect_by_func(self.nascondi_ultima_presa)
+		widget.disconnect_by_func(self.hide_last_move)
 		widget.connect('activate', self.main)
 
 	#mostra l'ultima presa
 	def main(self, widget):
+		self.widget = widget
 		args = self.app.partita.show_last_move()
 		if args:
 			widget.set_label(_('Hide last move'))
 			widget.disconnect_by_func(self.main)
-			widget.connect('activate', self.nascondi_ultima_presa, None, widget, args)
+			widget.connect('activate', self.hide_last_move, None, widget, args)

@@ -168,13 +168,13 @@ def get_card_size():
 	card=cairo.ImageSurface.create_from_png(percorso_carte+settings['cards']+'/'+immagini[0][1])
 	return card.get_width(), card.get_height()
 
-def create_match(grid, stage, end, update_status_bar):
+def create_match(app):
 	players=[settings['nome']]
 	n_players=int(settings['players'])
 	for p in range(n_players-1):
 		players.append(_('CPU')+' '+str(p+1))
 	variant = import_variant(settings['variante'])
-	return variant.Partita(grid, stage, players, end, update_status_bar)
+	return variant.Match(app, players)
 
 def get_pause():
 	return times[int(float(settings['speed']))]

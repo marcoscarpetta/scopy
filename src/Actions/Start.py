@@ -72,19 +72,19 @@ class Main():
 		except:
 			pass
 
-	def inizia_partita(self, widget=None):
+	def start_match(self, widget=None):
 		base.settings['nome']=self.name_entry.get_text()
 		base.settings['variante']=self.var_combo.get_active_id()
 		base.settings['players']=self.n_players.get_active_id()
 		base.settings.save()
 		self.dialog.hide()
-		self.app.nuova_partita()
+		self.app.new_match()
 
 	def main(self, widget=None):
 		self.dialog.set_transient_for(self.app.window)
 		self.dialog.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)
-		self.button.connect('pressed',self.inizia_partita)
-		self.button.connect('activate',self.inizia_partita)
+		self.button.connect('pressed',self.start_match)
+		self.button.connect('activate',self.start_match)
 		self.var_combo.connect('changed',self.set_n_players)
 		self.var_combo.set_active_id(base.settings['variante'])
 		self.name_entry.set_text(base.settings['nome'])

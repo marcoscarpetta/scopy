@@ -29,16 +29,17 @@ n_players = [4]
 Player=core.Player
 Ai=core.Ai
 
-class Partita(core.Partita):
-	def __init__(self, table, stage, players, end, update_status_bar):
+class Match(core.Match):
+	def __init__(self, app, players):
+		self.app = app
 		if len(players) not in n_players:
 			raise Exception('Numero di giocatori sbagliato')
 		self.mazzo = widgets.Deck()
 		self.carte_terra = widgets.Box(2,5)
 		self.players = [Player(players[0],widgets.Box(1,10))]
-		table.pack(self.mazzo,0,0)
-		table.pack(self.carte_terra,1,1)
-		table.pack(self.players[0].mano, 1,2)
+		app.table.pack(self.mazzo,0,0)
+		app.table.pack(self.carte_terra,1,1)
+		app.table.pack(self.players[0].mano, 1,2)
 		self.mazzo.populate()
 		self.mazzo.draw()
 		self.mazzo.mix()
@@ -49,40 +50,37 @@ class Partita(core.Partita):
 			self.teams = (
 				(players[0]+'/'+players[2],self.players[0]),
 				(players[1]+'/'+players[3],self.players[1]))
-			table.pack(self.players[1].mano, 2,1)
-			table.pack(self.players[2].mano, 1,0)
-			table.pack(self.players[3].mano, 0,1)
-			table.pack(self.players[0].carte_prese, 2,2)
-			table.pack(self.players[1].carte_prese, 2,0)
-			table.pack(self.players[0].scope, 3,2)
-			table.pack(self.players[1].scope, 3,0)
-			h=stage.get_height()-2*self.players[0].mano.get_height()-65
+			app.table.pack(self.players[1].mano, 2,1)
+			app.table.pack(self.players[2].mano, 1,0)
+			app.table.pack(self.players[3].mano, 0,1)
+			app.table.pack(self.players[0].carte_prese, 2,2)
+			app.table.pack(self.players[1].carte_prese, 2,0)
+			app.table.pack(self.players[0].scope, 3,2)
+			app.table.pack(self.players[1].scope, 3,0)
+			h=app.stage.get_height()-2*self.players[0].mano.get_height()-65
 			self.players[1].mano.set_max_height(h)
 			self.players[3].mano.set_max_height(h)
-			w=stage.get_width()-3*self.mazzo.get_width()
+			w=app.stage.get_width()-3*self.mazzo.get_width()
 			self.players[0].mano.set_max_width(w)
 			self.players[2].mano.set_max_width(w)
-		table.set_fill(self.carte_terra,False,False)
+		app.table.set_fill(self.carte_terra,False,False)
 		for player in self.players:
-			table.set_fill(player.mano,False,False)
-			table.set_fill(player.carte_prese,False,False)
-			table.set_fill(player.scope,False,False)
-		self.update_status_bar = update_status_bar
-		self.stage = stage
-		self.notifiche = widgets.NotificationSystem(stage)
+			app.table.set_fill(player.mano,False,False)
+			app.table.set_fill(player.carte_prese,False,False)
+			app.table.set_fill(player.scope,False,False)
+		self.notifiche = widgets.NotificationSystem(app.stage)
 		self.giocatore = random.randrange(len(players))
 		self.punti_vit = 11
 		self.player_can_play = False
 		self.mano = 0
 		self.ultimo_prende = 0
-		self.end = end
 		
 	#distribuisce le carte ai giocatori e a terra se è la prima mano
 	def distribuisci_carte(self):
 		situazione = ''
 		for team in self.teams:
 			situazione += team[0]+': '+str(team[1].punti)+'       '
-		self.update_status_bar(situazione)
+		self.app.update_status_bar(situazione)
 		for player in self.players:
 			for n in range(10):
 				card=self.mazzo.pop()
