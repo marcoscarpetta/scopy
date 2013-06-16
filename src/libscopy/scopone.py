@@ -34,9 +34,9 @@ class Match(core.Match):
 		self.app = app
 		if len(players) not in n_players:
 			raise Exception('Numero di giocatori sbagliato')
-		self.mazzo = widgets.Deck()
-		self.carte_terra = widgets.Box(2,5)
-		self.players = [Player(players[0],widgets.Box(1,10))]
+		self.mazzo = widgets.Deck(self.app)
+		self.carte_terra = widgets.Box(self.app,2,5)
+		self.players = [Player(self.app,players[0],widgets.Box(self.app,1,10))]
 		app.table.pack(self.mazzo,0,0)
 		app.table.pack(self.carte_terra,1,1)
 		app.table.pack(self.players[0].mano, 1,2)
@@ -44,9 +44,9 @@ class Match(core.Match):
 		self.mazzo.draw()
 		self.mazzo.mix()
 		if len(players)==4:
-			self.players.append(Ai(players[1],widgets.Box(10,1)))
-			self.players.append(Ai(players[2],widgets.Box(1,10),self.players[0].carte_prese,self.players[0].scope))
-			self.players.append(Ai(players[3],widgets.Box(10,1),self.players[1].carte_prese,self.players[1].scope))
+			self.players.append(Ai(self.app,players[1],widgets.Box(self.app,10,1)))
+			self.players.append(Ai(self.app,players[2],widgets.Box(self.app,1,10),self.players[0].carte_prese,self.players[0].scope))
+			self.players.append(Ai(self.app,players[3],widgets.Box(self.app,10,1),self.players[1].carte_prese,self.players[1].scope))
 			self.teams = (
 				(players[0]+'/'+players[2],self.players[0]),
 				(players[1]+'/'+players[3],self.players[1]))
@@ -138,7 +138,7 @@ class Match(core.Match):
 				if n == len(carte_mano):
 					valore = valore + 1
 				#non 7 a terra
-				if len(self.prese(widgets.Card(0,7),carte_terra+[carta_da_giocare])) != 0:
+				if len(self.prese(widgets.Card(self.app,0,7),carte_terra+[carta_da_giocare])) != 0:
 					valore = valore - 1
 				#presa dopo
 				for carta in carte_mano:

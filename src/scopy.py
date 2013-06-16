@@ -36,6 +36,9 @@ class Application():
 		self.window.connect('delete-event', Gtk.main_quit)
 		self.window.set_position(Gtk.WindowPosition.CENTER)
 		self.window.maximize()
+		
+		#application settings
+		self.settings = base.Settings()
 
 		#main window widgets
 		grid = Gtk.Grid()
@@ -56,7 +59,7 @@ class Application():
 				
 		#background
 		self.actor = Clutter.Actor()
-		self.back_img = Clutter.Texture.new_from_file(base.percorso_tap+base.settings['sfondo']+'.png')
+		self.back_img = Clutter.Texture.new_from_file(base.percorso_tap+self.settings['sfondo']+'.png')
 		self.back_img.set_repeat(True,True)
 		self.table = Clutter.TableLayout()
 		self.table.set_row_spacing(10)
@@ -72,7 +75,7 @@ class Application():
 		#alcune variabili di controllo
 		self.start_function = classes[_('New game...')].main
 		self.hide_last_move = classes[_('Show last move')].hide_last_move
-		self.time = base.times[int(float(base.settings['speed']))]
+		self.time = base.times[int(float(self.settings['speed']))]
 		self.match = None
 		self.window.show_all()
 

@@ -31,7 +31,7 @@ valori_set = [0, 16, 12, 13, 14, 15, 18, 21, 10, 10, 10]
 n_players = (2,4)
 
 class Player():
-	def __init__(self, name, mano, carte_prese=None, scope=None):
+	def __init__(self, app, name, mano, carte_prese=None, scope=None):
 		if name == '':
 			self.name = 'Giocatore'
 		else:
@@ -40,18 +40,18 @@ class Player():
 		if carte_prese:
 			self.carte_prese=carte_prese
 		else:
-			self.carte_prese = widgets.Deck()
+			self.carte_prese = widgets.Deck(app)
 		if scope:
 			self.scope=scope
 		else:
-			self.scope = widgets.Scope()
+			self.scope = widgets.Scope(app)
 		self.punti = 0
 		self.scoperte = 0
 		self.ai=False
 
 class Ai(Player):
-	def __init__(self, name, mano, carte_prese=None, scope=None):
-		Player.__init__(self, name, mano, carte_prese, scope)
+	def __init__(self, app, name, mano, carte_prese=None, scope=None):
+		Player.__init__(self, app, name, mano, carte_prese, scope)
 		self.ai=True
 
 class Match():
@@ -59,9 +59,9 @@ class Match():
 		self.app = app
 		if len(players) not in n_players:
 			raise Exception('Numero di giocatori sbagliato')
-		self.mazzo = widgets.Deck()
-		self.carte_terra = widgets.Box(2,5)
-		self.players = [Player(players[0],widgets.Box(1,3))]
+		self.mazzo = widgets.Deck(self.app)
+		self.carte_terra = widgets.Box(self.app,2,5)
+		self.players = [Player(app,players[0],widgets.Box(self.app,1,3))]
 		app.table.pack(self.mazzo,0,0)
 		app.table.pack(self.carte_terra,1,1)
 		app.table.pack(self.players[0].mano, 1,2)
@@ -69,7 +69,7 @@ class Match():
 		self.mazzo.draw()
 		self.mazzo.mix()
 		if len(players)==2:
-			self.players.append(Ai(players[1],widgets.Box(1,3)))
+			self.players.append(Ai(app,players[1],widgets.Box(self.app,1,3)))
 			self.teams = (
 				(self.players[0].name,self.players[0]),
 				(self.players[1].name,self.players[1]))
@@ -79,9 +79,9 @@ class Match():
 			app.table.pack(self.players[0].scope, 3,2)
 			app.table.pack(self.players[1].scope, 3,0)
 		if len(players)==4:
-			self.players.append(Ai(players[1],widgets.Box(3,1)))
-			self.players.append(Ai(players[2],widgets.Box(1,3),self.players[0].carte_prese,self.players[0].scope))
-			self.players.append(Ai(players[3],widgets.Box(3,1),self.players[1].carte_prese,self.players[1].scope))
+			self.players.append(Ai(app,players[1],widgets.Box(self.app,3,1)))
+			self.players.append(Ai(app,players[2],widgets.Box(self.app,1,3),self.players[0].carte_prese,self.players[0].scope))
+			self.players.append(Ai(app,players[3],widgets.Box(self.app,3,1),self.players[1].carte_prese,self.players[1].scope))
 			self.teams = (
 				(players[0]+'/'+players[2],self.players[0]),
 				(players[1]+'/'+players[3],self.players[1]))
@@ -185,13 +185,13 @@ class Match():
 		boxes=[]
 		n=0
 		while n<len(prese_possibili):			
-			box = widgets.Box(1,len(prese_possibili[n]))
+			box = widgets.Box(self.app,1,len(prese_possibili[n]))
 			box.set_position(10,n*(box.get_height()+10))
 			self.app.stage.add_actor(box)
 			boxes.append(box)
 			i=0
 			while i < len(prese_possibili[n]):
-				card = widgets.Card(prese_possibili[n][i].suit,prese_possibili[n][i].value)
+				card = widgets.Card(self.app,prese_possibili[n][i].suit,prese_possibili[n][i].value)
 				card.set_reactive(True)
 				card.connect('button-press-event',self.scelta_fatta,boxes,carta,prese_possibili[n],index)
 				card.draw_card()
@@ -232,7 +232,7 @@ class Match():
 		if len(carte) == 0:
 			self.players[giocatore].mano.move_to(carta, self.carte_terra)
 			if self.next() != 0:
-				GLib.timeout_add(2000+base.get_pause(),self.prossimo_giocatore)
+				GLib.timeout_add(2000+base.get_pause(self.app),self.prossimo_giocatore)
 			else:
 				GLib.timeout_add(500,self.prossimo_giocatore)
 		#se si prende qualcosa
@@ -245,9 +245,9 @@ class Match():
 				pass
 			else:
 				if len(carte) == len(self.carte_terra.get_list()):
-					GLib.timeout_add(2500+base.get_pause(), self.players[giocatore].scope.add_scopa, carta)
+					GLib.timeout_add(2500+base.get_pause(self.app), self.players[giocatore].scope.add_scopa, carta)
 			#prende le carte da terra
-			GLib.timeout_add(2000+base.get_pause(), self.presa_da_terra,giocatore,carta,carte)
+			GLib.timeout_add(2000+base.get_pause(self.app), self.presa_da_terra,giocatore,carta,carte)
 
 	#valuta la migliore presa che il computer puo' fare
 	def gioca_ai(self):
@@ -293,7 +293,7 @@ class Match():
 				if n == len(carte_mano):
 					valore = valore + 1
 				#non 7 a terra
-				if len(self.prese(widgets.Card(0,7),carte_terra+[carta_da_giocare])) != 0:
+				if len(self.prese(widgets.Card(self.app,0,7),carte_terra+[carta_da_giocare])) != 0:
 					valore = valore - 1
 				#presa dopo
 				for carta in carte_mano:
@@ -484,13 +484,13 @@ class Match():
 			boxes=[]
 			n=0
 			while n<len(self.ultima_presa):			
-				box = widgets.Box(1,len(self.ultima_presa[n]))
+				box = widgets.Box(self.app,1,len(self.ultima_presa[n]))
 				box.set_position(10,n*(box.get_height()+10))
 				self.app.stage.add_actor(box)
 				boxes.append(box)
 				i=0
 				while i < len(self.ultima_presa[n]):
-					card = widgets.Card(self.ultima_presa[n][i].suit,self.ultima_presa[n][i].value)
+					card = widgets.Card(self.app,self.ultima_presa[n][i].suit,self.ultima_presa[n][i].value)
 					card.set_reactive(True)
 					card.connect('button-press-event',self.app.hide_last_move,None,(boxes,index))
 					card.draw_card()

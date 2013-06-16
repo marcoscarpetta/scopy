@@ -21,6 +21,7 @@
 
 import sys, os
 import cairo
+import pickle
 
 APP_VERSION = '1.0 beta1'
 APP_NAME = 'scopy'
@@ -112,10 +113,10 @@ class Settings():
 		self.settings = {}
 		self.load()
 		self.check()
-	
+
 	def __getitem__(self, key):
 		return self.settings[key]
-	
+
 	def __setitem__(self, key, value):
 		self.settings[key] = value
 
@@ -123,30 +124,12 @@ class Settings():
 		d = os.path.expanduser('~')+"/.scopy"
 		if not os.path.exists(d):
 			os.makedirs(d)
-			config = open(os.path.expanduser('~')+"/.scopy/settings.conf", 'w')
-			config.close()
-			for key in default:
-				self[key] = default[key]
-			self.save()
-		else:
-			try:
-				f = open(os.path.expanduser('~')+"/.scopy/settings.conf")
-				line = 'first'
-				while line != '':
-					line = f.readline()
-					try:
-						pos_uguale = line.index('=')
-						self[line[0:pos_uguale]]=line[pos_uguale+1:-1]
-					except:
-						continue
-				for key in default:
-					if not key in self.settings:
-						self[key] = default[key]
-				self.save()
-			except:
-				for key in default:
-					self[key] = default[key]
-				self.save()
+		config = open(d+'/settings.conf', 'rw')
+		try:
+			self.settings = pickle.load(config)
+		except:
+			self.settings = default.copy()
+		config.close()
 	
 	def check(self):
 		if self['variante'] not in varianti:
@@ -158,23 +141,20 @@ class Settings():
 
 	def save(self):
 		config = open(os.path.expanduser('~')+"/.scopy/settings.conf", 'w')
-		for key in self.settings:
-			config.write(key+'='+str(self[key])+'\n')
+		pickle.dump(self.settings, config)
 		config.close()
 
-settings=Settings()
-
-def get_card_size():
-	card=cairo.ImageSurface.create_from_png(percorso_carte+settings['cards']+'/'+immagini[0][1])
+def get_card_size(app):
+	card=cairo.ImageSurface.create_from_png(percorso_carte+app.settings['cards']+'/'+immagini[0][1])
 	return card.get_width(), card.get_height()
 
 def create_match(app):
-	players=[settings['nome']]
-	n_players=int(settings['players'])
+	players=[app.settings['nome']]
+	n_players=int(app.settings['players'])
 	for p in range(n_players-1):
 		players.append(_('CPU')+' '+str(p+1))
-	variant = import_variant(settings['variante'])
+	variant = import_variant(app.settings['variante'])
 	return variant.Match(app, players)
 
-def get_pause():
-	return times[int(float(settings['speed']))]
+def get_pause(app):
+	return times[int(float(app.settings['speed']))]

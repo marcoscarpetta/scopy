@@ -139,7 +139,7 @@ class Match(core.Match):
 				if n == len(carte_mano):
 					valore = valore + 1
 				#non 7 a terra
-				if len(self.prese(widgets.Card(0,7),carte_terra+[carta_da_giocare])) != 0:
+				if len(self.prese(widgets.Card(self.app,0,7),carte_terra+[carta_da_giocare])) != 0:
 					valore = valore - 1
 				#presa dopo
 				for carta in carte_mano:

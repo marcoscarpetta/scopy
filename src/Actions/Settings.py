@@ -28,6 +28,7 @@ Name=_('Settings')
 
 class Main():
 	def __init__(self, app):
+		self.app = app
 		self.dialog = Gtk.Window()
 		self.dialog.set_title(_('Edit Settings'))
 		self.dialog.set_transient_for(app.window)
@@ -61,21 +62,20 @@ class Main():
 		button.connect('pressed', self.modifica_preferenze)
 		grid.attach(button,1,3,1,1)
 	
-		self.carte_combo.set_active(base.tipi_di_carte.index(base.settings['cards']))
-		self.sfondi_combo.set_active(base.sfondi.index(base.settings['sfondo']))
-		self.velocita.set_value(int(float(base.settings['speed'])))
-		self.app = app
+		self.carte_combo.set_active(base.tipi_di_carte.index(self.app.settings['cards']))
+		self.sfondi_combo.set_active(base.sfondi.index(self.app.settings['sfondo']))
+		self.velocita.set_value(int(float(self.app.settings['speed'])))
 		
 	#modifica le preferenze in base ai valori dati dall'utente
 	def modifica_preferenze(self, widget):
-		if base.settings['cards'] != base.tipi_di_carte[self.carte_combo.get_active()]:
-			base.settings['cards'] = base.tipi_di_carte[self.carte_combo.get_active()]
+		if self.app.settings['cards'] != base.tipi_di_carte[self.carte_combo.get_active()]:
+			self.app.settings['cards'] = base.tipi_di_carte[self.carte_combo.get_active()]
 			if self.app.partita != None:
 				self.app.partita.update_cards()
-		base.settings['speed']=str(self.velocita.get_value())
-		base.settings['sfondo']=base.sfondi[self.sfondi_combo.get_active()]
-		self.app.back_img.set_from_file(base.percorso_tap+base.settings['sfondo']+'.png')
-		base.settings.save()
+		self.app.settings['speed']=str(self.velocita.get_value())
+		self.app.settings['sfondo']=base.sfondi[self.sfondi_combo.get_active()]
+		self.app.back_img.set_from_file(base.percorso_tap+self.app.settings['sfondo']+'.png')
+		self.app.settings.save()
 		self.dialog.hide()
 
 	def main(self, widget):

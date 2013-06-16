@@ -68,15 +68,15 @@ class Main():
 		for n in base.get_number_of_players(self.var_combo.get_active_id()):
 			self.n_players.append(str(n),str(n))
 		try:
-			self.n_players.set_active_id(base.settings['players'])
+			self.n_players.set_active_id(self.app.settings['players'])
 		except:
 			pass
 
 	def start_match(self, widget=None):
-		base.settings['nome']=self.name_entry.get_text()
-		base.settings['variante']=self.var_combo.get_active_id()
-		base.settings['players']=self.n_players.get_active_id()
-		base.settings.save()
+		self.app.settings['nome']=self.name_entry.get_text()
+		self.app.settings['variante']=self.var_combo.get_active_id()
+		self.app.settings['players']=self.n_players.get_active_id()
+		self.app.settings.save()
 		self.dialog.hide()
 		self.app.new_match()
 
@@ -86,6 +86,6 @@ class Main():
 		self.button.connect('pressed',self.start_match)
 		self.button.connect('activate',self.start_match)
 		self.var_combo.connect('changed',self.set_n_players)
-		self.var_combo.set_active_id(base.settings['variante'])
-		self.name_entry.set_text(base.settings['nome'])
+		self.var_combo.set_active_id(self.app.settings['variante'])
+		self.name_entry.set_text(self.app.settings['nome'])
 		self.dialog.show_all()

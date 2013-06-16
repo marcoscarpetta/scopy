@@ -31,8 +31,9 @@ def go_to(actor,x,y,time):
 	return an
 
 class Card(Clutter.Texture):
-	def __init__(self, suit, value):
+	def __init__(self, app, suit, value):
 		Clutter.Texture.__init__(self)
+		self.app = app
 		self.suit = suit
 		self.value = value
 		self.id = 's'+str(suit)+'v'+str(value)
@@ -47,9 +48,9 @@ class Card(Clutter.Texture):
 	
 	def draw_card(self, retro=False):
 		if retro:
-			self.set_from_file(base.percorso_carte+base.settings['cards']+'/'+base.immagini[1][0])
+			self.set_from_file(base.percorso_carte+self.app.settings['cards']+'/'+base.immagini[1][0])
 		else:
-			self.set_from_file(base.percorso_carte+base.settings['cards']+'/'+base.immagini[self.suit][self.value])
+			self.set_from_file(base.percorso_carte+self.app.settings['cards']+'/'+base.immagini[self.suit][self.value])
 	
 	def activate(self, play):
 		self.set_reactive(True)
@@ -66,9 +67,10 @@ class Card(Clutter.Texture):
 
 #container for Card objects, with fixed rows and columns
 class Box(Clutter.CairoTexture):
-	def __init__(self, rows, cols, spacing=15):
+	def __init__(self, app, rows, cols, spacing=15):
 		Clutter.CairoTexture.__init__(self)
-		self.child_w,self.child_h = base.get_card_size()
+		self.app = app
+		self.child_w,self.child_h = base.get_card_size(self.app)
 		if Clutter.VERSION > 1.10:
 			self.set_x_expand(False)
 			self.set_y_expand(False)
@@ -111,12 +113,12 @@ class Box(Clutter.CairoTexture):
 		self.invalidate()
 	
 	def set_children_coords(self):
-		child_w,child_h = base.get_card_size()
+		child_w,child_h = base.get_card_size(self.app)
 		self.child_w,self.child_h = child_w,child_h
 		if self.max_height>0 and self.rows>1:
-			self.child_h = int((self.max_height-(self.rows+1)*self.spacing-base.get_card_size()[1])/(self.rows-1))
+			self.child_h = int((self.max_height-(self.rows+1)*self.spacing-base.get_card_size(self.app)[1])/(self.rows-1))
 		if self.max_width>0 and self.cols>1:
-			self.child_w = int((self.max_width-(self.cols+1)*self.spacing-base.get_card_size()[1])/(self.cols-1))
+			self.child_w = int((self.max_width-(self.cols+1)*self.spacing-base.get_card_size(self.app)[1])/(self.cols-1))
 		h=(self.rows+1)*self.spacing+child_h+(self.rows-1)*self.child_h
 		w=(self.cols+1)*self.spacing+child_w+(self.cols-1)*self.child_w
 		self.set_size(w,h)
@@ -155,7 +157,7 @@ class Box(Clutter.CairoTexture):
 		x=self.get_x()+c*(self.child_w+self.spacing)+self.spacing
 		y=self.get_y()+r*(self.child_h+self.spacing)+self.spacing
 		if add_to_stage:
-			base.stage.add_actor(actor)
+			self.app.stage.add_actor(actor)
 		if time != 0:
 			go_to(actor,x,y,time)
 		else:
@@ -165,7 +167,7 @@ class Box(Clutter.CairoTexture):
 		x=on_actor.get_x()+30
 		y=on_actor.get_y()+30
 		if add_to_stage:
-			base.stage.add_actor(actor)
+			self.app.stage.add_actor(actor)
 		if time != 0:
 			go_to(actor,x,y,time)
 		else:
@@ -220,22 +222,23 @@ class Box(Clutter.CairoTexture):
 		self.show()
 
 class Deck(Clutter.CairoTexture):
-	def __init__(self, padding=15):
+	def __init__(self, app, padding=15):
 		Clutter.CairoTexture.__init__(self)
-		self.child_w,self.child_h = base.get_card_size()
+		self.app = app
+		self.child_w,self.child_h = base.get_card_size(self.app)
 		if Clutter.VERSION > 1.10:
 			self.set_x_expand(False)
 			self.set_y_expand(False)
 		self.set_surface_size(2*padding+self.child_w+20,2*padding+self.child_h+20)
 		self.padding = padding
 		self.connect("allocation-changed",self.draw)
-		self.surface = cairo.ImageSurface.create_from_png(base.percorso_carte+base.settings['cards']+'/'+base.immagini[1][0])
+		self.surface = cairo.ImageSurface.create_from_png(base.percorso_carte+self.app.settings['cards']+'/'+base.immagini[1][0])
 		self.cards = []
 	
 	def populate(self):
 		for suit in range(4):
 			for value in range(1,11):
-				self.cards.append(Card(suit, value))
+				self.cards.append(Card(self.app, suit, value))
 	
 	def draw(self, actor_box=0, allocation_flag=0, a=0):
 		self.clear()
@@ -249,7 +252,7 @@ class Deck(Clutter.CairoTexture):
 		self.invalidate()
 	
 	def updated_cards(self):
-		self.surface = cairo.ImageSurface.create_from_png(base.percorso_carte+base.settings['cards']+'/'+base.immagini[1][0])
+		self.surface = cairo.ImageSurface.create_from_png(base.percorso_carte+self.app.settings['cards']+'/'+base.immagini[1][0])
 		self.draw()
 
 	def mix(self):
@@ -272,7 +275,7 @@ class Deck(Clutter.CairoTexture):
 		y=self.get_allocation_box().get_y()
 		x=self.get_x()
 		if add_to_stage:
-			base.stage.add_actor(actor)
+			self.app.stage.add_actor(actor)
 		if time != 0:
 			animation = go_to(actor,x+self.padding,y+self.padding,time)
 			animation.connect('completed', base.hide_data, actor)
@@ -288,9 +291,10 @@ class Deck(Clutter.CairoTexture):
 
 #container for clutter actor
 class Scope(Clutter.CairoTexture):
-	def __init__(self, padding=15):
+	def __init__(self, app, padding=15):
 		Clutter.CairoTexture.__init__(self)
-		self.child_w,self.child_h = base.get_card_size()
+		self.app = app
+		self.child_w,self.child_h = base.get_card_size(self.app)
 		if Clutter.VERSION > 1.10:
 			self.set_x_expand(False)
 			self.set_y_expand(False)
@@ -303,7 +307,7 @@ class Scope(Clutter.CairoTexture):
 	def draw(self, actor_box=0, allocation_flag=0, a=0):
 		if self.card != None:
 			cr = self.create()
-			surface = cairo.ImageSurface.create_from_png(base.percorso_carte+base.settings['cards']+'/'+base.immagini[self.card.suit][self.card.value])
+			surface = cairo.ImageSurface.create_from_png(base.percorso_carte+self.app.settings['cards']+'/'+base.immagini[self.card.suit][self.card.value])
 			cr.set_source_surface(surface,self.padding,self.padding)
 			cr.paint()
 		if self.scope!=0:
