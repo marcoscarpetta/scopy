@@ -30,6 +30,9 @@ def go_to(actor,x,y,time):
 	an = actor.animatev(Clutter.AnimationMode.EASE_IN_OUT_QUAD, time,['x','y'],[x,y])
 	return an
 
+effect = Clutter.ColorizeEffect()
+effect.set_tint(Clutter.Color.new(255,255,0,0))
+
 class Card(Clutter.Texture):
 	def __init__(self, app, suit, value):
 		Clutter.Texture.__init__(self)
@@ -55,15 +58,15 @@ class Card(Clutter.Texture):
 	def activate(self, play):
 		self.set_reactive(True)
 		self.connect('button-press-event',play)
+		self.connect('button-press-event',self.leave)
 		self.connect('enter-event',self.enter)
 		self.connect('leave-event',self.leave)
 	
 	def enter(self, actor, event):
-		self.start_x, self.start_y = self.get_x(),self.get_y()
-		go_to(self,self.get_x(),self.get_y()-10,100)
+		self.add_effect(effect)
 
 	def leave(self, actor, event):
-		go_to(self,self.start_x,self.start_y,100)
+		self.remove_effect(effect)
 
 #container for Card objects, with fixed rows and columns
 class Box(Clutter.CairoTexture):

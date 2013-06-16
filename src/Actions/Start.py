@@ -68,14 +68,14 @@ class Main():
 		for n in base.get_number_of_players(self.var_combo.get_active_id()):
 			self.n_players.append(str(n),str(n))
 		try:
-			self.n_players.set_active_id(self.app.settings['players'])
+			self.n_players.set_active_id(str(self.app.settings['players']))
 		except:
 			pass
 
 	def start_match(self, widget=None):
 		self.app.settings['nome']=self.name_entry.get_text()
 		self.app.settings['variante']=self.var_combo.get_active_id()
-		self.app.settings['players']=self.n_players.get_active_id()
+		self.app.settings['players']=int(self.n_players.get_active_id())
 		self.app.settings.save()
 		self.dialog.hide()
 		self.app.new_match()

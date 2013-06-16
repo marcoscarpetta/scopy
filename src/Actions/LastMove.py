@@ -31,7 +31,7 @@ class Main():
 
 	#nasconde l'ultima presa
 	def hide_last_move(self, actor, event, widget, args):
-		self.app.partita.hide_last_move(None,None,*args)
+		self.app.match.hide_last_move(None,None,*args)
 		if widget == None: widget=self.widget
 		widget.set_label(_('Show last move'))
 		widget.disconnect_by_func(self.hide_last_move)
@@ -40,7 +40,7 @@ class Main():
 	#mostra l'ultima presa
 	def main(self, widget):
 		self.widget = widget
-		args = self.app.partita.show_last_move()
+		args = self.app.match.show_last_move()
 		if args:
 			widget.set_label(_('Hide last move'))
 			widget.disconnect_by_func(self.main)

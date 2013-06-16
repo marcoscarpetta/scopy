@@ -102,10 +102,10 @@ sfondi.sort()
 default = {
 			'nome':_('Player'),
 			'variante':_('Classic scopa'),
-			'speed':'3',
+			'speed':3,
 			'cards':'Napoletane',
 			'sfondo':'verde',
-			'players':'2'
+			'players':2
 			}
 
 class Settings():

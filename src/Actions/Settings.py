@@ -70,9 +70,9 @@ class Main():
 	def modifica_preferenze(self, widget):
 		if self.app.settings['cards'] != base.tipi_di_carte[self.carte_combo.get_active()]:
 			self.app.settings['cards'] = base.tipi_di_carte[self.carte_combo.get_active()]
-			if self.app.partita != None:
+			if self.app.partita:
 				self.app.partita.update_cards()
-		self.app.settings['speed']=str(self.velocita.get_value())
+		self.app.settings['speed']=self.velocita.get_value()
 		self.app.settings['sfondo']=base.sfondi[self.sfondi_combo.get_active()]
 		self.app.back_img.set_from_file(base.percorso_tap+self.app.settings['sfondo']+'.png')
 		self.app.settings.save()
