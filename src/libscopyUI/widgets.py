@@ -33,9 +33,10 @@ def go_to(actor,x,y,time):
 effect = Clutter.ColorizeEffect()
 effect.set_tint(Clutter.Color.new(255,255,0,0))
 
-class Card(Clutter.Texture):
+class Card(Clutter.CairoTexture):
 	def __init__(self, app, suit, value):
-		Clutter.Texture.__init__(self)
+		Clutter.CairoTexture.__init__(self)
+		self.set_surface_size(*base.get_card_size(app))
 		self.app = app
 		self.suit = suit
 		self.value = value
@@ -53,8 +54,26 @@ class Card(Clutter.Texture):
 		if retro:
 			self.set_from_file(base.percorso_carte+self.app.settings['cards']+'/'+base.immagini[1][0])
 		else:
-			self.set_from_file(base.percorso_carte+self.app.settings['cards']+'/'+base.immagini[self.suit][self.value])
-	
+			cr = self.create()
+			surface = cairo.ImageSurface.create_from_png(base.percorso_carte+self.app.settings['cards']+'/'+base.immagini[self.suit][self.value])
+			cr.set_source_surface(surface,0,0)
+			cr.paint()
+			if self.app.settings['show_value_on_cards']:
+				cr.set_font_size(15)
+				xb, yb, w, h, xadvance, yadvance = (cr.text_extents(str(self.value)))
+				w,h=int(w),int(h)
+				sur = cairo.ImageSurface(cairo.FORMAT_ARGB32,w+10,h+10)
+				tmp = cairo.Context(sur)
+				tmp.set_source_rgb(0,0,0)
+				tmp.paint()
+				tmp.set_source_rgb(1,1,1)
+				tmp.set_font_size(15)
+				tmp.move_to(5,h+5)
+				tmp.show_text(str(self.value))
+				cr.set_source_surface(sur,self.get_width()-w-10,0)
+				cr.paint()
+			self.invalidate()
+
 	def activate(self, play):
 		self.set_reactive(True)
 		self.connect('button-press-event',play)

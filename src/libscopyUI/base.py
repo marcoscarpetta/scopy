@@ -36,7 +36,6 @@ gettext.textdomain('scopy')
 percorso = sys.path[0][0:-4]
 percorso_tap = percorso+'/data/images/tappeti/'
 percorso_carte = percorso+'/data/images/carte/'
-percorso_gui = percorso+'/data/ui/'
 percorso_doc = percorso+'/doc/'
 
 #destroys the given widget
@@ -91,13 +90,6 @@ for cartella in os.listdir(percorso_carte):
 		tipi_di_carte.append(cartella)
 tipi_di_carte.sort()
 
-#caricamento sfondi
-sfondi = []
-for cartella in os.listdir(percorso_tap):
-	if cartella[0] != '.':
-		sfondi.append(cartella[0:-4])
-sfondi.sort()
-
 #default settings
 default = {
 			'nome':_('Player'),
@@ -105,7 +97,8 @@ default = {
 			'speed':3,
 			'cards':'Napoletane',
 			'sfondo':percorso_tap+'verde.png',
-			'players':2
+			'players':2,
+			'show_value_on_cards':False
 			}
 
 class Settings():
@@ -138,6 +131,9 @@ class Settings():
 			self['cards'] = default['cards']
 		if not os.path.exists(self['sfondo']):
 			self['sfondo'] = default['sfondo']
+		for key in default:
+			if not key in self.settings:
+				self[key] = default[key]
 
 	def save(self):
 		config = open(os.path.expanduser('~')+"/.scopy/settings.conf", 'w')

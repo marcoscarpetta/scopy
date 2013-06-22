@@ -44,6 +44,7 @@ class Main():
 		grid.attach(Gtk.Label(_('Chose the type of cards:')),0,0,1,1)
 		grid.attach(Gtk.Label(_('Speed:')),0,1,1,1)
 		grid.attach(Gtk.Label(_('Background:')),0,2,1,1)
+		grid.attach(Gtk.Label(_('Show value on cards:')),0,3,1,1)
 	
 		self.carte_combo=Gtk.ComboBoxText()
 		for tipo in base.tipi_di_carte:
@@ -69,18 +70,21 @@ class Main():
 		self.back_dialog.add_filter(file_filter)
 		
 		self.velocita=Gtk.HScale.new_with_range(1,3,1)
+		
+		self.show_value_on_cards = Gtk.Switch()
+		self.show_value_on_cards.set_active(self.app.settings['show_value_on_cards'])
 	
 		grid.attach(self.carte_combo,1,0,1,1)
 		grid.attach(self.velocita,1,1,1,1)
 		grid.attach(self.back_button,1,2,1,1)
+		grid.attach(self.show_value_on_cards,1,3,1,1)
 	
 		button=Gtk.Button()
 		button.set_label(_('OK'))
 		button.connect('pressed', self.modifica_preferenze)
-		grid.attach(button,1,3,1,1)
+		grid.attach(button,1,4,1,1)
 	
 		self.carte_combo.set_active(base.tipi_di_carte.index(self.app.settings['cards']))
-		#self.sfondi_combo.set_active(base.sfondi.index(self.app.settings['sfondo']))
 		self.velocita.set_value(int(float(self.app.settings['speed'])))
 	
 	def on_back_button_pressed(self, event):
@@ -110,9 +114,13 @@ class Main():
 	def modifica_preferenze(self, widget):
 		if self.app.settings['cards'] != base.tipi_di_carte[self.carte_combo.get_active()]:
 			self.app.settings['cards'] = base.tipi_di_carte[self.carte_combo.get_active()]
-			if self.app.partita:
-				self.app.partita.update_cards()
+			if self.app.match:
+				self.app.match.update_cards()
 		self.app.settings['speed']=self.velocita.get_value()
+		if self.show_value_on_cards.get_active() != self.app.settings['show_value_on_cards']:
+			self.app.settings['show_value_on_cards']=self.show_value_on_cards.get_active()
+			if self.app.match:
+				self.app.match.update_cards()
 		self.app.back_img.set_from_file(self.app.settings['sfondo'])
 		self.app.settings.save()
 		self.dialog.hide()
