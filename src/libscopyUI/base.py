@@ -104,7 +104,7 @@ default = {
 			'variante':_('Classic scopa'),
 			'speed':3,
 			'cards':'Napoletane',
-			'sfondo':'verde',
+			'sfondo':percorso_tap+'verde.png',
 			'players':2
 			}
 
@@ -136,7 +136,7 @@ class Settings():
 			self['variante'] = default['variante']
 		if self['cards'] not in tipi_di_carte:
 			self['cards'] = default['cards']
-		if self['sfondo'] not in sfondi:
+		if not os.path.exists(self['sfondo']):
 			self['sfondo'] = default['sfondo']
 
 	def save(self):

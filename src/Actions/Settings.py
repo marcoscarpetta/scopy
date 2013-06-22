@@ -48,14 +48,31 @@ class Main():
 		self.carte_combo=Gtk.ComboBoxText()
 		for tipo in base.tipi_di_carte:
 			self.carte_combo.append_text(tipo)
-		self.sfondi_combo=Gtk.ComboBoxText()
-		for sfondo in base.sfondi:
-			self.sfondi_combo.append_text(sfondo)
+		
+		self.back_button = Gtk.Button()
+		self.image = Gtk.Image.new()
+		self.load_image()
+		self.back_button.set_image(self.image)
+		self.back_button.connect('pressed', self.on_back_button_pressed)
+		self.back_dialog = Gtk.FileChooserDialog(_("Select background image"),
+			self.dialog,
+			Gtk.FileChooserAction.OPEN,
+			(Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+			Gtk.STOCK_OPEN, Gtk.ResponseType.ACCEPT))
+		self.back_dialog.add_shortcut_folder(base.percorso_tap)
+		self.back_dialog.connect('response', self.on_back_dialog_response)
+		self.back_dialog.connect('update-preview', self.on_back_dialog_update_preview)
+		self.back_dialog.connect('delete-event', self.on_back_button_pressed)
+		file_filter = Gtk.FileFilter()
+		file_filter.set_name(_('Image files'))
+		file_filter.add_pixbuf_formats()
+		self.back_dialog.add_filter(file_filter)
+		
 		self.velocita=Gtk.HScale.new_with_range(1,3,1)
 	
 		grid.attach(self.carte_combo,1,0,1,1)
 		grid.attach(self.velocita,1,1,1,1)
-		grid.attach(self.sfondi_combo,1,2,1,1)
+		grid.attach(self.back_button,1,2,1,1)
 	
 		button=Gtk.Button()
 		button.set_label(_('OK'))
@@ -63,9 +80,32 @@ class Main():
 		grid.attach(button,1,3,1,1)
 	
 		self.carte_combo.set_active(base.tipi_di_carte.index(self.app.settings['cards']))
-		self.sfondi_combo.set_active(base.sfondi.index(self.app.settings['sfondo']))
+		#self.sfondi_combo.set_active(base.sfondi.index(self.app.settings['sfondo']))
 		self.velocita.set_value(int(float(self.app.settings['speed'])))
-		
+	
+	def on_back_button_pressed(self, event):
+		self.back_dialog.run()
+	
+	def on_back_dialog_response(self, event, response_id=0):
+		if response_id == -3:
+			self.app.settings['sfondo'] = self.back_dialog.get_filename()
+			self.load_image()
+		self.back_dialog.hide()
+		return True
+	
+	def on_back_dialog_update_preview(self, widget):
+		if self.back_dialog.get_preview_filename():
+			self.app.settings['sfondo'] = self.back_dialog.get_preview_filename()
+			self.app.back_img.set_from_file(self.app.settings['sfondo'])
+
+	def load_image(self):
+		tmp = Gtk.Image.new_from_file(self.app.settings['sfondo'])
+		pixbuf = tmp.get_pixbuf()
+		w = 200
+		h = pixbuf.get_height()*w/pixbuf.get_width()
+		pixbuf = pixbuf.scale_simple(w, h, 1)
+		self.image.set_from_pixbuf(pixbuf)
+
 	#modifica le preferenze in base ai valori dati dall'utente
 	def modifica_preferenze(self, widget):
 		if self.app.settings['cards'] != base.tipi_di_carte[self.carte_combo.get_active()]:
@@ -73,8 +113,7 @@ class Main():
 			if self.app.partita:
 				self.app.partita.update_cards()
 		self.app.settings['speed']=self.velocita.get_value()
-		self.app.settings['sfondo']=base.sfondi[self.sfondi_combo.get_active()]
-		self.app.back_img.set_from_file(base.percorso_tap+self.app.settings['sfondo']+'.png')
+		self.app.back_img.set_from_file(self.app.settings['sfondo'])
 		self.app.settings.save()
 		self.dialog.hide()
 

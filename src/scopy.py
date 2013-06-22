@@ -48,8 +48,6 @@ class Application():
 		grid.attach(self.embed, 0, 1, 1, 1)
 		self.status_bar = Gtk.Statusbar()
 		grid.attach(self.status_bar, 0, 3, 1, 3)
-		menu, classes=MenuCreator.create_menu(self)
-		grid.attach(menu, 0, 0, 3, 1)
 		self.window.add(grid)
 		
 		#icon
@@ -59,7 +57,7 @@ class Application():
 				
 		#background
 		self.actor = Clutter.Actor()
-		self.back_img = Clutter.Texture.new_from_file(base.percorso_tap+self.settings['sfondo']+'.png')
+		self.back_img = Clutter.Texture.new_from_file(self.settings['sfondo'])
 		self.back_img.set_repeat(True,True)
 		self.table = Clutter.TableLayout()
 		self.table.set_row_spacing(10)
@@ -68,6 +66,10 @@ class Application():
 		self.stage.add_actor(self.back_img)
 		self.stage.add_actor(self.actor)
 		self.actor.connect('notify::allocation',self.window_resized)
+		
+		#menu
+		menu, classes=MenuCreator.create_menu(self)
+		grid.attach(menu, 0, 0, 3, 1)
 		
 		#title
 		self.window.set_title(_('ScoPy'))
