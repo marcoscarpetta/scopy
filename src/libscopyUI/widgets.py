@@ -40,9 +40,6 @@ class Card(Clutter.CairoTexture):
 		self.app = app
 		self.suit = suit
 		self.value = value
-		self.id = 's'+str(suit)+'v'+str(value)
-		self.start_x = 0
-		self.start_y = 0
 
 	def get_suit():
 		return self.suit
@@ -51,6 +48,7 @@ class Card(Clutter.CairoTexture):
 		return self.value
 	
 	def draw_card(self, retro=False):
+		self.set_surface_size(*base.get_card_size(self.app))
 		if retro:
 			self.set_from_file(base.percorso_carte+self.app.settings['cards']+'/'+base.immagini[1][0])
 		else:
@@ -87,7 +85,7 @@ class Card(Clutter.CairoTexture):
 	def leave(self, actor, event):
 		self.remove_effect(effect)
 
-#container for Card objects, with fixed rows and columns
+#container for Card objects, with fixed number of rows and columns
 class Box(Clutter.CairoTexture):
 	def __init__(self, app, rows, cols, spacing=15):
 		Clutter.CairoTexture.__init__(self)
@@ -243,6 +241,7 @@ class Box(Clutter.CairoTexture):
 					self.children[row][col].show()
 		self.show()
 
+#class child of Clutter.CairoTexture that shows a deck, it also contains the list of cards in it
 class Deck(Clutter.CairoTexture):
 	def __init__(self, app, padding=15):
 		Clutter.CairoTexture.__init__(self)
@@ -311,7 +310,7 @@ class Deck(Clutter.CairoTexture):
 		self.cards = []
 		self.draw()
 
-#container for clutter actor
+#class child of Clutter.CairoTexture that shows the last 'scopa' and the number of done 'scope'
 class Scope(Clutter.CairoTexture):
 	def __init__(self, app, padding=15):
 		Clutter.CairoTexture.__init__(self)
@@ -364,6 +363,7 @@ class Scope(Clutter.CairoTexture):
 		self.clear()
 		self.invalidate()
 
+#This class handles the notifications
 class NotificationSystem():
 	def __init__(self, stage):
 		self.stage = stage
@@ -405,11 +405,11 @@ def destroy_summary(window, event, callback):
 	window.destroy()
 	callback()
 
-def show_summary(callback, *cols):
+def show_summary(app, callback, *cols):
 	window = Gtk.Dialog()
 	window.set_title(_('Game summary'))
-	#window.set_transient_for(self.window)
-	#window.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)
+	window.set_transient_for(app.window)
+	window.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)
 	window.set_border_width(10)
 	window.add_button(_('OK'), 0)
 	window.set_default_response(0)

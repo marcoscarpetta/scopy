@@ -232,4 +232,4 @@ class Match(core.Match):
 			colonne[n] += str(self.teams[n][1].punti)
 			n += 1
 
-		widgets.show_summary(self.azzera, legenda, *colonne)
+		widgets.show_summary(self.app, self.azzera, legenda, *colonne)
