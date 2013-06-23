@@ -30,16 +30,13 @@ def go_to(actor,x,y,time):
 	an = actor.animatev(Clutter.AnimationMode.EASE_IN_OUT_QUAD, time,['x','y'],[x,y])
 	return an
 
-effect = Clutter.ColorizeEffect()
-effect.set_tint(Clutter.Color.new(255,255,0,0))
-
 class Card(Clutter.CairoTexture):
 	def __init__(self, app, suit, value):
 		Clutter.CairoTexture.__init__(self)
-		self.set_surface_size(*base.get_card_size(app))
 		self.app = app
 		self.suit = suit
 		self.value = value
+		self.mouse_over = False
 
 	def get_suit():
 		return self.suit
@@ -48,11 +45,57 @@ class Card(Clutter.CairoTexture):
 		return self.value
 	
 	def draw_card(self, retro=False):
-		self.set_surface_size(*base.get_card_size(self.app))
+		s=10
+		r=10
+		w,h=base.get_card_size(self.app)
+		if self.get_reactive():
+			self.set_surface_size(w+s,h+s)
+			self.set_size(w+s,h+s)
+		else:
+			self.set_surface_size(w,h)
+		self.clear()
 		if retro:
 			self.set_from_file(base.percorso_carte+self.app.settings['cards']+'/'+base.immagini[1][0])
 		else:
 			cr = self.create()
+			### Shadow effect using cairo, clutter one doesn't work ###
+			if self.mouse_over:
+				#down-left corner
+				rg = cairo.RadialGradient(s+r, h-r, 0, s+r, h-r, s+r)
+				rg.add_color_stop_rgba(0.0, 0.4, 0.4, 0.4, 1.0)
+				rg.add_color_stop_rgba(1.0, 0, 0, 0, 0)  
+				cr.set_source(rg)
+				cr.rectangle(0, h-r, s+r, s+r)
+				cr.fill()
+				#down
+				lg = cairo.LinearGradient(0, h-r, 0, h+s)
+				lg.add_color_stop_rgba(0.0, 0.4, 0.4, 0.4, 1.0)
+				lg.add_color_stop_rgba(1.0, 0, 0, 0, 0)    
+				cr.rectangle(s+r, h-r, w-s-2*r, s+r)
+				cr.set_source(lg)
+				cr.fill()
+				#top-right corner
+				rg = cairo.RadialGradient(w-r, s+r, 0, w-r, s+r, s+r)
+				rg.add_color_stop_rgba(0.0, 0.4, 0.4, 0.4, 1.0)
+				rg.add_color_stop_rgba(1.0, 0, 0, 0, 0)  
+				cr.set_source(rg)
+				cr.rectangle(w-r, 0, s+r, s+r)
+				cr.fill()
+				#up
+				lg = cairo.LinearGradient(w-r, 0, w+s, 0)
+				lg.add_color_stop_rgba(0.0, 0.4, 0.4, 0.4, 1.0)
+				lg.add_color_stop_rgba(1.0, 0, 0, 0, 0)    
+				cr.rectangle(w-r, s+r, w+r, h-s-2*r)
+				cr.set_source(lg)
+				cr.fill()
+				#down-right corner
+				rg = cairo.RadialGradient(w-r, h-r, 0, w-r, h-r, s+r)
+				rg.add_color_stop_rgba(0.0, 0.4, 0.4, 0.4, 1.0)
+				rg.add_color_stop_rgba(1.0, 0, 0, 0, 0)  
+				cr.set_source(rg)
+				cr.rectangle(w-r, h-r, s+r, s+r)
+				cr.fill()
+			### Now drawing the card ### 
 			surface = cairo.ImageSurface.create_from_png(base.percorso_carte+self.app.settings['cards']+'/'+base.immagini[self.suit][self.value])
 			cr.set_source_surface(surface,0,0)
 			cr.paint()
@@ -70,6 +113,7 @@ class Card(Clutter.CairoTexture):
 				tmp.show_text(str(self.value))
 				cr.set_source_surface(sur,self.get_width()-w-10,0)
 				cr.paint()
+			
 			self.invalidate()
 
 	def activate(self, play):
@@ -80,10 +124,12 @@ class Card(Clutter.CairoTexture):
 		self.connect('leave-event',self.leave)
 	
 	def enter(self, actor, event):
-		self.add_effect(effect)
+		self.mouse_over = True
+		self.draw_card()
 
 	def leave(self, actor, event):
-		self.remove_effect(effect)
+		self.mouse_over = False
+		self.draw_card()
 
 #container for Card objects, with fixed number of rows and columns
 class Box(Clutter.CairoTexture):
