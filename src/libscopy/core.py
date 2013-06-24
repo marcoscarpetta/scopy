@@ -222,6 +222,9 @@ class Match():
 	#gioca la carta indicata del giocatore indicato e prende le carte indicate da terra
 	def gioca_carta(self, giocatore, carta, carte):
 		self.ultima_presa = [[carta],carte]
+		for carta_da_prendere in carte:
+			self.app.stage.set_child_above_sibling(carta_da_prendere, None)
+		self.app.stage.set_child_above_sibling(carta, None)
 		if self.players[giocatore].ai:
 			carta.draw_card()
 		else:
