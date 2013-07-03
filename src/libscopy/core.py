@@ -93,13 +93,6 @@ class Match():
 			app.table.pack(self.players[0].scope, 3,2)
 			app.table.pack(self.players[1].scope, 3,0)
 			h=app.stage.get_height()-2*self.players[0].mano.get_height()-65
-			self.players[1].mano.set_max_height(h)
-			self.players[3].mano.set_max_height(h)
-		app.table.set_fill(self.carte_terra,False,False)
-		for player in self.players:
-			app.table.set_fill(player.mano,False,False)
-			app.table.set_fill(player.carte_prese,False,False)
-			app.table.set_fill(player.scope,False,False)
 		self.notifiche = widgets.NotificationSystem(app.stage)
 		self.giocatore = random.randrange(len(players))
 		self.punti_vit = 11
@@ -555,9 +548,4 @@ class Match():
 			player.mano.set_children_coords()
 	
 	def destroy(self):
-		self.mazzo.destroy()
-		self.carte_terra.destroy_all()
-		for player in self.players:
-			player.mano.destroy_all()
-			player.carte_prese.destroy()
-			player.scope.destroy()
+		self.app.table.destroy_all_children()

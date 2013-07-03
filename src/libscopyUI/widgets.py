@@ -25,11 +25,123 @@ import cairo
 import random
 from gettext import gettext as _
 
+min_width = 30
+min_height = 5
+
 #funzione per spostamenti
 def go_to(actor,x,y,time):
 	an = actor.animatev(Clutter.AnimationMode.EASE_IN_OUT_QUAD, time,['x','y'],[x,y])
 	return an
 
+class Table(Clutter.Texture):
+	def __init__(self):
+		Clutter.CairoTexture.__init__(self)
+		self._children = []
+		self._children_rows = []
+		self._children_columns = []
+		self._rows = 0
+		self._columns = 0
+		self._on_child_added = None
+	
+	def set_on_child_added_callback(self, callback):
+		self._on_child_added = callback
+	
+	def relayout(self):
+		max_width = [0]*self._columns
+		max_height = [0]*self._rows
+		i=0
+		while i <len(self._children):
+			max_width[self._children_columns[i]] = max(max_width[self._children_columns[i]], self._children[i].get_natural_width())
+			max_height[self._children_rows[i]] = max(max_height[self._children_rows[i]], self._children[i].get_natural_height())
+			i+=1
+		if sum(max_width)>self.get_width():
+			reducible_columns = []
+			for c in range(self._columns):
+				reducibles = []
+				natural_width, min_width = 0,0
+				for i in range(len(self._children)):
+					if self._children_columns[i] == c:
+						min_width = max(min_width, self._children[i].get_min_width())
+						natural_width = max(natural_width, self._children[i].get_natural_width())
+						if self._children[i].get_min_width()<self._children[i].get_natural_width():
+							reducibles.append(self._children[i])
+				if min_width < natural_width:
+					reducible_columns.append([min_width, natural_width, reducibles])
+			for column in reducible_columns:
+				new_width = column[1]-(sum(max_width)-self.get_width())/len(reducible_columns)
+				for actor in column[2]:
+					if actor.get_min_width()<=new_width<actor.get_natural_width():
+						actor.set_max_width(new_width)
+		if sum(max_height)>self.get_height():
+			reducible_rows = []
+			for r in range(self._rows):
+				reducibles = []
+				natural_height, min_height = 0,0
+				for i in range(len(self._children)):
+					if self._children_rows[i] == r:
+						min_height = max(min_height, self._children[i].get_min_height())
+						natural_height = max(natural_height, self._children[i].get_natural_height())
+						if self._children[i].get_min_height()<self._children[i].get_natural_height():
+							reducibles.append(self._children[i])
+				if min_height < natural_height:
+					reducible_rows.append([min_height, natural_height, reducibles])
+			for row in reducible_rows:
+				new_height = row[1]-(sum(max_height)-self.get_height())/len(reducible_rows)
+				for actor in row[2]:
+					if actor.get_min_height()<=new_height<actor.get_natural_height():
+						actor.set_max_height(new_height)
+		max_width = [0]*self._columns
+		max_height = [0]*self._rows
+		i=0
+		while i <len(self._children):
+			max_width[self._children_columns[i]] = max(max_width[self._children_columns[i]], self._children[i].get_width())
+			max_height[self._children_rows[i]] = max(max_height[self._children_rows[i]], self._children[i].get_height())
+			i+=1
+		i=0
+		while i <len(self._children):
+			self._children[i].set_position(sum(max_width[:self._children_columns[i]]),sum(max_height[:self._children_rows[i]]))
+			i+=1
+	
+	def set_size(self, width, height):
+		Clutter.Actor.set_size(self, width, height)
+		self.relayout()
+
+	def pack(self, actor, column, row):
+		i=0
+		while i<len(self._children):
+			if self._children_rows[i] == row and self._children_columns[i] == column:
+				raise Exception('There is yet an actor on that place')
+			i+=1
+		self.get_parent().add_actor(actor)
+		self._children.append(actor)
+		self._children_rows.append(row)
+		self._children_columns.append(column)
+		self._rows = max(self._rows, row+1)
+		self._columns = max(self._columns, column+1)
+		self.relayout()
+		if self._on_child_added:
+			self._on_child_added()
+	
+	def get_min_size(self):
+		max_width = [0]*self._columns
+		max_height = [0]*self._rows
+		i=0
+		while i <len(self._children):
+			max_width[self._children_columns[i]] = max(max_width[self._children_columns[i]], self._children[i].get_min_width())
+			max_height[self._children_rows[i]] = max(max_height[self._children_rows[i]], self._children[i].get_min_height())
+			i+=1
+		return (sum(max_width),sum(max_height))
+	
+	def destroy_all_children(self):
+		for children in self._children:
+			children.destroy()
+		self._children = []
+		self._children_rows = []
+		self._children_columns = []
+		self._rows = 0
+		self._columns = 0
+
+#Clutter actor that showing a card
 class Card(Clutter.CairoTexture):
 	def __init__(self, app, suit, value):
 		Clutter.CairoTexture.__init__(self)
@@ -136,11 +248,11 @@ class Box(Clutter.CairoTexture):
 	def __init__(self, app, rows, cols, spacing=15):
 		Clutter.CairoTexture.__init__(self)
 		self.app = app
-		self.child_w,self.child_h = base.get_card_size(self.app)
 		if Clutter.VERSION > 1.10:
 			self.set_x_expand(False)
 			self.set_y_expand(False)
-		self.set_surface_size(cols*self.child_w+(cols+1)*spacing,rows*self.child_h+(rows+1)*spacing)
+		self.column_width, self.row_height = base.get_card_size(self.app)
+		self.set_surface_size(cols*self.column_width+(cols+1)*spacing,rows*self.row_height+(rows+1)*spacing)
 		self.max_height = 0
 		self.max_width = 0
 		self.rows = rows
@@ -179,14 +291,13 @@ class Box(Clutter.CairoTexture):
 		self.invalidate()
 	
 	def set_children_coords(self):
-		child_w,child_h = base.get_card_size(self.app)
-		self.child_w,self.child_h = child_w,child_h
+		card_w,card_h = base.get_card_size(self.app)
 		if self.max_height>0 and self.rows>1:
-			self.child_h = int((self.max_height-(self.rows+1)*self.spacing-base.get_card_size(self.app)[1])/(self.rows-1))
+			self.row_height = int((self.max_height-(self.rows+1)*self.spacing-card_h)/(self.rows-1))
 		if self.max_width>0 and self.cols>1:
-			self.child_w = int((self.max_width-(self.cols+1)*self.spacing-base.get_card_size(self.app)[1])/(self.cols-1))
-		h=(self.rows+1)*self.spacing+child_h+(self.rows-1)*self.child_h
-		w=(self.cols+1)*self.spacing+child_w+(self.cols-1)*self.child_w
+			self.column_width = int((self.max_width-(self.cols+1)*self.spacing-card_w)/(self.cols-1))
+		h=(self.rows+1)*self.spacing+card_h+(self.rows-1)*self.row_height
+		w=(self.cols+1)*self.spacing+card_w+(self.cols-1)*self.column_width
 		self.set_size(w,h)
 		self.draw_rect()
 		r=0
@@ -194,10 +305,30 @@ class Box(Clutter.CairoTexture):
 			c=0
 			while c<self.cols:
 				if self.children[r][c] != 0:
-					 self.children[r][c].set_x(self.get_allocation_box().get_x()+c*(self.child_w+self.spacing)+self.spacing)
-					 self.children[r][c].set_y(self.get_y()+r*(self.child_h+self.spacing)+self.spacing)
+					 self.children[r][c].set_x(self.get_x()+c*(self.column_width+self.spacing)+self.spacing)
+					 self.children[r][c].set_y(self.get_y()+r*(self.row_height+self.spacing)+self.spacing)
 				c+=1
 			r+=1
+	
+	def set_position(self, width, height):
+		Clutter.Actor.set_position(self, width, height)
+		self.set_children_coords()
+
+	def get_min_width(self):
+		if self.cols>1:
+			return (self.cols+1)*self.spacing+(self.cols-1)*min_width+base.get_card_size(self.app)[0]
+		return (self.cols+1)*self.spacing+self.cols*base.get_card_size(self.app)[0]
+	
+	def get_min_height(self):
+		if self.rows>1:
+			return (self.rows+1)*self.spacing+(self.rows-1)*min_height+base.get_card_size(self.app)[1]
+		return (self.rows+1)*self.spacing+self.rows*base.get_card_size(self.app)[1]
+		
+	def get_natural_width(self):
+		return (self.cols+1)*self.spacing+self.cols*base.get_card_size(self.app)[0]
+	
+	def get_natural_height(self):
+		return (self.rows+1)*self.spacing+self.rows*base.get_card_size(self.app)[1]
 	
 	def set_max_height(self, height):
 		self.max_height = height
@@ -208,7 +339,6 @@ class Box(Clutter.CairoTexture):
 		self.set_children_coords()
 
 	def add(self, actor, time=500, add_to_stage=True):
-		self.get_allocation_box().get_y()
 		r,c=-1,-1
 		n=0
 		while n<self.rows:
@@ -220,8 +350,8 @@ class Box(Clutter.CairoTexture):
 				i=i+1
 			n=n+1
 		self.children[r][c]=actor
-		x=self.get_x()+c*(self.child_w+self.spacing)+self.spacing
-		y=self.get_y()+r*(self.child_h+self.spacing)+self.spacing
+		x=self.get_x()+c*(self.column_width+self.spacing)+self.spacing
+		y=self.get_y()+r*(self.row_height+self.spacing)+self.spacing
 		if add_to_stage:
 			self.app.stage.add_actor(actor)
 		if time != 0:
@@ -273,12 +403,12 @@ class Box(Clutter.CairoTexture):
 					self.children[row][col].hide()
 		self.hide()
 	
-	def destroy_all(self):
+	def destroy(self):
 		for row in range(self.rows):
 			for col in range(self.cols):
 				if self.children[row][col] != 0:
 					self.children[row][col].destroy()
-		self.destroy()
+		Clutter.Actor.destroy(self)
 	
 	def show_all(self):
 		for row in range(self.rows):
@@ -306,6 +436,18 @@ class Deck(Clutter.CairoTexture):
 		for suit in range(4):
 			for value in range(1,11):
 				self.cards.append(Card(self.app, suit, value))
+		
+	def get_min_width(self):
+		return 2*self.padding+self.child_w+20
+	
+	def get_min_height(self):
+		return 2*self.padding+self.child_h+20
+		
+	def get_natural_width(self):
+		return 2*self.padding+self.child_w+20
+	
+	def get_natural_height(self):
+		return 2*self.padding+self.child_h+20
 	
 	def draw(self, actor_box=0, allocation_flag=0, a=0):
 		self.clear()
@@ -339,7 +481,7 @@ class Deck(Clutter.CairoTexture):
 	
 	def add(self, actor, time=500, add_to_stage=True):
 		self.cards.append(actor)
-		y=self.get_allocation_box().get_y()
+		y=self.get_y()
 		x=self.get_x()
 		if add_to_stage:
 			self.app.stage.add_actor(actor)
@@ -393,6 +535,18 @@ class Scope(Clutter.CairoTexture):
 			cr.set_source_surface(sur,self.get_width()-w-10-self.padding,self.padding)
 			cr.paint()
 			self.invalidate()
+		
+	def get_min_width(self):
+		return 2*self.padding+self.child_w
+	
+	def get_min_height(self):
+		return 2*self.padding+self.child_h
+		
+	def get_natural_width(self):
+		return 2*self.padding+self.child_w
+	
+	def get_natural_height(self):
+		return 2*self.padding+self.child_h
 	
 	def add_scopa(self, card=None, scope=None):
 		if card != None:

@@ -57,17 +57,6 @@ class Match(core.Match):
 			app.table.pack(self.players[1].carte_prese, 2,0)
 			app.table.pack(self.players[0].scope, 3,2)
 			app.table.pack(self.players[1].scope, 3,0)
-			h=app.stage.get_height()-2*self.players[0].mano.get_height()-65
-			self.players[1].mano.set_max_height(h)
-			self.players[3].mano.set_max_height(h)
-			w=app.stage.get_width()-3*self.mazzo.get_width()
-			self.players[0].mano.set_max_width(w)
-			self.players[2].mano.set_max_width(w)
-		app.table.set_fill(self.carte_terra,False,False)
-		for player in self.players:
-			app.table.set_fill(player.mano,False,False)
-			app.table.set_fill(player.carte_prese,False,False)
-			app.table.set_fill(player.scope,False,False)
 		self.notifiche = widgets.NotificationSystem(app.stage)
 		self.giocatore = random.randrange(len(players))
 		self.punti_vit = 11

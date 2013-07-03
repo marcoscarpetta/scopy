@@ -21,7 +21,7 @@
 ##
 
 from libscopyUI import MenuCreator
-from libscopyUI import base
+from libscopyUI import base,widgets
 from Actions import Start
 from gi.repository import Gtk,Gdk,GtkClutter,Clutter
 from gettext import gettext as _
@@ -43,6 +43,7 @@ class Application():
 		#main window widgets
 		grid = Gtk.Grid()
 		self.embed = GtkClutter.Embed.new()
+		self.embed.connect('configure-event', self.window_resized)
 		self.stage = self.embed.get_stage()
 		base.stage = self.stage
 		grid.attach(self.embed, 0, 1, 1, 1)
@@ -56,16 +57,11 @@ class Application():
 		self.window.set_icon(pixbuf)
 				
 		#background
-		self.actor = Clutter.Actor()
-		self.back_img = Clutter.Texture.new_from_file(self.settings['sfondo'])
-		self.back_img.set_repeat(True,True)
-		self.table = Clutter.TableLayout()
-		self.table.set_row_spacing(10)
-		self.table.set_column_spacing(10)
-		self.actor.set_layout_manager(self.table)
-		self.stage.add_actor(self.back_img)
-		self.stage.add_actor(self.actor)
-		self.actor.connect('notify::allocation',self.window_resized)
+		self.table = widgets.Table()
+		self.table.set_on_child_added_callback(self._set_size_request)
+		self.table.set_from_file(self.settings['sfondo'])
+		self.table.set_repeat(True,True)
+		self.stage.add_actor(self.table)
 		
 		#menu
 		menu, classes=MenuCreator.create_menu(self)
@@ -77,15 +73,16 @@ class Application():
 		#alcune variabili di controllo
 		self.start_function = classes[_('New game...')].main
 		self.hide_last_move = classes[_('Show last move')].hide_last_move
-		self.time = base.times[int(float(self.settings['speed']))]
 		self.match = None
 		self.window.show_all()
 
+	def _set_size_request(self):
+		self.embed.set_size_request(*self.table.get_min_size())
+
 	#controlla che lo sfondo copra tutta la finestra
 	def window_resized(self,widget=None,event=None,a=0):
-		#self.window.resize(self.actor.get_width(),self.actor.get_height())
-		self.width, self.height = self.embed.get_allocated_width(), self.embed.get_allocated_height()
-		self.back_img.set_size(self.width, self.height)
+		width, height = self.embed.get_allocated_width(), self.embed.get_allocated_height()
+		self.table.set_size(width, height)
 		
 	def update_status_bar(self, text):
 		c_id = self.status_bar.get_context_id('situazione')
