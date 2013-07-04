@@ -31,7 +31,7 @@ valori_set = [0, 16, 12, 13, 14, 15, 18, 21, 10, 10, 10]
 n_players = (2,4)
 
 class Player():
-	def __init__(self, app, name, mano, carte_prese=None, scope=None):
+	def __init__(self, app, name, mano, carte_prese=None):
 		if name == '':
 			self.name = 'Giocatore'
 		else:
@@ -40,18 +40,14 @@ class Player():
 		if carte_prese:
 			self.carte_prese=carte_prese
 		else:
-			self.carte_prese = widgets.Deck(app)
-		if scope:
-			self.scope=scope
-		else:
-			self.scope = widgets.Scope(app)
+			self.carte_prese = widgets.Deck(app, with_scopa=True)
 		self.punti = 0
 		self.scoperte = 0
 		self.ai=False
 
 class Ai(Player):
-	def __init__(self, app, name, mano, carte_prese=None, scope=None):
-		Player.__init__(self, app, name, mano, carte_prese, scope)
+	def __init__(self, app, name, mano, carte_prese=None):
+		Player.__init__(self, app, name, mano, carte_prese)
 		self.ai=True
 
 class Match():
@@ -76,12 +72,10 @@ class Match():
 			app.table.pack(self.players[1].mano, 1,0)
 			app.table.pack(self.players[0].carte_prese, 2,2)
 			app.table.pack(self.players[1].carte_prese, 2,0)
-			app.table.pack(self.players[0].scope, 3,2)
-			app.table.pack(self.players[1].scope, 3,0)
 		if len(players)==4:
 			self.players.append(Ai(app,players[1],widgets.Box(self.app,3,1)))
-			self.players.append(Ai(app,players[2],widgets.Box(self.app,1,3),self.players[0].carte_prese,self.players[0].scope))
-			self.players.append(Ai(app,players[3],widgets.Box(self.app,3,1),self.players[1].carte_prese,self.players[1].scope))
+			self.players.append(Ai(app,players[2],widgets.Box(self.app,1,3),self.players[0].carte_prese))
+			self.players.append(Ai(app,players[3],widgets.Box(self.app,3,1),self.players[1].carte_prese))
 			self.teams = (
 				(players[0]+'/'+players[2],self.players[0]),
 				(players[1]+'/'+players[3],self.players[1]))
@@ -90,8 +84,6 @@ class Match():
 			app.table.pack(self.players[3].mano, 0,1)
 			app.table.pack(self.players[0].carte_prese, 2,2)
 			app.table.pack(self.players[1].carte_prese, 2,0)
-			app.table.pack(self.players[0].scope, 3,2)
-			app.table.pack(self.players[1].scope, 3,0)
 			h=app.stage.get_height()-2*self.players[0].mano.get_height()-65
 		self.notifiche = widgets.NotificationSystem(app.stage)
 		self.giocatore = random.randrange(len(players))
@@ -173,7 +165,6 @@ class Match():
 		for player in self.players:
 			player.mano.hide_all()
 			player.carte_prese.hide()
-			player.scope.hide()
 		index = self.notifiche.notify(_('What do you take?'),0)
 		boxes=[]
 		n=0
@@ -196,13 +187,12 @@ class Match():
 	def scelta_fatta(self,actor,event,oggetti,carta,presa,index):
 		self.notifiche.delete(index)
 		for box in oggetti:
-			box.destroy_all()
+			box.destroy()
 		self.mazzo.show()
 		self.carte_terra.show_all()
 		for player in self.players:
 			player.mano.show_all()
 			player.carte_prese.show()
-			player.scope.show()
 		self.gioca_carta(0,carta,presa)
 	
 	#prende le carte da terra e le sposta nelle carte prese dal giocatore
@@ -241,7 +231,7 @@ class Match():
 				pass
 			else:
 				if len(carte) == len(self.carte_terra.get_list()):
-					GLib.timeout_add(2500+base.get_pause(self.app), self.players[giocatore].scope.add_scopa, carta)
+					GLib.timeout_add(2500+base.get_pause(self.app), self.players[giocatore].carte_prese.add_scopa, carta)
 			#prende le carte da terra
 			GLib.timeout_add(2000+base.get_pause(self.app), self.presa_da_terra,giocatore,carta,carte)
 
@@ -435,9 +425,9 @@ class Match():
 		
 		n=0
 		while n < len(self.teams):
-			self.teams[n][1].punti += self.teams[n][1].scope.scope
-			punti[n].append(self.teams[n][1].scope.scope)
-			punti[n].append(self.teams[n][1].scope.scope)
+			self.teams[n][1].punti += self.teams[n][1].carte_prese.scope
+			punti[n].append(self.teams[n][1].carte_prese.scope)
+			punti[n].append(self.teams[n][1].carte_prese.scope)
 			n += 1
 
 		i=0
@@ -475,7 +465,6 @@ class Match():
 			for player in self.players:
 				player.mano.hide_all()
 				player.carte_prese.hide()
-				player.scope.hide()
 			index = self.notifiche.notify(_('%s played ... and took ...'%self.players[-1].name),0)
 			boxes=[]
 			n=0
@@ -498,13 +487,12 @@ class Match():
 	def hide_last_move(self,actor,event,oggetti,index):
 		self.notifiche.delete(index)
 		for box in oggetti:
-			box.destroy_all()
+			box.destroy()
 		self.mazzo.show()
 		self.carte_terra.show_all()
 		for player in self.players:
 			player.mano.show_all()
 			player.carte_prese.show()
-			player.scope.show()
 
 	#azzera la partita quando si finisce il mazzo
 	def azzera(self):
@@ -512,7 +500,6 @@ class Match():
 		self.mazzo.mix()
 		for giocatore in self.players:
 			giocatore.carte_prese.reset()
-			giocatore.scope.reset()
 		if self.giocatore+1 < len(self.players):
 			self.giocatore += 1
 		else:
@@ -539,13 +526,12 @@ class Match():
 		self.mazzo.updated_cards()
 		for card in self.carte_terra.get_list():
 			card.draw_card()
-		self.carte_terra.set_children_coords()
+		self.carte_terra.relayout()
 		for player in self.players:
-			player.scope.draw()
 			player.carte_prese.updated_cards()
 			for card in player.mano.get_list():
 				card.draw_card(player.ai)
-			player.mano.set_children_coords()
+			player.mano.relayout()
 	
 	def destroy(self):
 		self.app.table.destroy_all_children()

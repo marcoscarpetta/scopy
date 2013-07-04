@@ -56,25 +56,24 @@ class Match(core.Match):
 				if card.value == 7 and card.suit == 0:
 					sette=card
 			if somma <= 9:
-				player.scope.add_scopa(None,3)
+				player.carte_prese.add_scopa(None,3)
 				self.notifiche.notify(_("The sum of %s's cards is minor then 10"%player.name),5000)
 				player.scoperte = 1
 			elif sette:
 				if somma-6 <= 9:
-					player.scope.add_scopa(None,3)
+					player.carte_prese.add_scopa(None,3)
 					self.notifiche.notify(_("The sum of %s's cards is minor then 10"%player.name),5000)
 					player.scoperte = 1
 					sette.new_value=1
 			if uguali == 2 and sette and valore_uguali != 7:
-				player.scope.add_scopa(None,10)
+				player.carte_prese.add_scopa(None,10)
 				self.notifiche.notify(_("%s has 3 equals cards"%player.name),5000)
 				player.scoperte = 1
 				sette.new_value = valore_uguali
 			if uguali == 3:
-				player.scope.add_scopa(None,10)
+				player.carte_prese.add_scopa(None,10)
 				self.notifiche.notify(_("%s has 3 equals cards"%player.name),5000)
 				player.scoperte = 1
-			player.scope.draw()
 			for card in carte:
 				if player.ai:
 					card.draw_card(not player.scoperte)
@@ -309,17 +308,17 @@ class Match(core.Match):
 						punti[n][2] = 1
 			a=1
 			while a in denari: a+=1
-			if a>2: self.teams[n][1].scope += a
+			if a>2: self.teams[n][1].carte_prese.scope += a
 			a=10
 			while a in denari: a-=1
-			if a<9: self.teams[n][1].scope += 11-a
+			if a<9: self.teams[n][1].carte_prese.scope += 11-a
 			n += 1
 		
 		n=0
 		while n < len(self.teams):
-			self.teams[n][1].punti += self.teams[n][1].scope.scope
-			punti[n].append(self.teams[n][1].scope.scope)
-			punti[n].append(self.teams[n][1].scope.scope)
+			self.teams[n][1].punti += self.teams[n][1].carte_prese.scope
+			punti[n].append(self.teams[n][1].carte_prese.scope)
+			punti[n].append(self.teams[n][1].carte_prese.scope)
 			n += 1
 
 		i=0

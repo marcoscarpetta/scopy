@@ -290,7 +290,7 @@ class Box(Clutter.CairoTexture):
 		cr.fill()
 		self.invalidate()
 	
-	def set_children_coords(self):
+	def relayout(self):
 		card_w,card_h = base.get_card_size(self.app)
 		if self.max_height>0 and self.rows>1:
 			self.row_height = int((self.max_height-(self.rows+1)*self.spacing-card_h)/(self.rows-1))
@@ -312,7 +312,7 @@ class Box(Clutter.CairoTexture):
 	
 	def set_position(self, width, height):
 		Clutter.Actor.set_position(self, width, height)
-		self.set_children_coords()
+		self.relayout()
 
 	def get_min_width(self):
 		if self.cols>1:
@@ -332,11 +332,11 @@ class Box(Clutter.CairoTexture):
 	
 	def set_max_height(self, height):
 		self.max_height = height
-		self.set_children_coords()
+		self.relayout()
 	
 	def set_max_width(self, width):
 		self.max_width = width
-		self.set_children_coords()
+		self.relayout()
 
 	def add(self, actor, time=500, add_to_stage=True):
 		r,c=-1,-1
@@ -419,18 +419,23 @@ class Box(Clutter.CairoTexture):
 
 #class child of Clutter.CairoTexture that shows a deck, it also contains the list of cards in it
 class Deck(Clutter.CairoTexture):
-	def __init__(self, app, padding=15):
+	def __init__(self, app, with_scopa=False, padding=15):
 		Clutter.CairoTexture.__init__(self)
 		self.app = app
 		self.child_w,self.child_h = base.get_card_size(self.app)
 		if Clutter.VERSION > 1.10:
 			self.set_x_expand(False)
 			self.set_y_expand(False)
-		self.set_surface_size(2*padding+self.child_w+20,2*padding+self.child_h+20)
+		if with_scopa:
+			self.set_surface_size(2*(padding+self.child_w),2*padding+self.child_h+20)
+		else:
+			self.set_surface_size(2*padding+self.child_w+20,2*padding+self.child_h+20)
 		self.padding = padding
-		self.connect("allocation-changed",self.draw)
 		self.surface = cairo.ImageSurface.create_from_png(base.percorso_carte+self.app.settings['cards']+'/'+base.immagini[1][0])
 		self.cards = []
+		self.with_scopa = with_scopa
+		self.scopa_card = None
+		self.scope = 0
 	
 	def populate(self):
 		for suit in range(4):
@@ -438,21 +443,48 @@ class Deck(Clutter.CairoTexture):
 				self.cards.append(Card(self.app, suit, value))
 		
 	def get_min_width(self):
-		return 2*self.padding+self.child_w+20
-	
+		if self.with_scopa:
+			return 2*(self.padding+self.child_w)
+		else:
+			return 2*self.padding+self.child_w+20
+
 	def get_min_height(self):
-		return 2*self.padding+self.child_h+20
+			return 2*self.padding+self.child_h+20
 		
 	def get_natural_width(self):
-		return 2*self.padding+self.child_w+20
+		if self.with_scopa:
+			return 2*(self.padding+self.child_w)
+		else:
+			return 2*self.padding+self.child_w+20
 	
 	def get_natural_height(self):
-		return 2*self.padding+self.child_h+20
+			return 2*self.padding+self.child_h+20
 	
 	def draw(self, actor_box=0, allocation_flag=0, a=0):
 		self.clear()
-		c=(len(self.cards)+3)/4
 		cr = self.create()
+		if self.with_scopa:
+			if self.scopa_card != None:
+				cr = self.create()
+				surface = cairo.ImageSurface.create_from_png(base.percorso_carte+self.app.settings['cards']+'/'+base.immagini[self.scopa_card.suit][self.scopa_card.value])
+				cr.set_source_surface(surface,self.padding+self.child_w,self.padding)
+				cr.paint()
+			if self.scope != 0:
+				cr = self.create()
+				cr.set_font_size(15)
+				xb, yb, w, h, xadvance, yadvance = (cr.text_extents(str(self.scope)))
+				w,h=int(w),int(h)
+				sur = cairo.ImageSurface(cairo.FORMAT_ARGB32,w+10,h+10)
+				tmp = cairo.Context(sur)
+				tmp.set_source_rgb(0,0,0)
+				tmp.paint()
+				tmp.set_source_rgb(1,1,1)
+				tmp.set_font_size(15)
+				tmp.move_to(5,h+5)
+				tmp.show_text(str(self.scope))
+				cr.set_source_surface(sur,self.get_width()-w-10-self.padding,self.padding)
+				cr.paint()
+		c=(len(self.cards)+3)/4
 		n=0
 		while n<c:
 			cr.set_source_surface(self.surface,n+self.padding,n+self.padding)
@@ -492,65 +524,9 @@ class Deck(Clutter.CairoTexture):
 		else:
 			actor.set_position(x,y)
 	
-	def reset(self):
-		for card in self.cards:
-			card.destroy()
-		self.cards = []
-		self.draw()
-
-#class child of Clutter.CairoTexture that shows the last 'scopa' and the number of done 'scope'
-class Scope(Clutter.CairoTexture):
-	def __init__(self, app, padding=15):
-		Clutter.CairoTexture.__init__(self)
-		self.app = app
-		self.child_w,self.child_h = base.get_card_size(self.app)
-		if Clutter.VERSION > 1.10:
-			self.set_x_expand(False)
-			self.set_y_expand(False)
-		self.set_surface_size(2*padding+self.child_w,2*padding+self.child_h)
-		self.padding = padding
-		self.connect("allocation-changed",self.draw)
-		self.card = None
-		self.scope = 0
-	
-	def draw(self, actor_box=0, allocation_flag=0, a=0):
-		if self.card != None:
-			cr = self.create()
-			surface = cairo.ImageSurface.create_from_png(base.percorso_carte+self.app.settings['cards']+'/'+base.immagini[self.card.suit][self.card.value])
-			cr.set_source_surface(surface,self.padding,self.padding)
-			cr.paint()
-		if self.scope!=0:
-			cr = self.create()
-			cr.set_font_size(15)
-			xb, yb, w, h, xadvance, yadvance = (cr.text_extents(str(self.scope)))
-			w,h=int(w),int(h)
-			sur = cairo.ImageSurface(cairo.FORMAT_ARGB32,w+10,h+10)
-			tmp = cairo.Context(sur)
-			tmp.set_source_rgb(0,0,0)
-			tmp.paint()
-			tmp.set_source_rgb(1,1,1)
-			tmp.set_font_size(15)
-			tmp.move_to(5,h+5)
-			tmp.show_text(str(self.scope))
-			cr.set_source_surface(sur,self.get_width()-w-10-self.padding,self.padding)
-			cr.paint()
-			self.invalidate()
-		
-	def get_min_width(self):
-		return 2*self.padding+self.child_w
-	
-	def get_min_height(self):
-		return 2*self.padding+self.child_h
-		
-	def get_natural_width(self):
-		return 2*self.padding+self.child_w
-	
-	def get_natural_height(self):
-		return 2*self.padding+self.child_h
-	
 	def add_scopa(self, card=None, scope=None):
 		if card != None:
-			self.card = card
+			self.scopa_card = card
 			if scope == None:
 				self.scope += 1
 		if scope != None:
@@ -558,8 +534,12 @@ class Scope(Clutter.CairoTexture):
 		self.draw()
 	
 	def reset(self):
+		for card in self.cards:
+			card.destroy()
+		self.cards = []
 		self.scope=0
-		self.card = None
+		self.scopa_card = None
+		self.draw()
 		self.clear()
 		self.invalidate()
 

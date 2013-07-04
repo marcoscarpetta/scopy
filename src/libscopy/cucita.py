@@ -51,18 +51,17 @@ class Match(core.Match):
 					uguali += 1
 				prev.append(card.value)
 			if somma <= 9:
-				player.scope.add_scopa(None,2)
+				player.carte_prese.add_scopa(None,2)
 				self.notifiche.notify(_("The sum of %s's cards is minor then 10"%player.name),5000)
 				player.scoperte = 1
 			if uguali == 2:
-				player.scope.add_scopa(None,3)
+				player.carte_prese.add_scopa(None,3)
 				self.notifiche.notify(_("%s has 2 equals cards"%player.name),5000)
 				player.scoperte = 1
 			if uguali == 3:
-				player.scope.add_scopa(None,7)
+				player.carte_prese.add_scopa(None,7)
 				self.notifiche.notify(_("%s has 3 equals cards"%player.name),5000)
 				player.scoperte = 1
-			player.scope.draw()
 			for card in carte:
 				if player.ai:
 					card.draw_card(not player.scoperte)

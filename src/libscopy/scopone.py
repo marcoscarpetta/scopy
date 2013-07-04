@@ -45,8 +45,8 @@ class Match(core.Match):
 		self.mazzo.mix()
 		if len(players)==4:
 			self.players.append(Ai(self.app,players[1],widgets.Box(self.app,10,1)))
-			self.players.append(Ai(self.app,players[2],widgets.Box(self.app,1,10),self.players[0].carte_prese,self.players[0].scope))
-			self.players.append(Ai(self.app,players[3],widgets.Box(self.app,10,1),self.players[1].carte_prese,self.players[1].scope))
+			self.players.append(Ai(self.app,players[2],widgets.Box(self.app,1,10),self.players[0].carte_prese))
+			self.players.append(Ai(self.app,players[3],widgets.Box(self.app,10,1),self.players[1].carte_prese))
 			self.teams = (
 				(players[0]+'/'+players[2],self.players[0]),
 				(players[1]+'/'+players[3],self.players[1]))
@@ -55,8 +55,6 @@ class Match(core.Match):
 			app.table.pack(self.players[3].mano, 0,1)
 			app.table.pack(self.players[0].carte_prese, 2,2)
 			app.table.pack(self.players[1].carte_prese, 2,0)
-			app.table.pack(self.players[0].scope, 3,2)
-			app.table.pack(self.players[1].scope, 3,0)
 		self.notifiche = widgets.NotificationSystem(app.stage)
 		self.giocatore = random.randrange(len(players))
 		self.punti_vit = 11

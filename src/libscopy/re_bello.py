@@ -201,9 +201,9 @@ class Match(core.Match):
 		
 		n=0
 		while n < len(self.teams):
-			self.teams[n][1].punti += self.teams[n][1].scope.scope
-			punti[n].append(self.teams[n][1].scope.scope)
-			punti[n].append(self.teams[n][1].scope.scope)
+			self.teams[n][1].punti += self.teams[n][1].carte_prese.scope
+			punti[n].append(self.teams[n][1].carte_prese.scope)
+			punti[n].append(self.teams[n][1].carte_prese.scope)
 			n += 1
 
 		i=0
