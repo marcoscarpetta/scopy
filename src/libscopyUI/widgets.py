@@ -57,42 +57,38 @@ class Table(Clutter.Texture):
 			max_width[self._children_columns[i]] = max(max_width[self._children_columns[i]], self._children[i].get_natural_width())
 			max_height[self._children_rows[i]] = max(max_height[self._children_rows[i]], self._children[i].get_natural_height())
 			i+=1
-		if sum(max_width)>self_width:
-			reducible_columns = []
-			for c in range(self._columns):
-				reducibles = []
-				natural_width, min_width = 0,0
-				for i in range(len(self._children)):
-					if self._children_columns[i] == c:
-						min_width = max(min_width, self._children[i].get_min_width())
-						natural_width = max(natural_width, self._children[i].get_natural_width())
-						if self._children[i].get_min_width()<self._children[i].get_natural_width():
-							reducibles.append(self._children[i])
-				if min_width < natural_width:
-					reducible_columns.append([min_width, natural_width, reducibles])
-			for column in reducible_columns:
-				new_width = column[1]-(sum(max_width)-self_width)/len(reducible_columns)
-				for actor in column[2]:
-					if actor.get_min_width()<=new_width<actor.get_natural_width():
-						actor.set_max_width(new_width)
-		if sum(max_height)>self_height:
-			reducible_rows = []
-			for r in range(self._rows):
-				reducibles = []
-				natural_height, min_height = 0,0
-				for i in range(len(self._children)):
-					if self._children_rows[i] == r:
-						min_height = max(min_height, self._children[i].get_min_height())
-						natural_height = max(natural_height, self._children[i].get_natural_height())
-						if self._children[i].get_min_height()<self._children[i].get_natural_height():
-							reducibles.append(self._children[i])
-				if min_height < natural_height:
-					reducible_rows.append([min_height, natural_height, reducibles])
-			for row in reducible_rows:
-				new_height = row[1]-(sum(max_height)-self_height)/len(reducible_rows)
-				for actor in row[2]:
-					if actor.get_min_height()<=new_height<actor.get_natural_height():
-						actor.set_max_height(new_height)
+		reducible_columns = []
+		for c in range(self._columns):
+			reducibles = []
+			natural_width, min_width = 0,0
+			for i in range(len(self._children)):
+				if self._children_columns[i] == c:
+					min_width = max(min_width, self._children[i].get_min_width())
+					natural_width = max(natural_width, self._children[i].get_natural_width())
+					if self._children[i].get_min_width()<self._children[i].get_natural_width():
+						reducibles.append(self._children[i])
+			if min_width < natural_width:
+				reducible_columns.append([min_width, natural_width, reducibles])
+		for column in reducible_columns:
+			new_width = column[1]-(sum(max_width)-self_width)/len(reducible_columns)
+			for actor in column[2]:
+				actor.set_max_width(new_width)
+		reducible_rows = []
+		for r in range(self._rows):
+			reducibles = []
+			natural_height, min_height = 0,0
+			for i in range(len(self._children)):
+				if self._children_rows[i] == r:
+					min_height = max(min_height, self._children[i].get_min_height())
+					natural_height = max(natural_height, self._children[i].get_natural_height())
+					if self._children[i].get_min_height()<self._children[i].get_natural_height():
+						reducibles.append(self._children[i])
+			if min_height < natural_height:
+				reducible_rows.append([min_height, natural_height, reducibles])
+		for row in reducible_rows:
+			new_height = row[1]-(sum(max_height)-self_height)/len(reducible_rows)
+			for actor in row[2]:
+				actor.set_max_height(new_height)
 		max_width = [0]*self._columns
 		max_height = [0]*self._rows
 		i=0
@@ -338,11 +334,17 @@ class Box(Clutter.CairoTexture):
 		return (self.rows+1)*self.spacing+self.rows*base.get_card_size(self.app)[1]
 	
 	def set_max_height(self, height):
-		self.max_height = height
+		if height > self.get_natural_height():
+			self.max_height = self.get_natural_height()
+		else:
+			self.max_height = height
 		self.relayout()
 	
 	def set_max_width(self, width):
-		self.max_width = width
+		if width > self.get_natural_width():
+			self.max_width = self.get_natural_width()
+		else:
+			self.max_width = width
 		self.relayout()
 
 	def add(self, actor, time=500, add_to_stage=True):
