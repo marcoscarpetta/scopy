@@ -26,7 +26,7 @@ import random
 from gettext import gettext as _
 
 min_width = 30
-min_height = 5
+min_height = 1
 
 #funzione per spostamenti
 def go_to(actor,x,y,time):
@@ -34,7 +34,7 @@ def go_to(actor,x,y,time):
 	return an
 
 class Table(Clutter.Texture):
-	def __init__(self):
+	def __init__(self, spacing=10):
 		Clutter.CairoTexture.__init__(self)
 		self._children = []
 		self._children_rows = []
@@ -42,11 +42,14 @@ class Table(Clutter.Texture):
 		self._rows = 0
 		self._columns = 0
 		self._on_child_added = None
+		self._spacing = spacing
 	
 	def set_on_child_added_callback(self, callback):
 		self._on_child_added = callback
 	
 	def relayout(self):
+		self_width = self.get_width()-(self._columns-1)*self._spacing
+		self_height = self.get_height()-(self._rows-1)*self._spacing
 		max_width = [0]*self._columns
 		max_height = [0]*self._rows
 		i=0
@@ -54,7 +57,7 @@ class Table(Clutter.Texture):
 			max_width[self._children_columns[i]] = max(max_width[self._children_columns[i]], self._children[i].get_natural_width())
 			max_height[self._children_rows[i]] = max(max_height[self._children_rows[i]], self._children[i].get_natural_height())
 			i+=1
-		if sum(max_width)>self.get_width():
+		if sum(max_width)>self_width:
 			reducible_columns = []
 			for c in range(self._columns):
 				reducibles = []
@@ -68,11 +71,11 @@ class Table(Clutter.Texture):
 				if min_width < natural_width:
 					reducible_columns.append([min_width, natural_width, reducibles])
 			for column in reducible_columns:
-				new_width = column[1]-(sum(max_width)-self.get_width())/len(reducible_columns)
+				new_width = column[1]-(sum(max_width)-self_width)/len(reducible_columns)
 				for actor in column[2]:
 					if actor.get_min_width()<=new_width<actor.get_natural_width():
 						actor.set_max_width(new_width)
-		if sum(max_height)>self.get_height():
+		if sum(max_height)>self_height:
 			reducible_rows = []
 			for r in range(self._rows):
 				reducibles = []
@@ -86,7 +89,7 @@ class Table(Clutter.Texture):
 				if min_height < natural_height:
 					reducible_rows.append([min_height, natural_height, reducibles])
 			for row in reducible_rows:
-				new_height = row[1]-(sum(max_height)-self.get_height())/len(reducible_rows)
+				new_height = row[1]-(sum(max_height)-self_height)/len(reducible_rows)
 				for actor in row[2]:
 					if actor.get_min_height()<=new_height<actor.get_natural_height():
 						actor.set_max_height(new_height)
@@ -99,7 +102,11 @@ class Table(Clutter.Texture):
 			i+=1
 		i=0
 		while i <len(self._children):
-			self._children[i].set_position(sum(max_width[:self._children_columns[i]]),sum(max_height[:self._children_rows[i]]))
+			cx=int((max_width[self._children_columns[i]]-self._children[i].get_width())/2)
+			cy=int((max_height[self._children_rows[i]]-self._children[i].get_height())/2)
+			x=sum(max_width[:self._children_columns[i]])+self._children_columns[i]*self._spacing+cx
+			y=sum(max_height[:self._children_rows[i]])+self._children_rows[i]*self._spacing+cy
+			self._children[i].set_position(x,y)
 			i+=1
 	
 	def set_size(self, width, height):
@@ -130,7 +137,7 @@ class Table(Clutter.Texture):
 			max_width[self._children_columns[i]] = max(max_width[self._children_columns[i]], self._children[i].get_min_width())
 			max_height[self._children_rows[i]] = max(max_height[self._children_rows[i]], self._children[i].get_min_height())
 			i+=1
-		return (sum(max_width),sum(max_height))
+		return (sum(max_width)+(self._columns-1)*self._spacing,sum(max_height)+(self._rows-1)*self._spacing)
 	
 	def destroy_all_children(self):
 		for children in self._children:
@@ -310,8 +317,8 @@ class Box(Clutter.CairoTexture):
 				c+=1
 			r+=1
 	
-	def set_position(self, width, height):
-		Clutter.Actor.set_position(self, width, height)
+	def set_position(self, x, y):
+		Clutter.Actor.set_position(self, x, y)
 		self.relayout()
 
 	def get_min_width(self):
