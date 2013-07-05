@@ -1,8 +1,12 @@
-scopy (0.99+1.0b1) precise; urgency=low
+scopy (0.99+1.0b2) precise; urgency=low
 
   * 1.0
   * Added Scopone variant
   * Added 'Number of players' options
+  * New shadow effect
+  * New background chooser
+  * New setting 'show value on cards'
+  * Better handling of the widgets position
   * 0.4.2
   * Removed WebKit dependencies
   * Added boxes to contain groups of cards
