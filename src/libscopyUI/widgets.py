@@ -96,10 +96,15 @@ class Table(Clutter.Texture):
 			max_width[self._children_columns[i]] = max(max_width[self._children_columns[i]], self._children[i].get_width())
 			max_height[self._children_rows[i]] = max(max_height[self._children_rows[i]], self._children[i].get_height())
 			i+=1
+		freex, freey = 0,0
+		if self._columns>1 and self.get_width()>sum(max_width):
+			freex=int((self.get_width()-sum(max_width))/(self._columns-1))
+		if self._rows>1 and self.get_height()>sum(max_height):
+			freey=int((self.get_height()-sum(max_height))/(self._rows-1))
 		i=0
 		while i <len(self._children):
-			cx=int((max_width[self._children_columns[i]]-self._children[i].get_width())/2)
-			cy=int((max_height[self._children_rows[i]]-self._children[i].get_height())/2)
+			cx=int((max_width[self._children_columns[i]]-self._children[i].get_width())/2)+freex*self._children_columns[i]
+			cy=int((max_height[self._children_rows[i]]-self._children[i].get_height())/2)+freey*self._children_rows[i]
 			x=sum(max_width[:self._children_columns[i]])+self._children_columns[i]*self._spacing+cx
 			y=sum(max_height[:self._children_rows[i]])+self._children_rows[i]*self._spacing+cy
 			self._children[i].set_position(x,y)

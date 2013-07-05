@@ -1,16 +1,16 @@
-# Italian translation for scopy
-# Copyright (c) 2011 Rosetta Contributors and Canonical Ltd 2011
+# Serbian translation for scopy
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
 # This file is distributed under the same license as the scopy package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2011.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: scopy\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-07-04 20:46+0200\n"
-"PO-Revision-Date: 2013-07-05 06:26+0000\n"
-"Last-Translator: Marco Scarpetta <Unknown>\n"
-"Language-Team: Italian <it@li.org>\n"
+"PO-Revision-Date: 2013-06-15 06:46+0000\n"
+"Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
+"Language-Team: Serbian <sr@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -19,304 +19,206 @@ msgstr ""
 
 #: src/scopy.py:71
 msgid "ScoPy"
-msgstr "ScoPy"
+msgstr ""
 
 #: src/scopy.py:74 src/Actions/Start.py:27 src/Actions/Start.py:35
 msgid "New game..."
-msgstr "Nuova partita..."
+msgstr "Нова игра..."
 
 #: src/scopy.py:75 src/Actions/LastMove.py:25 src/Actions/LastMove.py:36
 msgid "Show last move"
-msgstr "Mostra l'ultima mossa"
+msgstr "Прикажи последњи потез"
 
 #: src/libscopy/re_bello.py:164 src/libscopy/cirulla.py:275
 #: src/libscopy/core.py:392
 msgid "Cards"
-msgstr "Carte"
+msgstr "Карте"
 
 #: src/libscopy/re_bello.py:165 src/libscopy/cirulla.py:276
 #: src/libscopy/core.py:393
 msgid "Primiera"
-msgstr "Primiera"
+msgstr ""
 
 #: src/libscopy/re_bello.py:166 src/libscopy/cirulla.py:277
 #: src/libscopy/core.py:394
 msgid "Seven of Coins"
-msgstr "Settebello"
+msgstr ""
 
 #: src/libscopy/re_bello.py:167 src/libscopyUI/base.py:71
 msgid "Beautiful King"
-msgstr "Re Bello"
+msgstr "Краљ лепи"
 
 #: src/libscopy/re_bello.py:168 src/libscopy/cirulla.py:278
 #: src/libscopy/core.py:395
 msgid "Coins"
-msgstr "Denari"
+msgstr "Новчићи"
 
 #: src/libscopy/re_bello.py:169 src/libscopy/cirulla.py:279
 #: src/libscopy/core.py:396
 msgid "Scope"
-msgstr "Scope"
+msgstr ""
 
 #: src/libscopy/re_bello.py:170 src/libscopy/cirulla.py:280
 #: src/libscopy/core.py:397
 msgid "Partial"
-msgstr "Parziale"
+msgstr "Делимично"
 
 #: src/libscopy/re_bello.py:171 src/libscopy/cirulla.py:281
 #: src/libscopy/core.py:398
 msgid "Total"
-msgstr "Totale"
+msgstr "Укупно"
 
 #: src/libscopy/cirulla.py:60 src/libscopy/cirulla.py:65
 #: src/libscopy/cucita.py:55
 #, python-format
 msgid "The sum of %s's cards is minor then 10"
-msgstr "La somma delle carte di %s é minore di 10"
+msgstr "%s има збир карата мањи од 10"
 
 #: src/libscopy/cirulla.py:70 src/libscopy/cirulla.py:75
 #: src/libscopy/cucita.py:63
 #, python-format
 msgid "%s has 3 equals cards"
-msgstr "%s ha 3 carte uguali"
+msgstr "%s има 3 исте карте"
 
 #: src/libscopy/cirulla.py:91 src/libscopy/cucita.py:79
 #: src/libscopy/scopone.py:82 src/libscopy/core.py:121
 msgid "It's your turn"
-msgstr "È il tuo turno"
+msgstr "На вас је ред"
 
 #: src/libscopy/cirulla.py:93 src/libscopy/cucita.py:81
 #: src/libscopy/scopone.py:84 src/libscopy/core.py:123
 #, python-format
 msgid "%s starts"
-msgstr "Comincia %s"
+msgstr "%s почиње"
 
 #: src/libscopy/cucita.py:59
 #, python-format
 msgid "%s has 2 equals cards"
-msgstr "%s ha 2 carte uguali"
+msgstr "%s има 2 исте карте"
 
 #: src/libscopy/core.py:168
 msgid "What do you take?"
-msgstr "Che vuoi prendere?"
+msgstr "Шта узимате?"
 
 #: src/libscopy/core.py:468
 #, python-format
 msgid "%s played ... and took ..."
-msgstr "%s ha giocato ... e ha preso ..."
+msgstr "%s је играо ... и узео ..."
 
 #: src/libscopy/core.py:520
 #, python-format
 msgid "%s won!"
-msgstr "Ha vinto %s!"
+msgstr "%s је победио!"
 
 #: src/Actions/About.py:27 src/Actions/Help.py:27 src/Actions/Help.py:28
 msgid "Help"
-msgstr "Aiuto"
+msgstr "Помоћ"
 
 #: src/Actions/About.py:28 src/Actions/About.py:33
 msgid "About"
-msgstr "Informazioni..."
+msgstr "О програму"
 
 #: src/Actions/About.py:43
 msgid "The italian card game \"scopa\""
-msgstr "Il gioco della scopa"
+msgstr ""
 
 #: src/Actions/LastMove.py:24 src/Actions/Settings.py:26
 msgid "Edit"
-msgstr "Modifica"
+msgstr "Уреди"
 
 #: src/Actions/LastMove.py:45
 msgid "Hide last move"
-msgstr "Nascondi l'ultima mossa"
+msgstr "Сакриј последњи потез"
 
 #: src/Actions/Quit.py:25 src/Actions/Start.py:26
 msgid "File"
-msgstr "File"
+msgstr "Датотека"
 
 #: src/Actions/Quit.py:26
 msgid "Quit"
-msgstr "Esci"
+msgstr "Изађи"
 
 #: src/Actions/Settings.py:27
 msgid "Settings"
-msgstr "Impostazioni"
+msgstr "Подешавања"
 
 #: src/Actions/Settings.py:33
 msgid "Edit Settings"
-msgstr "Impostazioni"
+msgstr "Измени подешавања"
 
 #: src/Actions/Settings.py:44
 msgid "Chose the type of cards:"
-msgstr "Scegli il tipo di carte:"
+msgstr "Изабери врсту карте:"
 
 #: src/Actions/Settings.py:45
 msgid "Speed:"
-msgstr "Velocità:"
+msgstr "Брзина:"
 
 #: src/Actions/Settings.py:46
 msgid "Background:"
-msgstr "Sfondo:"
+msgstr "Позадина:"
 
 #: src/Actions/Settings.py:47
 msgid "Show value on cards:"
-msgstr "Mostra i valori sulle carte:"
+msgstr ""
 
 #: src/Actions/Settings.py:58
 msgid "Select background image"
-msgstr "Seleziona l'immagine di sfondo"
+msgstr ""
 
 #: src/Actions/Settings.py:68
 msgid "Image files"
-msgstr "File di immagini"
+msgstr ""
 
 #: src/Actions/Settings.py:83 src/libscopyUI/widgets.py:603
 msgid "OK"
-msgstr "OK"
+msgstr "У реду"
 
 #: src/Actions/Start.py:44
 msgid "Name:"
-msgstr "Nome:"
+msgstr "Назив:"
 
 #: src/Actions/Start.py:45
 msgid "Variant:"
-msgstr "Variante:"
+msgstr "Варијанта:"
 
 #: src/Actions/Start.py:46
 msgid "Number of players:"
-msgstr "Numero di giocatori :"
+msgstr "Број играча:"
 
 #: src/Actions/Start.py:59
 msgid "Start game!"
-msgstr "Inizia partita!"
+msgstr "Започните игру!"
 
 #: src/libscopyUI/base.py:62 src/libscopyUI/base.py:65
 #: src/libscopyUI/base.py:96
 msgid "Classic scopa"
-msgstr "Scopa classica"
+msgstr ""
 
 #: src/libscopyUI/base.py:62 src/libscopyUI/base.py:67
 msgid "Cirulla"
-msgstr "Cirulla"
+msgstr "Ћирула"
 
 #: src/libscopyUI/base.py:62 src/libscopyUI/base.py:69
 msgid "Cucita"
-msgstr "Cucita"
+msgstr ""
 
 #: src/libscopyUI/base.py:62
 msgid "Re Bello"
-msgstr "Re Bello"
+msgstr ""
 
 #: src/libscopyUI/base.py:62 src/libscopyUI/base.py:73
 msgid "Scopone"
-msgstr "Scopone"
+msgstr ""
 
 #: src/libscopyUI/base.py:95
 msgid "Player"
-msgstr "Giocatore"
+msgstr "Играч"
 
 #: src/libscopyUI/base.py:151
 msgid "CPU"
-msgstr "CPU"
+msgstr "Процесор"
 
 #: src/libscopyUI/widgets.py:599
 msgid "Game summary"
-msgstr "Riepilogo partita"
-
-#~ msgid "Sum lower then 9"
-#~ msgstr "Somma minore di 9"
-
-#~ msgid "You won!"
-#~ msgstr "Hai Vinto!"
-
-#~ msgid "I won!"
-#~ msgstr "Ho vinto!"
-
-#~ msgid "Computer"
-#~ msgstr "Computer"
-
-#~ msgid "Remaining rounds:"
-#~ msgstr "Turni restanti"
-
-#~ msgid "3 egual cards"
-#~ msgstr "3 carte uguali"
-
-#~ msgid "I start"
-#~ msgstr "Comincio io"
-
-#~ msgid " and 3 egual cards"
-#~ msgstr " e 3 carte uguali"
-
-#~ msgid "Computer played ... and took ..."
-#~ msgstr "Il computer ha giocato ... e ha preso ..."
-
-#~ msgid "User"
-#~ msgstr "Utente"
-
-#~ msgid "Lost"
-#~ msgstr "Perse"
-
-#~ msgid "Won"
-#~ msgstr "Vinte"
-
-#~ msgid "Password:"
-#~ msgstr "Password:"
-
-#~ msgid "Username:"
-#~ msgstr "Nome utente:"
-
-#~ msgid "Remember account:"
-#~ msgstr "Ricorda l'account:"
-
-#~ msgid "Repeat password:"
-#~ msgstr "Ripeti la password:"
-
-#~ msgid "Register"
-#~ msgstr "Registrati"
-
-#~ msgid "Login"
-#~ msgstr "Accedi"
-
-#~ msgid "Status"
-#~ msgstr "Stato"
-
-#~ msgid "Account successfully created!"
-#~ msgstr "Account creato correttamente!"
-
-#~ msgid "Online game..."
-#~ msgstr "Gioca online..."
-
-#~ msgid "Registration error"
-#~ msgstr "Errore di registrazione"
-
-#~ msgid "People"
-#~ msgstr "Contatti"
-
-#~ msgid "Online game request"
-#~ msgstr "Richiesta di una partita online"
-
-#, python-format
-#~ msgid "%s accepted your game request."
-#~ msgstr "%s ha accettato la tua richiesta di giocare."
-
-#, python-format
-#~ msgid "%s refused your game request."
-#~ msgstr "%s ha rifiutato la tua richiesta di giocare."
-
-#, python-format
-#~ msgid ""
-#~ "%(player)s wants to play a \"%(game)s\" game with you.\n"
-#~ "Do you accept the challenge?"
-#~ msgstr ""
-#~ "%(player)s vuole fare una partita di \"%(game)s\" con te.\n"
-#~ "Accetti?"
-
-#~ msgid "Disconnect"
-#~ msgstr "Disconnetti"
-
-#, python-format
-#~ msgid "You can't play with %(player)s because he is '%(game)s'"
-#~ msgstr "Non puoi giocare con %(player)s perchè è '%(game)s'"
-
-#~ msgid "Play online..."
-#~ msgstr "Gioca online..."
+msgstr "Сажетак игре"

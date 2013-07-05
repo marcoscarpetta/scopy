@@ -7,123 +7,127 @@ msgid ""
 msgstr ""
 "Project-Id-Version: scopy 0.4.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-02-20 19:15+0100\n"
-"PO-Revision-Date: 2013-01-26 19:23+0000\n"
+"POT-Creation-Date: 2013-07-04 20:46+0200\n"
+"PO-Revision-Date: 2013-02-27 07:01+0000\n"
 "Last-Translator: GenghisKhan <genghiskhan@gmx.ca>\n"
 "Language-Team: Rahut\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2013-02-20 19:12+0000\n"
-"X-Generator: Launchpad (build 16491)\n"
+"X-Launchpad-Export-Date: 2013-07-05 06:36+0000\n"
+"X-Generator: Launchpad (build 16696)\n"
 "Language: he\n"
 
-#: src/scopy.py:63
+#: src/scopy.py:71
 msgid "ScoPy"
 msgstr "ScoPy"
 
-#: src/libscopy/re_bello.py:164 src/libscopy/cirulla.py:276
-#: src/libscopy/core.py:408
+#: src/scopy.py:74 src/Actions/Start.py:27 src/Actions/Start.py:35
+msgid "New game..."
+msgstr "משחק חדש..."
+
+#: src/scopy.py:75 src/Actions/LastMove.py:25 src/Actions/LastMove.py:36
+msgid "Show last move"
+msgstr "הצג תור אחרון"
+
+#: src/libscopy/re_bello.py:164 src/libscopy/cirulla.py:275
+#: src/libscopy/core.py:392
 msgid "Cards"
-msgstr ""
+msgstr "קלפים"
 
-#: src/libscopy/re_bello.py:165 src/libscopy/cirulla.py:277
-#: src/libscopy/core.py:409
+#: src/libscopy/re_bello.py:165 src/libscopy/cirulla.py:276
+#: src/libscopy/core.py:393
 msgid "Primiera"
-msgstr ""
+msgstr "פרימיירה"
 
-#: src/libscopy/re_bello.py:166 src/libscopy/cirulla.py:278
-#: src/libscopy/core.py:410
+#: src/libscopy/re_bello.py:166 src/libscopy/cirulla.py:277
+#: src/libscopy/core.py:394
 msgid "Seven of Coins"
-msgstr ""
+msgstr "שבע של מטבעות"
 
-#: src/libscopy/re_bello.py:167
+#: src/libscopy/re_bello.py:167 src/libscopyUI/base.py:71
 msgid "Beautiful King"
-msgstr ""
+msgstr "מלך יפיפה"
 
-#: src/libscopy/re_bello.py:168 src/libscopy/cirulla.py:279
-#: src/libscopy/core.py:411
+#: src/libscopy/re_bello.py:168 src/libscopy/cirulla.py:278
+#: src/libscopy/core.py:395
 msgid "Coins"
-msgstr ""
+msgstr "מטבעות"
 
-#: src/libscopy/re_bello.py:169 src/libscopy/cirulla.py:280
-#: src/libscopy/core.py:412
+#: src/libscopy/re_bello.py:169 src/libscopy/cirulla.py:279
+#: src/libscopy/core.py:396
 msgid "Scope"
-msgstr ""
+msgstr "היקף"
 
-#: src/libscopy/re_bello.py:170 src/libscopy/cirulla.py:281
-#: src/libscopy/core.py:413
+#: src/libscopy/re_bello.py:170 src/libscopy/cirulla.py:280
+#: src/libscopy/core.py:397
 msgid "Partial"
-msgstr ""
+msgstr "חלקי"
 
-#: src/libscopy/re_bello.py:171 src/libscopy/cirulla.py:282
-#: src/libscopy/core.py:414
+#: src/libscopy/re_bello.py:171 src/libscopy/cirulla.py:281
+#: src/libscopy/core.py:398
 msgid "Total"
-msgstr ""
+msgstr "סך הכל"
 
 #: src/libscopy/cirulla.py:60 src/libscopy/cirulla.py:65
 #: src/libscopy/cucita.py:55
 #, python-format
 msgid "The sum of %s's cards is minor then 10"
-msgstr ""
+msgstr "הסך של %s הקלפים הינו קטן מן 10"
 
 #: src/libscopy/cirulla.py:70 src/libscopy/cirulla.py:75
 #: src/libscopy/cucita.py:63
 #, python-format
 msgid "%s has 3 equals cards"
-msgstr ""
+msgstr "%s מחזיק 3 קלפים שווים"
 
-#: src/libscopy/cirulla.py:92 src/libscopy/cucita.py:80
-#: src/libscopy/scopone.py:96 src/libscopy/core.py:138
+#: src/libscopy/cirulla.py:91 src/libscopy/cucita.py:79
+#: src/libscopy/scopone.py:82 src/libscopy/core.py:121
 msgid "It's your turn"
 msgstr "עכשיו תורך"
 
-#: src/libscopy/cirulla.py:94 src/libscopy/cucita.py:82
-#: src/libscopy/scopone.py:98 src/libscopy/core.py:140
+#: src/libscopy/cirulla.py:93 src/libscopy/cucita.py:81
+#: src/libscopy/scopone.py:84 src/libscopy/core.py:123
 #, python-format
 msgid "%s starts"
-msgstr ""
+msgstr "%s מתחיל"
 
 #: src/libscopy/cucita.py:59
 #, python-format
 msgid "%s has 2 equals cards"
-msgstr ""
+msgstr "%s מחזיק 2 קלפים שווים"
 
-#: src/libscopy/core.py:186
+#: src/libscopy/core.py:168
 msgid "What do you take?"
 msgstr "מה אתה לוקח?"
 
-#: src/libscopy/core.py:485
+#: src/libscopy/core.py:468
 #, python-format
 msgid "%s played ... and took ..."
-msgstr ""
+msgstr "%s שיחק ... ולקח ..."
 
-#: src/libscopy/core.py:539
+#: src/libscopy/core.py:520
 #, python-format
 msgid "%s won!"
-msgstr ""
+msgstr "%s ניצח!"
 
 #: src/Actions/About.py:27 src/Actions/Help.py:27 src/Actions/Help.py:28
 msgid "Help"
 msgstr "עזרה"
 
-#: src/Actions/About.py:28 src/Actions/About.py:32
+#: src/Actions/About.py:28 src/Actions/About.py:33
 msgid "About"
 msgstr "אודות"
 
-#: src/Actions/About.py:42
+#: src/Actions/About.py:43
 msgid "The italian card game \"scopa\""
 msgstr "משחק הקלפים האיטלקי \"סקופא\""
 
-#: src/Actions/LastMove.py:26 src/Actions/Settings.py:26
+#: src/Actions/LastMove.py:24 src/Actions/Settings.py:26
 msgid "Edit"
 msgstr "עריכה"
 
-#: src/Actions/LastMove.py:27 src/Actions/LastMove.py:35
-msgid "Show last move"
-msgstr "הצג תור אחרון"
-
-#: src/Actions/LastMove.py:42
+#: src/Actions/LastMove.py:45
 msgid "Hide last move"
 msgstr "הסתר תור אחרון"
 
@@ -139,78 +143,86 @@ msgstr "יציאה"
 msgid "Settings"
 msgstr "הגדרות"
 
-#: src/Actions/Settings.py:43
+#: src/Actions/Settings.py:33
 msgid "Edit Settings"
 msgstr "ערוך הגדרות"
 
-#: src/Actions/Settings.py:51
+#: src/Actions/Settings.py:44
 msgid "Chose the type of cards:"
 msgstr "בחר טיפוס של קלפים:"
 
-#: src/Actions/Settings.py:52
+#: src/Actions/Settings.py:45
 msgid "Speed:"
 msgstr "מהירות:"
 
-#: src/Actions/Settings.py:53
+#: src/Actions/Settings.py:46
 msgid "Background:"
 msgstr "רקע אחורי:"
 
-#: src/Actions/Settings.py:65 src/libscopyUI/widgets.py:388
+#: src/Actions/Settings.py:47
+msgid "Show value on cards:"
+msgstr ""
+
+#: src/Actions/Settings.py:58
+msgid "Select background image"
+msgstr ""
+
+#: src/Actions/Settings.py:68
+msgid "Image files"
+msgstr ""
+
+#: src/Actions/Settings.py:83 src/libscopyUI/widgets.py:603
 msgid "OK"
 msgstr "אישור"
 
-#: src/Actions/Start.py:27 src/Actions/Start.py:30
-msgid "New game..."
-msgstr "משחק חדש..."
-
-#: src/Actions/Start.py:34
+#: src/Actions/Start.py:44
 msgid "Name:"
 msgstr "שם:"
 
-#: src/Actions/Start.py:35
+#: src/Actions/Start.py:45
 msgid "Variant:"
 msgstr "גרסא:"
 
-#: src/Actions/Start.py:36
+#: src/Actions/Start.py:46
 msgid "Number of players:"
-msgstr ""
+msgstr "מספר שחקנים:"
 
-#: src/Actions/Start.py:48
+#: src/Actions/Start.py:59
 msgid "Start game!"
 msgstr "התחל משחק!"
 
-#: src/libscopyUI/base.py:61 src/libscopyUI/base.py:64
-#: src/libscopyUI/base.py:102
+#: src/libscopyUI/base.py:62 src/libscopyUI/base.py:65
+#: src/libscopyUI/base.py:96
 msgid "Classic scopa"
 msgstr "סקופא קלאסי"
 
-#: src/libscopyUI/base.py:61 src/libscopyUI/base.py:66
+#: src/libscopyUI/base.py:62 src/libscopyUI/base.py:67
 msgid "Cirulla"
 msgstr "קירולה"
 
-#: src/libscopyUI/base.py:61 src/libscopyUI/base.py:68
+#: src/libscopyUI/base.py:62 src/libscopyUI/base.py:69
 msgid "Cucita"
 msgstr "קוציתה"
 
-#: src/libscopyUI/base.py:61 src/libscopyUI/base.py:70
+#: src/libscopyUI/base.py:62
 msgid "Re Bello"
-msgstr "ריבלו"
+msgstr "רי בלו"
 
-#: src/libscopyUI/base.py:61 src/libscopyUI/base.py:72
+#: src/libscopyUI/base.py:62 src/libscopyUI/base.py:73
 msgid "Scopone"
-msgstr ""
+msgstr "סקופון"
 
-#: src/libscopyUI/base.py:101
+#: src/libscopyUI/base.py:95
 msgid "Player"
 msgstr "שחקן"
 
-#: src/libscopyUI/base.py:174
+#: src/libscopyUI/base.py:151
 msgid "CPU"
-msgstr ""
+msgstr "CPU"
 
-#: src/libscopyUI/widgets.py:384
+#: src/libscopyUI/widgets.py:599
 msgid "Game summary"
-msgstr "סיכם משחק"
+msgstr "סיכום משחק"
 
 #~ msgid "You won!"
 #~ msgstr "ניצחת!"

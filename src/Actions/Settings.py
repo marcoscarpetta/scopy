@@ -100,7 +100,7 @@ class Main():
 	def on_back_dialog_update_preview(self, widget):
 		if self.back_dialog.get_preview_filename():
 			self.app.settings['sfondo'] = self.back_dialog.get_preview_filename()
-			self.app.back_img.set_from_file(self.app.settings['sfondo'])
+			self.app.table.set_from_file(self.app.settings['sfondo'])
 
 	def load_image(self):
 		tmp = Gtk.Image.new_from_file(self.app.settings['sfondo'])
@@ -121,7 +121,7 @@ class Main():
 			self.app.settings['show_value_on_cards']=self.show_value_on_cards.get_active()
 			if self.app.match:
 				self.app.match.update_cards()
-		self.app.back_img.set_from_file(self.app.settings['sfondo'])
+		self.app.table.set_from_file(self.app.settings['sfondo'])
 		self.app.settings.save()
 		self.dialog.hide()
 
