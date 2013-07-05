@@ -95,7 +95,6 @@ class Application():
 		self.match = base.create_match(self)
 		self.match.start()
 
-
 app = Application()
 app.start_function(None)
 Gtk.main()

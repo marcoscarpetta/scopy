@@ -518,7 +518,7 @@ class Match():
 			n+=1
 		if giocatore >= 0:
 			self.notifiche.notify(_('%s won!')%self.teams[giocatore][0],2000)
-			self.app.new_match()
+			self.app.start_function(None)
 		else:
 			self.start()
 	

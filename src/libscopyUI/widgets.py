@@ -98,9 +98,9 @@ class Table(Clutter.Texture):
 			i+=1
 		freex, freey = 0,0
 		if self._columns>1 and self.get_width()>sum(max_width):
-			freex=int((self.get_width()-sum(max_width))/(self._columns-1))
+			freex=int((self_width-sum(max_width))/(self._columns-1))
 		if self._rows>1 and self.get_height()>sum(max_height):
-			freey=int((self.get_height()-sum(max_height))/(self._rows-1))
+			freey=int((self_height-sum(max_height))/(self._rows-1))
 		i=0
 		while i <len(self._children):
 			cx=int((max_width[self._children_columns[i]]-self._children[i].get_width())/2)+freex*self._children_columns[i]
