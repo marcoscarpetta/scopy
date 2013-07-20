@@ -117,6 +117,9 @@ class Settings():
 		d = os.path.expanduser('~')+"/.scopy"
 		if not os.path.exists(d):
 			os.makedirs(d)
+		if not os.path.exists(d+'/settings.conf'):
+			config = open(d+'/settings.conf', 'w')
+			config.close()
 		config = open(d+'/settings.conf', 'rw')
 		try:
 			self.settings = pickle.load(config)
