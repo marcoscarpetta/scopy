@@ -23,7 +23,7 @@ import sys, os
 import cairo
 import pickle
 
-APP_VERSION = '1.0 beta2'
+APP_VERSION = '1.0'
 APP_NAME = 'scopy'
 
 #setting up gettext
