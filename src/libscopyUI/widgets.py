@@ -158,10 +158,10 @@ class Card(Clutter.CairoTexture):
 		self.value = value
 		self.mouse_over = False
 
-	def get_suit():
+	def get_suit(self):
 		return self.suit
 		
-	def get_value():
+	def get_value(self):
 		return self.value
 	
 	def draw_card(self, retro=False):
@@ -231,7 +231,7 @@ class Card(Clutter.CairoTexture):
 				tmp.set_font_size(15)
 				tmp.move_to(5,h+5)
 				tmp.show_text(str(self.value))
-				cr.set_source_surface(sur,self.get_width()-w-10,0)
+				cr.set_source_surface(sur,0,0)
 				cr.paint()
 			
 			self.invalidate()
