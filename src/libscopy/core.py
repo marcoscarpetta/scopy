@@ -20,7 +20,7 @@
 ##
 
 import random
-from gi.repository import Clutter,GLib
+from gi.repository import GLib
 from libscopyUI import base,widgets
 import itertools
 from gettext import gettext as _
@@ -84,7 +84,6 @@ class Match():
 			app.table.pack(self.players[3].mano, 0,1)
 			app.table.pack(self.players[0].carte_prese, 2,2)
 			app.table.pack(self.players[1].carte_prese, 2,0)
-			h=app.stage.get_height()-2*self.players[0].mano.get_height()-65
 		self.notifiche = widgets.NotificationSystem(app.stage)
 		self.giocatore = random.randrange(len(players))
 		self.punti_vit = 11
