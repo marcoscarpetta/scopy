@@ -22,8 +22,7 @@
 
 from libscopyUI import MenuCreator
 from libscopyUI import base,widgets
-from Actions import Start
-from gi.repository import Gtk,Gdk,GtkClutter,Clutter
+from gi.repository import Gtk,Gdk,GtkClutter
 from gettext import gettext as _
 import cairo
 GtkClutter.init([])
