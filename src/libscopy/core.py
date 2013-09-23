@@ -300,8 +300,8 @@ class Match():
 				#scopa
 				if len(giocata[1]) == len(carte_terra):
 					valore = valore + 20
-				valore_terra = 0
 				#scopa avversario
+				valore_terra = 0
 				for carta in carte_terra:
 					if not carta in giocata[1]:
 						valore_terra += carta.value
