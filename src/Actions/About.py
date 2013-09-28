@@ -20,9 +20,8 @@
 ##
 
 from gettext import gettext as _
-from gi.repository import Gtk,Gdk
+from gi.repository import Gtk
 from libscopyUI import base
-import cairo
 
 Path=_('Help')
 Name=_('About')
@@ -53,9 +52,7 @@ class Main():
 			'mapreri (carte Trevisane)',
 			'Magog (sfondi, carte Toscane)'])
 		self.dialog.set_translator_credits('Adolfo Jayme Barrientos \nSarahSlean \nMarti Bosch \nMarc Coll Carrillo \nMichael Moroni \nAntonio Trande \nGenghis Khan \nStanislas Michalak \nAleksey Kabanov')
-		image = cairo.ImageSurface.create_from_png(base.percorso+'/data/icons/icona.png')
-		icona = Gdk.pixbuf_get_from_surface(image,0,0,100,100)
-		self.dialog.set_logo(icona)
+		self.dialog.set_logo(Gtk.IconTheme().load_icon("scopy", 128, 0))
 
 	def main(self, widget):
 		self.dialog.show()

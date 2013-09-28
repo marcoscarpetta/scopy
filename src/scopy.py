@@ -22,9 +22,8 @@
 
 from libscopyUI import MenuCreator
 from libscopyUI import base,widgets
-from gi.repository import Gtk,Gdk,GtkClutter
+from gi.repository import Gtk,GtkClutter
 from gettext import gettext as _
-import cairo
 GtkClutter.init([])
 
 #classe che contiene tutti i metodi necessari alla creazione e funzionamento della gui
@@ -51,9 +50,7 @@ class Application():
 		self.window.add(grid)
 		
 		#icon
-		icon = cairo.ImageSurface.create_from_png(base.percorso+'/data/icons/icona32.png')
-		pixbuf = Gdk.pixbuf_get_from_surface(icon,0,0,icon.get_width(),icon.get_height())
-		self.window.set_icon(pixbuf)
+		self.window.set_icon_name("scopy")
 				
 		#background
 		self.table = widgets.Table()
