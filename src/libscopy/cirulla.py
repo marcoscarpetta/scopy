@@ -26,6 +26,35 @@ import random
 
 n_players = (2,4)
 
+ai_values = (
+		### nessuna presa
+		lambda mem: 1, #2 carte uguali
+		lambda mem: 1, #non denari
+		lambda mem: 1,	#non 7
+		lambda mem: 1, #carta piu' bassa
+		lambda mem: -1, #non 7 a terra (turno successivo)
+		lambda mem: 1,	#presa dopo
+		lambda mem: -10,	#carte avversario scoperte, scopa dopo
+		lambda mem: -5,	#carte avversario scoperte, presa dopo
+		lambda mem: -6, #possibile scopa avversario
+		### almeno una presa
+      lambda mem: 20, #scopa
+		lambda mem: -6,	#carte avversario scoperte, scopa dopo
+		lambda mem: -1,	#carte avversario scoperte, presa dopo
+		lambda mem: -6, #probabile scopa avversario
+		### se non si prende niente
+		lambda mem: 1, #non denaro
+      lambda mem: 1, #non 7
+		lambda mem: 1, #carta piu' bassa
+		### se si prende qualcosa
+		lambda mem: 1, #ogni carta presa
+      lambda mem: 3, #ogni denaro
+      lambda mem: (mem['7'] > 2)*4, #ogni sette
+      lambda mem: 20, #sette bello
+      lambda mem: 6, #ogni sei
+      lambda mem: 1, #ogni asso
+	)
+
 class Match(core.Match):
 	def __init__(self, app, players):
 		core.Match.__init__(self, app, players)
@@ -111,123 +140,142 @@ class Match(core.Match):
 		if len(giocate) == 1:
 			migliore = giocate[0]
 		#se non si puo' prendere
-		elif no_prese == 1:
-			migliore = [carte_mano[0],[],-20]
-			for carta_da_giocare in carte_mano:
-				valore = 0
-				if carta.value == 1:
-					valore -= 20
-				n = 0
+		else:
+			migliore = [carte_mano[0],[],-1000]
+			for giocata in giocate:
+				par = []
+				flag = no_prese
+				### no_prese = 1
 				#2 carte uguali
-				for carta in carte_mano:
-					if carta.value == carta_da_giocare.value:
-						n = n+1
-				if n >= 2:
-					valore = valore+1
-				#non denari
-				if carta_da_giocare.suit != 0:
-					valore = valore + 1
-				#non 7
-				if carta_da_giocare.value != 7:
-					valore = valore + 1
 				n = 0
+				for carta in carte_mano:
+					if carta.value == giocata[0].value:
+						n = n+1
+				par.append((n>=2)*flag)
+			
+				#non denari
+				par.append((giocata[0].suit != 0)*flag)
+			
+				#non 7
+				par.append((giocata[0].value != 7)*flag)
+			
 				#carta piu' bassa
+				n = 0
 				for carta in carte_mano:
-					if carta.value >= carta_da_giocare.value:
+					if carta.value >= giocata[0].value:
 						n = n + 1
-				if n == len(carte_mano):
-					valore = valore + 1
+				par.append((n == len(carte_mano))*flag)
+			
 				#non 7 a terra
-				if len(self.prese(widgets.Card(self.app,0,7),carte_terra+[carta_da_giocare])) != 0:
-					valore = valore - 1
+				n=0
+				if len(self.prese(widgets.Card(self.app,0,7),carte_terra+[giocata[0]])) != 0:
+					n=1
+				par.append(n*flag)
+			
 				#presa dopo
+				presa_dopo = 0
 				for carta in carte_mano:
-					if carta != carta_da_giocare:
-						if len(self.prese(carta,carte_terra+[carta_da_giocare])) != 0:
-							valore = valore + 1
+					if carta != giocata[0]:
+						if len(self.prese(carta,carte_terra+[giocata[0]])) != 0:
+							presa_dopo += 1
+				par.append(presa_dopo*flag)
+				
 				#carte avversario conosciute
+				scopa_avversario = 0
+				presa_avversario = 0
 				if self.players[self.next()].scoperte:
 					for carta in self.players[self.next()].mano.get_list():
-						for presa in self.prese(carta, carte_terra+[carta_da_giocare]):
+						for presa in self.prese(carta, carte_terra+[giocata[0]]):
 							if len(presa) == len(carte_terra)+1:
-								valore -= 10
-							valore -= 5
+								scopa_avversario = 1
+							presa_avversario = 1
+				par.append(scopa_avversario*flag)
+				par.append((not scopa_avversario)*presa_avversario*flag)
+				
 				#scopa avversario
-				if not self.players[self.next()].scoperte:
-					valore_terra = carta_da_giocare.value
-					for carta in carte_terra:
-						valore_terra += carta.value
-					if valore_terra <= 10:
-						valore -= 6
+				valore_terra = giocata[0].value
+				for carta in carte_terra:
+					valore_terra += carta.value
+				par.append((not scopa_avversario)*(valore_terra <= 10)*flag)
 
-				if valore > migliore[2]:
-					migliore[0], migliore[2] = carta_da_giocare, valore
-		else:
-			migliore = [carte_mano[0],[],-20]
-			for giocata in giocate:
-				valore = 0
+				### no_prese=0
+				flag = not no_prese
 				#scopa
-				if len(giocata[1]) == len(carte_terra):
-					valore = valore + 20
+				par.append((len(giocata[1]) == len(carte_terra))*flag)
+			
+				#
 				valore_terra = 0
  				carte_da_lasciare=[]
-				#scopa avversario
 				for carta in carte_terra:
 					if not carta in giocata[1]:
 						valore_terra += carta.value
 						carte_da_lasciare.append(carta)
-				if not self.players[self.next()].scoperte:
-					if giocata[1] == []:
-						valore_terra += giocata[0].value
-					if valore_terra <= 10:
-						valore -= 6
+				if giocata[1] == []:
+					valore_terra += giocata[0].value
+					carte_da_lasciare.append(giocata[0])
+				
 				#carte avversario conosciute
+				scopa_avversario = 0
+				presa_avversario = 0
 				if self.players[self.next()].scoperte:
 					for carta in self.players[self.next()].mano.get_list():
 						for presa in self.prese(carta, carte_da_lasciare):
 							if len(presa) == len(carte_da_lasciare):
-								valore -= 6
-							valore -= 1
-				#se non si prende niente
-				if giocata[1] == []:
-					#non denaro
-					if giocata[0].suit != 0:
-						valore += 1
-					#non 7
-					if giocata[0].value != 7:
-						valore += 1
-					n = 0
-					#carta piu' bassa
-					for carta in carte_mano:
-						if carta.value > giocata[0].value:
-							n = n + 1
-					if n == len(carte_mano):
-						valore += 1
-				#se si prende qualcosa
-				else:
-					carte_da_prendere=[]
-					carte_da_prendere.append(giocata[0])
-					for carta in giocata[1]:
-						carte_da_prendere.append(carta)	
-					valore += len(carte_da_prendere)
-					for carta in carte_da_prendere:
-						#se denaro
+								scopa_avversario = 1
+							presa_avversario = 1
+				par.append(scopa_avversario*flag)
+				par.append((not scopa_avversario)*presa_avversario*flag)
+				
+				#probabile scopa avversario
+				par.append((not scopa_avversario)*(valore_terra <= 10)*flag)
+			
+				### se non si prende niente
+				flag = (not no_prese)*(len(giocata[1]) == 0)
+			
+				#non denaro
+				par.append((giocata[0].suit != 0)*flag)
+			
+				#non 7
+				par.append((giocata[0].value != 7)*flag)
+			
+				#carta piu' bassa
+				for carta in carte_mano:
+					if carta.value > giocata[0].value:
+						n = n + 1
+				par.append((n == len(carte_mano))*flag)
+			
+				### se si prende qualcosa
+				flag = (not no_prese)*(len(giocata[1]) != 0)
+				carte_da_prendere=list(giocata[1])
+				carte_da_prendere.append(giocata[0])
+			
+				#numero carte prese
+				par.append(len(carte_da_prendere)*flag)
+			
+				tmp = [0,0,0,0,0]
+				for carta in carte_da_prendere:
+					#se denaro
+					if carta.suit == 0:
+						tmp[0] += 1
+					#se sette
+					if carta.value == 7:
+						tmp[1] += 1
+						#se sette bello
 						if carta.suit == 0:
-							valore += 3
-						#se sette
-						if carta.value == 7:
-							valore += 4
-							#se sette bello
-							if carta.suit == 0:
-								valore += 20
-						#se sei
-						if carta.value == 6:
-							valore += 2
-						#se asso
-						if carta.value == 1:
-							valore += 1
-				if valore > migliore[2]:
-					migliore[0], migliore[1], migliore[2] = giocata[0], giocata[1], valore
+							tmp[2] += 1
+					#se sei
+					if carta.value == 6:
+						tmp[3] += 1
+					#se asso
+					if carta.value == 1:
+						tmp[4] += 1
+				for v in tmp:
+					par.append(v*flag)
+				
+				value = self.players[self.giocatore].value(par, ai_values)
+				if value > migliore[2]:
+					migliore[0], migliore[1], migliore[2] = giocata[0], giocata[1], value
+				
 		self.gioca_carta(self.giocatore,migliore[0],migliore[1])
 
 	#ritorna tutte le prese effetuabili con la carta
