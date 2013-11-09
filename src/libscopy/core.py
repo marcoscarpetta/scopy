@@ -31,28 +31,28 @@ valori_set = [0, 16, 12, 13, 14, 15, 18, 21, 10, 10, 10]
 n_players = (2,4)
 
 ai_values = (
-		### nessuna presa
-		lambda mem: 1, #2 carte uguali
-		lambda mem: 1, #non denari
-		lambda mem: 1,	#non 7
-		lambda mem: 1, #carta piu' bassa
-		lambda mem: -1, #non 7 a terra (turno successivo)
-		lambda mem: 1,	#presa dopo
-		lambda mem: -6, #possibile scopa avversario
-		### almeno una presa
-      lambda mem: 20, #scopa
-		lambda mem: -6, #probabile scopa avversario
-		### se non si prende niente
-		lambda mem: 1, #non denaro
-      lambda mem: 1, #non 7
-		lambda mem: 1, #carta piu' bassa
-		### se si prende qualcosa
-		lambda mem: 1, #ogni carta presa
-      lambda mem: 3, #ogni denaro
-      lambda mem: (mem['7'] > 2)*4, #ogni sette
-      lambda mem: 20, #sette bello
-      lambda mem: 6, #ogni sei
-      lambda mem: 1, #ogni asso
+	### nessuna presa
+	lambda mem: 1, #2 carte uguali
+	lambda mem: 1, #non denari
+	lambda mem: 1,	#non 7
+	lambda mem: 1, #carta piu' bassa
+	lambda mem: -1, #non 7 a terra (turno successivo)
+	lambda mem: 1,	#presa dopo
+	lambda mem: -6, #possibile scopa avversario
+	### almeno una presa
+	lambda mem: 20, #scopa
+	lambda mem: -6, #probabile scopa avversario
+	### se non si prende niente
+	lambda mem: 1, #non denaro
+	lambda mem: 1, #non 7
+	lambda mem: 1, #carta piu' bassa
+	### se si prende qualcosa
+	lambda mem: 1, #ogni carta presa
+	lambda mem: 3, #ogni denaro
+	lambda mem: (mem['7'] > 2)*4, #ogni sette
+	lambda mem: 20, #sette bello
+	lambda mem: 6, #ogni sei
+	lambda mem: 1, #ogni asso
 	)
 
 class Memory(dict):
