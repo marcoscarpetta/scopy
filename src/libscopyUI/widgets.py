@@ -19,7 +19,7 @@
 # can be found in the file /usr/share/common-licenses/GPL-3.
 ##
 
-from gi.repository import Gtk,Clutter,GLib
+from gi.repository import Gtk,Clutter,GLib,Gio
 from libscopyUI import base
 import cairo
 import random
@@ -153,6 +153,7 @@ class Table(Clutter.Texture):
 class Card(Clutter.CairoTexture):
 	def __init__(self, app, suit, value):
 		Clutter.CairoTexture.__init__(self)
+		self.settings = Gio.Settings.new(base.SCHEMA_ID)
 		self.app = app
 		self.suit = suit
 		self.value = value
@@ -175,7 +176,7 @@ class Card(Clutter.CairoTexture):
 			self.set_surface_size(w,h)
 		self.clear()
 		if retro:
-			self.set_from_file(base.percorso_carte+self.app.settings['cards']+'/'+base.immagini[1][0])
+			self.set_from_file(base.percorso_carte+self.settings.get_string('cards')+'/'+base.immagini[1][0])
 		else:
 			cr = self.create()
 			### Shadow effect using cairo, clutter one doesn't work ###
@@ -216,10 +217,10 @@ class Card(Clutter.CairoTexture):
 				cr.rectangle(w-r, h-r, s+r, s+r)
 				cr.fill()
 			### Now drawing the card ### 
-			surface = cairo.ImageSurface.create_from_png(base.percorso_carte+self.app.settings['cards']+'/'+base.immagini[self.suit][self.value])
+			surface = cairo.ImageSurface.create_from_png(base.percorso_carte+self.settings.get_string('cards')+'/'+base.immagini[self.suit][self.value])
 			cr.set_source_surface(surface,0,0)
 			cr.paint()
-			if self.app.settings['show_value_on_cards']:
+			if self.settings.get_boolean('show-value-on-cards'):
 				cr.set_font_size(15)
 				xb, yb, w, h, xadvance, yadvance = (cr.text_extents(str(self.value)))
 				w,h=int(w),int(h)
@@ -435,6 +436,7 @@ class Box(Clutter.CairoTexture):
 class Deck(Clutter.CairoTexture):
 	def __init__(self, app, with_scopa=False, padding=15):
 		Clutter.CairoTexture.__init__(self)
+		self.settings = Gio.Settings.new(base.SCHEMA_ID)
 		self.app = app
 		self.child_w,self.child_h = base.get_card_size(self.app)
 		if Clutter.VERSION > 1.10:
@@ -445,7 +447,7 @@ class Deck(Clutter.CairoTexture):
 		else:
 			self.set_surface_size(2*padding+self.child_w+20,2*padding+self.child_h+20)
 		self.padding = padding
-		self.surface = cairo.ImageSurface.create_from_png(base.percorso_carte+self.app.settings['cards']+'/'+base.immagini[1][0])
+		self.surface = cairo.ImageSurface.create_from_png(base.percorso_carte+self.settings.get_string('cards')+'/'+base.immagini[1][0])
 		self.cards = []
 		self.with_scopa = with_scopa
 		self.scopa_card = None
@@ -480,7 +482,7 @@ class Deck(Clutter.CairoTexture):
 		if self.with_scopa:
 			if self.scopa_card != None:
 				cr = self.create()
-				surface = cairo.ImageSurface.create_from_png(base.percorso_carte+self.app.settings['cards']+'/'+base.immagini[self.scopa_card.suit][self.scopa_card.value])
+				surface = cairo.ImageSurface.create_from_png(base.percorso_carte+self.settings.get_string('cards')+'/'+base.immagini[self.scopa_card.suit][self.scopa_card.value])
 				cr.set_source_surface(surface,self.padding+self.child_w,self.padding)
 				cr.paint()
 			if self.scope != 0:
@@ -507,7 +509,7 @@ class Deck(Clutter.CairoTexture):
 		self.invalidate()
 	
 	def updated_cards(self):
-		self.surface = cairo.ImageSurface.create_from_png(base.percorso_carte+self.app.settings['cards']+'/'+base.immagini[1][0])
+		self.surface = cairo.ImageSurface.create_from_png(base.percorso_carte+self.settings.get_string('cards')+'/'+base.immagini[1][0])
 		self.draw()
 
 	def mix(self):

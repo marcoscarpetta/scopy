@@ -22,7 +22,7 @@
 
 from libscopyUI import MenuCreator
 from libscopyUI import base,widgets
-from gi.repository import Gtk,GtkClutter
+from gi.repository import Gtk,GtkClutter,Gio
 from gettext import gettext as _
 GtkClutter.init([])
 
@@ -36,7 +36,7 @@ class Application():
 		self.window.maximize()
 		
 		#application settings
-		self.settings = base.Settings()
+		self.settings = Gio.Settings.new(base.SCHEMA_ID)
 
 		#main window widgets
 		grid = Gtk.Grid()
@@ -55,7 +55,7 @@ class Application():
 		#background
 		self.table = widgets.Table()
 		self.table.set_on_child_added_callback(self._set_size_request)
-		self.table.set_from_file(self.settings['sfondo'])
+		self.table.set_from_file(self.settings.get_string('background'))
 		self.table.set_repeat(True,True)
 		self.stage.add_actor(self.table)
 		

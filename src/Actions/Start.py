@@ -20,7 +20,7 @@
 ##
 
 from gettext import gettext as _
-from gi.repository import Gtk
+from gi.repository import Gtk,Gio
 from libscopyUI import base
 
 Path=_('File')
@@ -29,6 +29,7 @@ Name=_('New game...')
 class Main():
 	def __init__(self, app):
 		self.app = app
+		self.settings = Gio.Settings.new(base.SCHEMA_ID)
 		
 		self.dialog = Gtk.Window()
 
@@ -68,15 +69,14 @@ class Main():
 		for n in base.get_number_of_players(self.var_combo.get_active_id()):
 			self.n_players.append(str(n),str(n))
 		try:
-			self.n_players.set_active_id(str(self.app.settings['players']))
+			self.n_players.set_active_id(str(self.settings.get_int('players')))
 		except:
 			pass
 
 	def start_match(self, widget=None):
-		self.app.settings['nome']=self.name_entry.get_text()
-		self.app.settings['variante']=self.var_combo.get_active_id()
-		self.app.settings['players']=int(self.n_players.get_active_id())
-		self.app.settings.save()
+		self.settings.set_string('player-name', self.name_entry.get_text())
+		self.settings.set_string('variant', self.var_combo.get_active_id())
+		self.settings.set_int('players', int(self.n_players.get_active_id()))
 		self.dialog.hide()
 		self.app.new_match()
 
@@ -86,6 +86,6 @@ class Main():
 		self.button.connect('pressed',self.start_match)
 		self.button.connect('activate',self.start_match)
 		self.var_combo.connect('changed',self.set_n_players)
-		self.var_combo.set_active_id(self.app.settings['variante'])
-		self.name_entry.set_text(self.app.settings['nome'])
+		self.var_combo.set_active_id(self.settings.get_string('variant'))
+		self.name_entry.set_text(self.settings.get_string('player-name'))
 		self.dialog.show_all()

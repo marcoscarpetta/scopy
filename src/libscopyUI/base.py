@@ -22,9 +22,13 @@
 import sys, os
 import cairo
 import pickle
+from gi.repository import Gio
 
 APP_VERSION = '1.0'
 APP_NAME = 'scopy'
+SCHEMA_ID = 'apps.scopy'
+
+settings = Gio.Settings.new(SCHEMA_ID)
 
 #setting up gettext
 import gettext
@@ -90,70 +94,17 @@ for cartella in os.listdir(percorso_carte):
 		tipi_di_carte.append(cartella)
 tipi_di_carte.sort()
 
-#default settings
-default = {
-			'nome':_('Player'),
-			'variante':_('Classic scopa'),
-			'speed':3,
-			'cards':'Napoletane',
-			'sfondo':percorso_tap+'verde.png',
-			'players':2,
-			'show_value_on_cards':False
-			}
-
-class Settings():
-	def __init__(self):
-		self.settings = {}
-		self.load()
-		self.check()
-
-	def __getitem__(self, key):
-		return self.settings[key]
-
-	def __setitem__(self, key, value):
-		self.settings[key] = value
-
-	def load(self):
-		d = os.path.expanduser('~')+"/.scopy"
-		if not os.path.exists(d):
-			os.makedirs(d)
-		if not os.path.exists(d+'/settings.conf'):
-			config = open(d+'/settings.conf', 'w')
-			config.close()
-		config = open(d+'/settings.conf', 'rw')
-		try:
-			self.settings = pickle.load(config)
-		except:
-			self.settings = default.copy()
-		config.close()
-	
-	def check(self):
-		if self['variante'] not in varianti:
-			self['variante'] = default['variante']
-		if self['cards'] not in tipi_di_carte:
-			self['cards'] = default['cards']
-		if not os.path.exists(self['sfondo']):
-			self['sfondo'] = default['sfondo']
-		for key in default:
-			if not key in self.settings:
-				self[key] = default[key]
-
-	def save(self):
-		config = open(os.path.expanduser('~')+"/.scopy/settings.conf", 'w')
-		pickle.dump(self.settings, config)
-		config.close()
-
 def get_card_size(app):
-	card=cairo.ImageSurface.create_from_png(percorso_carte+app.settings['cards']+'/'+immagini[0][1])
+	card=cairo.ImageSurface.create_from_png(percorso_carte+settings.get_string('cards')+'/'+immagini[0][1])
 	return card.get_width(), card.get_height()
 
 def create_match(app):
-	players=[app.settings['nome']]
-	n_players=int(app.settings['players'])
+	players=[settings.get_string('player-name')]
+	n_players=int(settings.get_int('players'))
 	for p in range(n_players-1):
 		players.append(_('CPU')+' '+str(p+1))
-	variant = import_variant(app.settings['variante'])
+	variant = import_variant(settings.get_string('variant'))
 	return variant.Match(app, players)
 
 def get_pause(app):
-	return times[int(float(app.settings['speed']))]
+	return times[settings.get_int('speed')]

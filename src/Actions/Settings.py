@@ -20,7 +20,7 @@
 ##
 
 from gettext import gettext as _
-from gi.repository import Gtk
+from gi.repository import Gtk,Gio
 from libscopyUI import base
 
 Path=_('Edit')
@@ -29,6 +29,8 @@ Name=_('Settings')
 class Main():
 	def __init__(self, app):
 		self.app = app
+		self.settings = Gio.Settings.new(base.SCHEMA_ID)
+		
 		self.dialog = Gtk.Window()
 		self.dialog.set_title(_('Edit Settings'))
 		self.dialog.set_transient_for(app.window)
@@ -72,7 +74,7 @@ class Main():
 		self.velocita=Gtk.HScale.new_with_range(1,3,1)
 		
 		self.show_value_on_cards = Gtk.Switch()
-		self.show_value_on_cards.set_active(self.app.settings['show_value_on_cards'])
+		self.show_value_on_cards.set_active(self.settings.get_boolean('show-value-on-cards'))
 	
 		grid.attach(self.carte_combo,1,0,1,1)
 		grid.attach(self.velocita,1,1,1,1)
@@ -84,26 +86,26 @@ class Main():
 		button.connect('pressed', self.modifica_preferenze)
 		grid.attach(button,1,4,1,1)
 	
-		self.carte_combo.set_active(base.tipi_di_carte.index(self.app.settings['cards']))
-		self.velocita.set_value(int(float(self.app.settings['speed'])))
+		self.carte_combo.set_active(base.tipi_di_carte.index(self.settings.get_string('cards')))
+		self.velocita.set_value(self.settings.get_int('speed'))
 	
 	def on_back_button_pressed(self, event):
 		self.back_dialog.run()
 	
 	def on_back_dialog_response(self, event, response_id=0):
 		if response_id == -3:
-			self.app.settings['sfondo'] = self.back_dialog.get_filename()
+			self.settings.set_string('background', self.back_dialog.get_filename())
 			self.load_image()
 		self.back_dialog.hide()
 		return True
 	
 	def on_back_dialog_update_preview(self, widget):
 		if self.back_dialog.get_preview_filename():
-			self.app.settings['sfondo'] = self.back_dialog.get_preview_filename()
-			self.app.table.set_from_file(self.app.settings['sfondo'])
+			self.settings.set_string('background', self.back_dialog.get_preview_filename())
+			self.app.table.set_from_file(self.back_dialog.get_preview_filename())
 
 	def load_image(self):
-		tmp = Gtk.Image.new_from_file(self.app.settings['sfondo'])
+		tmp = Gtk.Image.new_from_file(self.settings.get_string('background'))
 		pixbuf = tmp.get_pixbuf()
 		w = 200
 		h = pixbuf.get_height()*w/pixbuf.get_width()
@@ -112,17 +114,16 @@ class Main():
 
 	#modifica le preferenze in base ai valori dati dall'utente
 	def modifica_preferenze(self, widget):
-		if self.app.settings['cards'] != base.tipi_di_carte[self.carte_combo.get_active()]:
-			self.app.settings['cards'] = base.tipi_di_carte[self.carte_combo.get_active()]
+		if self.settings.get_string('cards') != base.tipi_di_carte[self.carte_combo.get_active()]:
+			self.settings.set_string('cards', base.tipi_di_carte[self.carte_combo.get_active()])
 			if self.app.match:
 				self.app.match.update_cards()
-		self.app.settings['speed']=self.velocita.get_value()
-		if self.show_value_on_cards.get_active() != self.app.settings['show_value_on_cards']:
-			self.app.settings['show_value_on_cards']=self.show_value_on_cards.get_active()
+		self.settings.set_int('speed', self.velocita.get_value())
+		if self.show_value_on_cards.get_active() != self.settings.get_boolean('show-value-on-cards'):
+			self.settings.set_boolean('show-value-on-cards', self.show_value_on_cards.get_active())
 			if self.app.match:
 				self.app.match.update_cards()
-		self.app.table.set_from_file(self.app.settings['sfondo'])
-		self.app.settings.save()
+		self.app.table.set_from_file(self.settings.get_string('background'))
 		self.dialog.hide()
 
 	def main(self, widget):
