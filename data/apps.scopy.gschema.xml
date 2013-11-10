@@ -2,7 +2,7 @@
   <schema id="apps.scopy" path="/apps/scopy/" gettext-domain="scopy">
 
     <key name="player-name" type="s">
-      <default l10n="scopy">"Player"</default>
+      <default l10n="messages">"Player"</default>
       <summary>Player name</summary>
       <description>
         Player name
@@ -10,7 +10,7 @@
     </key>
 
     <key name="variant" type="s">
-      <default l10n="scopy">"Classic scopa"</default>
+      <default l10n="messages">"Classic scopa"</default>
       <summary>Game variant</summary>
       <description>
         Game variant
@@ -33,7 +33,7 @@
       </description>
     </key>
 	 
-	 <key name="background" type="s">
+    <key name="background" type="s">
       <default>"/usr/share/scopy/data/images/tappeti/verde.png"</default>
       <summary>Background image</summary>
       <description>
@@ -41,7 +41,7 @@
       </description>
     </key>
 	 
-	 <key name="players" type="i">
+    <key name="players" type="i">
       <default>2</default>
       <summary>Number of players</summary>
       <description>
@@ -49,12 +49,13 @@
       </description>
     </key>
 	 
-	 <key name="show-value-on-cards" type="b">
+    <key name="show-value-on-cards" type="b">
       <default>false</default>
       <summary>Show values on cards</summary>
       <description>
         Show values on cards
       </description>
     </key>
+
   </schema>
 </schemalist>
