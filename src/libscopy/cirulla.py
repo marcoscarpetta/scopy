@@ -168,7 +168,7 @@ class Match(core.Match):
 			
 				#non 7 a terra
 				n=0
-				if len(self.prese(widgets.Card(self.app,0,7),carte_terra+[giocata[0]])) != 0:
+				if len(self.prese(widgets.Card(0,7),carte_terra+[giocata[0]])) != 0:
 					n=1
 				par.append(n*flag)
 			

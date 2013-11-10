@@ -151,10 +151,9 @@ class Table(Clutter.Texture):
 
 #Clutter actor that showing a card
 class Card(Clutter.CairoTexture):
-	def __init__(self, app, suit, value):
+	def __init__(self, suit, value):
 		Clutter.CairoTexture.__init__(self)
 		self.settings = Gio.Settings.new(base.SCHEMA_ID)
-		self.app = app
 		self.suit = suit
 		self.value = value
 		self.mouse_over = False
@@ -168,7 +167,7 @@ class Card(Clutter.CairoTexture):
 	def draw_card(self, retro=False):
 		s=10
 		r=10
-		w,h=base.get_card_size(self.app)
+		w,h=base.get_card_size()
 		if self.get_reactive():
 			self.set_surface_size(w+s,h+s)
 			self.set_size(w+s,h+s)
@@ -260,7 +259,7 @@ class Box(Clutter.CairoTexture):
 		if Clutter.VERSION > 1.10:
 			self.set_x_expand(False)
 			self.set_y_expand(False)
-		self.column_width, self.row_height = base.get_card_size(self.app)
+		self.column_width, self.row_height = base.get_card_size()
 		self.set_surface_size(cols*self.column_width+(cols+1)*spacing,rows*self.row_height+(rows+1)*spacing)
 		self.max_height = 0
 		self.max_width = 0
@@ -300,7 +299,7 @@ class Box(Clutter.CairoTexture):
 		self.invalidate()
 	
 	def relayout(self):
-		card_w,card_h = base.get_card_size(self.app)
+		card_w,card_h = base.get_card_size()
 		if self.max_height>0 and self.rows>1:
 			self.row_height = int((self.max_height-(self.rows+1)*self.spacing-card_h)/(self.rows-1))
 		if self.max_width>0 and self.cols>1:
@@ -325,19 +324,19 @@ class Box(Clutter.CairoTexture):
 
 	def get_min_width(self):
 		if self.cols>1:
-			return (self.cols+1)*self.spacing+(self.cols-1)*min_width+base.get_card_size(self.app)[0]
-		return (self.cols+1)*self.spacing+self.cols*base.get_card_size(self.app)[0]
+			return (self.cols+1)*self.spacing+(self.cols-1)*min_width+base.get_card_size()[0]
+		return (self.cols+1)*self.spacing+self.cols*base.get_card_size()[0]
 	
 	def get_min_height(self):
 		if self.rows>1:
-			return (self.rows+1)*self.spacing+(self.rows-1)*min_height+base.get_card_size(self.app)[1]
-		return (self.rows+1)*self.spacing+self.rows*base.get_card_size(self.app)[1]
+			return (self.rows+1)*self.spacing+(self.rows-1)*min_height+base.get_card_size()[1]
+		return (self.rows+1)*self.spacing+self.rows*base.get_card_size()[1]
 		
 	def get_natural_width(self):
-		return (self.cols+1)*self.spacing+self.cols*base.get_card_size(self.app)[0]
+		return (self.cols+1)*self.spacing+self.cols*base.get_card_size()[0]
 	
 	def get_natural_height(self):
-		return (self.rows+1)*self.spacing+self.rows*base.get_card_size(self.app)[1]
+		return (self.rows+1)*self.spacing+self.rows*base.get_card_size()[1]
 	
 	def set_max_height(self, height):
 		if height > self.get_natural_height():
@@ -438,7 +437,7 @@ class Deck(Clutter.CairoTexture):
 		Clutter.CairoTexture.__init__(self)
 		self.settings = Gio.Settings.new(base.SCHEMA_ID)
 		self.app = app
-		self.child_w,self.child_h = base.get_card_size(self.app)
+		self.child_w,self.child_h = base.get_card_size()
 		if Clutter.VERSION > 1.10:
 			self.set_x_expand(False)
 			self.set_y_expand(False)
@@ -456,7 +455,7 @@ class Deck(Clutter.CairoTexture):
 	def populate(self):
 		for suit in range(4):
 			for value in range(1,11):
-				self.cards.append(Card(self.app, suit, value))
+				self.cards.append(Card(suit, value))
 		
 	def get_min_width(self):
 		if self.with_scopa:

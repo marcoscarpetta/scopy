@@ -215,7 +215,7 @@ class Match():
 			boxes.append(box)
 			i=0
 			while i < len(prese_possibili[n]):
-				card = widgets.Card(self.app,prese_possibili[n][i].suit,prese_possibili[n][i].value)
+				card = widgets.Card(prese_possibili[n][i].suit,prese_possibili[n][i].value)
 				card.set_reactive(True)
 				card.connect('button-press-event',self.scelta_fatta,boxes,carta,prese_possibili[n],index)
 				card.draw_card()
@@ -258,7 +258,7 @@ class Match():
 		if len(carte) == 0:
 			self.players[giocatore].mano.move_to(carta, self.carte_terra)
 			if self.next() != 0:
-				GLib.timeout_add(2000+base.get_pause(self.app),self.prossimo_giocatore)
+				GLib.timeout_add(2000+base.get_pause(),self.prossimo_giocatore)
 			else:
 				GLib.timeout_add(500,self.prossimo_giocatore)
 		#se si prende qualcosa
@@ -271,9 +271,9 @@ class Match():
 				pass
 			else:
 				if len(carte) == len(self.carte_terra.get_list()):
-					GLib.timeout_add(2500+base.get_pause(self.app), self.players[giocatore].carte_prese.add_scopa, carta)
+					GLib.timeout_add(2500+base.get_pause(), self.players[giocatore].carte_prese.add_scopa, carta)
 			#prende le carte da terra
-			GLib.timeout_add(2000+base.get_pause(self.app), self.presa_da_terra,giocatore,carta,carte)
+			GLib.timeout_add(2000+base.get_pause(), self.presa_da_terra,giocatore,carta,carte)
 
 	#valuta la migliore presa che il computer puo' fare
 	def gioca_ai(self):
@@ -322,7 +322,7 @@ class Match():
 			
 				#non 7 a terra
 				n=0
-				if len(self.prese(widgets.Card(self.app,0,7),carte_terra+[giocata[0]])) != 0:
+				if len(self.prese(widgets.Card(0,7),carte_terra+[giocata[0]])) != 0:
 					n=1
 				par.append(n*flag)
 			
@@ -526,7 +526,7 @@ class Match():
 				boxes.append(box)
 				i=0
 				while i < len(self.ultima_presa[n]):
-					card = widgets.Card(self.app,self.ultima_presa[n][i].suit,self.ultima_presa[n][i].value)
+					card = widgets.Card(self.ultima_presa[n][i].suit,self.ultima_presa[n][i].value)
 					card.set_reactive(True)
 					card.connect('button-press-event',self.app.hide_last_move,None,(boxes,index))
 					card.draw_card()

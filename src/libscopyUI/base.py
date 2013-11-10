@@ -94,7 +94,7 @@ for cartella in os.listdir(percorso_carte):
 		tipi_di_carte.append(cartella)
 tipi_di_carte.sort()
 
-def get_card_size(app):
+def get_card_size():
 	card=cairo.ImageSurface.create_from_png(percorso_carte+settings.get_string('cards')+'/'+immagini[0][1])
 	return card.get_width(), card.get_height()
 
@@ -106,5 +106,5 @@ def create_match(app):
 	variant = import_variant(settings.get_string('variant'))
 	return variant.Match(app, players)
 
-def get_pause(app):
+def get_pause():
 	return times[settings.get_int('speed')]
