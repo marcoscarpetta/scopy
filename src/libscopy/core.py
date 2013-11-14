@@ -48,8 +48,8 @@ ai_values = (
 	lambda mem: 1, #carta piu' bassa
 	### se si prende qualcosa
 	lambda mem: 1, #ogni carta presa
-	lambda mem: 3, #ogni denaro
-	lambda mem: (mem['7'] > 2)*4, #ogni sette
+	lambda mem: (mem['denari'] < 6)*3, #ogni denaro
+	lambda mem: (mem['7'] < 3)*4, #ogni sette
 	lambda mem: 20, #sette bello
 	lambda mem: 6, #ogni sei
 	lambda mem: 1, #ogni asso
@@ -58,7 +58,7 @@ ai_values = (
 class Memory(dict):
 	def __getitem__(self, key):
 		if key in self:
-			return self[key]
+			return dict.__getitem__(self, key)
 		else:
 			return 0
 
@@ -90,6 +90,15 @@ class Ai(Player):
 			value += par[i]*values[i](self.memory)
 			i += 1
 		return value
+	
+	def update_memory(self, cards, scopa):
+		self.memory['punti'] = self.punti + scopa
+		
+		for card in cards:
+			if card.value == 7:
+				self.memory['7'] += 1
+			if card.suit == 0:
+				self.memory['denari'] += 1 
 
 class Match():
 	def __init__(self, app, players):
@@ -400,7 +409,8 @@ class Match():
 				value = self.players[self.giocatore].value(par, ai_values)
 				if value > migliore[2]:
 					migliore[0], migliore[1], migliore[2] = giocata[0], giocata[1], value
-				
+		
+		self.players[self.giocatore].update_memory(migliore[1], len(migliore[1])==carte_terra)
 		self.gioca_carta(self.giocatore,migliore[0],migliore[1])
 	
 	#ritorna tutte le combinazioni di almeno 2 carte
