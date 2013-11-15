@@ -56,6 +56,14 @@
         Show values on cards
       </description>
     </key>
+	 
+	 <key name="window-size" type="(ii)">
+      <default>(800,600)</default>
+      <summary>Window size</summary>
+      <description>
+        The main window size
+      </description>
+    </key>
 
   </schema>
 </schemalist>

@@ -22,21 +22,21 @@
 
 from libscopyUI import MenuCreator
 from libscopyUI import base,widgets
-from gi.repository import Gtk,GtkClutter,Gio
+from gi.repository import Gtk,GtkClutter,Gio,GLib
 from gettext import gettext as _
 GtkClutter.init([])
 
 #classe che contiene tutti i metodi necessari alla creazione e funzionamento della gui
 class Application():
 	def __init__(self):
+		#application settings
+		self.settings = Gio.Settings.new(base.SCHEMA_ID)
+		
 		#main window
 		self.window = Gtk.Window()
 		self.window.connect('delete-event', Gtk.main_quit)
 		self.window.set_position(Gtk.WindowPosition.CENTER)
-		self.window.maximize()
-		
-		#application settings
-		self.settings = Gio.Settings.new(base.SCHEMA_ID)
+		self.window.resize(*self.settings.get_value("window-size"))
 
 		#main window widgets
 		grid = Gtk.Grid()
@@ -79,6 +79,7 @@ class Application():
 	def window_resized(self,widget=None,event=None,a=0):
 		width, height = self.embed.get_allocated_width(), self.embed.get_allocated_height()
 		self.table.set_size(width, height)
+		self.settings.set_value("window-size", GLib.Variant('(ii)',self.window.get_size()))
 		
 	def update_status_bar(self, text):
 		c_id = self.status_bar.get_context_id('situazione')
