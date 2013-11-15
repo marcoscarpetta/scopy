@@ -164,7 +164,7 @@ class Card(Clutter.CairoTexture):
 	def get_value(self):
 		return self.value
 	
-	def draw_card(self, retro=False):
+	def draw_card(self, face_up=True):
 		s=10
 		r=10
 		w,h=base.get_card_size()
@@ -174,7 +174,7 @@ class Card(Clutter.CairoTexture):
 		else:
 			self.set_surface_size(w,h)
 		self.clear()
-		if retro:
+		if not face_up:
 			self.set_from_file(base.percorso_carte+self.settings.get_string('cards')+'/'+base.immagini[1][0])
 		else:
 			cr = self.create()
@@ -255,6 +255,9 @@ class Card(Clutter.CairoTexture):
 class Box(Clutter.CairoTexture):
 	def __init__(self, app, rows, cols, spacing=15):
 		Clutter.CairoTexture.__init__(self)
+		self.settings = Gio.Settings.new(base.SCHEMA_ID)
+		self.settings.connect("changed::cards", self.update_cards)
+		self.settings.connect("changed::show-value-on-cards", self.update_cards)
 		self.app = app
 		if Clutter.VERSION > 1.10:
 			self.set_x_expand(False)
@@ -265,6 +268,7 @@ class Box(Clutter.CairoTexture):
 		self.max_width = 0
 		self.rows = rows
 		self.cols = cols
+		self.face_up = True
 		self.spacing = spacing
 		self.draw_rect()
 		self.children = []
@@ -318,6 +322,21 @@ class Box(Clutter.CairoTexture):
 				c+=1
 			r+=1
 	
+	def set_face_up(self, face_up):
+		self.face_up = face_up
+		self.redraw_cards()
+	
+	def get_face_up(self):
+		return self.face_up
+	
+	def redraw_cards(self):
+		for card in self.get_list():
+			card.draw_card(self.face_up)
+	
+	def update_cards(self, settings, key):
+		self.redraw_cards()
+		self.relayout()
+	
 	def set_position(self, x, y):
 		Clutter.Actor.set_position(self, x, y)
 		self.relayout()
@@ -353,6 +372,7 @@ class Box(Clutter.CairoTexture):
 		self.relayout()
 
 	def add(self, actor, time=500, add_to_stage=True):
+		actor.draw_card(self.face_up)
 		r,c=-1,-1
 		n=0
 		while n<self.rows:
@@ -374,6 +394,7 @@ class Box(Clutter.CairoTexture):
 			actor.set_position(x,y)
 	
 	def add_on(self, actor, on_actor, time, add_to_stage=True):
+		actor.draw_card(self.face_up)
 		x=on_actor.get_x()+30
 		y=on_actor.get_y()+30
 		if add_to_stage:

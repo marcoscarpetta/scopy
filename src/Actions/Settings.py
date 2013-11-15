@@ -48,9 +48,10 @@ class Main():
 		grid.attach(Gtk.Label(_('Background:')),0,2,1,1)
 		grid.attach(Gtk.Label(_('Show value on cards:')),0,3,1,1)
 	
-		self.carte_combo=Gtk.ComboBoxText()
+		self.cards_combo = Gtk.ComboBoxText()
 		for tipo in base.tipi_di_carte:
-			self.carte_combo.append_text(tipo)
+			self.cards_combo.append_text(tipo)
+		self.cards_combo.connect("changed", self.on_cards_combo_changed)
 		
 		self.back_button = Gtk.Button()
 		self.image = Gtk.Image.new()
@@ -71,13 +72,14 @@ class Main():
 		file_filter.add_pixbuf_formats()
 		self.back_dialog.add_filter(file_filter)
 		
-		self.velocita=Gtk.HScale.new_with_range(1,3,1)
+		self.speed_scale=Gtk.HScale.new_with_range(1,3,1)
 		
 		self.show_value_on_cards = Gtk.Switch()
 		self.show_value_on_cards.set_active(self.settings.get_boolean('show-value-on-cards'))
+		self.show_value_on_cards.connect("notify::active", self.on_show_value_on_cards_changed)
 	
-		grid.attach(self.carte_combo,1,0,1,1)
-		grid.attach(self.velocita,1,1,1,1)
+		grid.attach(self.cards_combo,1,0,1,1)
+		grid.attach(self.speed_scale,1,1,1,1)
 		grid.attach(self.back_button,1,2,1,1)
 		grid.attach(self.show_value_on_cards,1,3,1,1)
 	
@@ -86,8 +88,8 @@ class Main():
 		button.connect('pressed', self.modifica_preferenze)
 		grid.attach(button,1,4,1,1)
 	
-		self.carte_combo.set_active(base.tipi_di_carte.index(self.settings.get_string('cards')))
-		self.velocita.set_value(self.settings.get_int('speed'))
+		self.cards_combo.set_active(base.tipi_di_carte.index(self.settings.get_string('cards')))
+		self.speed_scale.set_value(self.settings.get_int('speed'))
 	
 	def on_back_button_pressed(self, event):
 		self.back_dialog.run()
@@ -112,17 +114,15 @@ class Main():
 		pixbuf = pixbuf.scale_simple(w, h, 1)
 		self.image.set_from_pixbuf(pixbuf)
 
+	def on_cards_combo_changed(self, widget):
+		self.settings.set_string('cards', base.tipi_di_carte[self.cards_combo.get_active()])
+	
+	def on_show_value_on_cards_changed(self, widget, data):
+		self.settings.set_boolean('show-value-on-cards', self.show_value_on_cards.get_active())
+	
 	#modifica le preferenze in base ai valori dati dall'utente
 	def modifica_preferenze(self, widget):
-		if self.settings.get_string('cards') != base.tipi_di_carte[self.carte_combo.get_active()]:
-			self.settings.set_string('cards', base.tipi_di_carte[self.carte_combo.get_active()])
-			if self.app.match:
-				self.app.match.update_cards()
-		self.settings.set_int('speed', self.velocita.get_value())
-		if self.show_value_on_cards.get_active() != self.settings.get_boolean('show-value-on-cards'):
-			self.settings.set_boolean('show-value-on-cards', self.show_value_on_cards.get_active())
-			if self.app.match:
-				self.app.match.update_cards()
+		self.settings.set_int('speed', self.speed_scale.get_value())
 		self.app.table.set_from_file(self.settings.get_string('background'))
 		self.dialog.hide()
 

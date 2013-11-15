@@ -134,6 +134,8 @@ class Match():
 			app.table.pack(self.players[3].mano, 0,1)
 			app.table.pack(self.players[0].carte_prese, 2,2)
 			app.table.pack(self.players[1].carte_prese, 2,0)
+		for i in range(len(players)-1):
+			self.players[i+1].mano.set_face_up(False)
 		self.notifiche = widgets.NotificationSystem(app.stage)
 		self.giocatore = random.randrange(len(players))
 		self.punti_vit = 11
@@ -155,16 +157,12 @@ class Match():
 		for player in self.players:
 			for n in range(3):
 				card=self.mazzo.pop()
-				if player.ai:
-					card.draw_card(1)
-				else:
-					card.draw_card()
+				if not player.ai:
 					card.activate(self.play)
 				player.mano.add(card)
 		if self.mano == 0:
 			for n in range(4):
 				card=self.mazzo.pop()
-				card.draw_card()
 				self.carte_terra.add(card)
 			if self.giocatore == 0:
 				self.notifiche.notify(_("It's your turn"),2000)
@@ -227,7 +225,6 @@ class Match():
 				card = widgets.Card(prese_possibili[n][i].suit,prese_possibili[n][i].value)
 				card.set_reactive(True)
 				card.connect('button-press-event',self.scelta_fatta,boxes,carta,prese_possibili[n],index)
-				card.draw_card()
 				box.add(card,0)
 				i=i+1
 			n=n+1
@@ -257,9 +254,7 @@ class Match():
 		for carta_da_prendere in carte:
 			self.app.stage.set_child_above_sibling(carta_da_prendere, None)
 		self.app.stage.set_child_above_sibling(carta, None)
-		if self.players[giocatore].ai:
-			carta.draw_card()
-		else:
+		if not self.players[giocatore].ai:
 			carta.disconnect_by_func(carta.enter)
 			carta.disconnect_by_func(carta.leave)
 			self.player_can_play = False
@@ -539,7 +534,6 @@ class Match():
 					card = widgets.Card(self.ultima_presa[n][i].suit,self.ultima_presa[n][i].value)
 					card.set_reactive(True)
 					card.connect('button-press-event',self.app.hide_last_move,None,(boxes,index))
-					card.draw_card()
 					box.add(card,0)
 					i=i+1
 				n=n+1
@@ -582,17 +576,6 @@ class Match():
 			self.app.start_function(None)
 		else:
 			self.start()
-	
-	def update_cards(self):
-		self.mazzo.updated_cards()
-		for card in self.carte_terra.get_list():
-			card.draw_card()
-		self.carte_terra.relayout()
-		for player in self.players:
-			player.carte_prese.updated_cards()
-			for card in player.mano.get_list():
-				card.draw_card(player.ai)
-			player.mano.relayout()
 	
 	def destroy(self):
 		self.app.table.destroy_all_children()

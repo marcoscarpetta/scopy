@@ -105,16 +105,14 @@ class Match(core.Match):
 				player.scoperte = 1
 			for card in carte:
 				if player.ai:
-					card.draw_card(not player.scoperte)
+					player.mano.set_face_up(player.scoperte)
 				else:
-					card.draw_card()
 					card.activate(self.play)
 				player.mano.add(card)
 			
 		if self.mano == 0:
 			for n in range(4):
 				card=self.mazzo.pop()
-				card.draw_card()
 				self.carte_terra.add(card)
 			if self.giocatore == 0:
 				self.notifiche.notify(_("It's your turn"),2000)
