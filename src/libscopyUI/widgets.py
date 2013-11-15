@@ -457,6 +457,7 @@ class Deck(Clutter.CairoTexture):
 	def __init__(self, app, with_scopa=False, padding=15):
 		Clutter.CairoTexture.__init__(self)
 		self.settings = Gio.Settings.new(base.SCHEMA_ID)
+		self.settings.connect("changed::cards", self.update_cards)
 		self.app = app
 		self.child_w,self.child_h = base.get_card_size()
 		if Clutter.VERSION > 1.10:
@@ -528,7 +529,7 @@ class Deck(Clutter.CairoTexture):
 			n=n+1
 		self.invalidate()
 	
-	def updated_cards(self):
+	def update_cards(self, settings=None, key=None):
 		self.surface = cairo.ImageSurface.create_from_png(base.percorso_carte+self.settings.get_string('cards')+'/'+base.immagini[1][0])
 		self.draw()
 

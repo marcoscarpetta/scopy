@@ -72,7 +72,7 @@ class Main():
 		file_filter.add_pixbuf_formats()
 		self.back_dialog.add_filter(file_filter)
 		
-		self.speed_scale=Gtk.HScale.new_with_range(1,3,1)
+		self.speed_scale=Gtk.Scale.new_with_range(Gtk.Orientation.HORIZONTAL, 1, 3, 1)
 		
 		self.show_value_on_cards = Gtk.Switch()
 		self.show_value_on_cards.set_active(self.settings.get_boolean('show-value-on-cards'))
