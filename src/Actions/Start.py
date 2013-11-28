@@ -63,6 +63,12 @@ class Main():
 		self.name_entry.set_property("activates-default",True)
 		self.button.set_can_default(True)
 		self.button.grab_default()
+
+		self.dialog.set_transient_for(self.app.window)
+		self.dialog.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)
+		self.button.connect('pressed',self.start_match)
+		self.button.connect('activate',self.start_match)
+		self.var_combo.connect('changed',self.set_n_players)
 	
 	def set_n_players(self, widget=None):
 		self.n_players.remove_all()
@@ -81,11 +87,6 @@ class Main():
 		self.app.new_match()
 
 	def main(self, widget=None):
-		self.dialog.set_transient_for(self.app.window)
-		self.dialog.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)
-		self.button.connect('pressed',self.start_match)
-		self.button.connect('activate',self.start_match)
-		self.var_combo.connect('changed',self.set_n_players)
 		self.var_combo.set_active_id(self.settings.get_string('variant'))
 		self.name_entry.set_text(self.settings.get_string('player-name'))
 		self.dialog.show_all()
