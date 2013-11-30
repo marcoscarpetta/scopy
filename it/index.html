@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<title>ScoPy | Il gioco della scopa</title>
+<link rel="stylesheet" href="../data/css3.css" type="text/css">
+<link rel="SHORTCUT ICON" href="../data/scopy.png">
+</head>
+
+<body>
+<script src="../lib.js">
+</script>
+<nav id="nav_menu">
+<a href="#about" title="Cos'è ScoPy?" class="item">Cos'è ScoPy?</a>
+<a href="#download" title="Download e installazione" class="item">Download e installazione</a>
+<a href="#screenshots" title="Screenshots" class="item">Screenshots</a>
+<a href="#partecipa" title="Partecipa!" class="item">Partecipa!</a>
+<a href="#contatti" title="Contatti" class="item">Contatti</a>
+<span style="float:right;" id="span"><script>getMenu("it")</script></span>
+</nav>
+
+<div id="corpo">
+
+<div id="info">
+<div>
+Ultima release stabile: 1.0 <br>
+<a href="https://github.com/marcoscarpetta/scopy/releases/tag/1.0" target='_blank'>github</a><br>
+<a href="http://sourceforge.net/projects/scopy/files/1.0/" target='_blank'>sourceforge</a><br>
+<a href="https://launchpad.net/~scopy.team/+archive/scopy-stable" target='_blank'>PPA</a>
+</div>
+<div>
+Ultima release instabile: <br>//<br><br><br>
+</div>
+<div>
+Ultima revisione:<br>
+<a href="https://github.com/marcoscarpetta/scopy/archive/master.zip">github (zip)</a><br>
+<a href="https://launchpad.net/~scopy.team/+archive/scopy-daily" target='_blank'>PPA</a><br><br>
+</div>
+</div><br><br>
+
+<a id="about" class="title">
+<h2>Cos'è ScoPy?</h2>
+</a>
+<p>
+<script type="text/javascript" src="http://www.ohloh.net/p/710950/widgets/project_partner_badge.js"></script>
+<br>
+<img src='../data/scopy.svg' alt='Scopy' style="float:right; width:200px; height:200px;">
+ScoPy è un programma che permette di giocare al famoso gioco della scopa.<br>
+Attualmente è possibile giocare 1 contro 1 con il computer o in quattro, in coppia con un computer. 
+Sono presenti <strong>5 varianti di gioco</strong>:</p>
+<ul>
+<li>Classica</li>
+<li>Cirulla</li>
+<li>Cucita</li>
+<li>Re Bello</li>
+<li>Scopone</li>
+</ul>
+<strong>9 diversi mazzi di carte </strong>:
+<ul>
+<li>Bergamasche</li>
+<li>Francitalia</li>
+<li>Napoletane</li>
+<li>Piacentine</li>
+<li>Poker</li>
+<li>Scartini</li>
+<li>Siciliane</li>
+<li>Toscane</li>
+<li>Trevisane</li>
+</ul>
+<p>È inoltre possibile scegliere tra i diversi sfondi disponibili o usare una propria immagine.<br>
+Il gioco è stato tradotto in diverse lingue.<br>
+Il software è scritto in <a title='Python' href='http://www.python.org/' target='_blank'>Python</a>,
+utilizza le librerie grafiche standard di GNOME: 
+<a title='GTK+3' href='http://www.gtk.org/' target='_blank'>GTK+3</a>, 
+<a title='clutter' href='http://www.clutter-project.org/' target='_blank'>Clutter</a> e 
+<a title='cairo' href='http://cairographics.org/' target='_blank'>cairo</a>.<br>
+ScoPy è free software, rilasciato sotto i termini della licenza 
+<a href='http://www.gnu.org/licenses/gpl.html' target='_blank'>GPL v3</a>; il codice sorgente è 
+disponibile su <a href='https://github.com/marcoscarpetta/scopy' target='_blank'>github</a>.<br>
+</p>
+
+<strong>Risorse:</strong>
+<ul>
+<li><a href='http://sourceforge.net/projects/scopy/' target='_blank'>Pagina del progetto su sourceforge</a></li>
+<li><a href='http://launchpad.net/scopy' target='_blank'>Pagina del progetto su launchpad</a></li>
+<li><a href='https://github.com/marcoscarpetta/scopy' target='_blank'>Pagina del progetto su github</a></li>
+</ul>
+
+<a id="download" class="title">
+<h2>Download e installazione</h2>
+</a><br>
+
+<span style='color:#000080;'><strong>Downlaod</strong></span><br>
+<p>È possibile scaricare ScoPy da 
+<a href='http://sourceforge.net/projects/scopy/files/' target='_blank'>sourceforge</a>
+ o da <a href='https://github.com/marcoscarpetta/scopy/releases' target='_blank'>github</a>.
+I sorgenti sono ospitati da <a href='https://github.com/marcoscarpetta/scopy' target='_blank'>github</a>.</p>
+<span style='color:#000080;'><br>
+<strong>Installazione</strong></span><br>
+<em>
+<strong><img src='../data/large_linux2.png'  alt='linux' width='64' height='64'/> GNU/Linux</strong></em><br>
+<p>È possibile installare ScoPy su qualsiasi distribuzione GNU/Linux che abbia installati Python e 
+le GTK+3. Per farlo, basta scaricare i 
+<a href='https://github.com/marcoscarpetta/scopy/tags' target='_blank'>sorgenti</a>, scompattare 
+l'archivio ed eseguire nella stessa cartella:<br></p>
+<span class='code'>sudo python setup.py install --prefix='/usr'</span><br><br>
+<em><strong><img src='../data/large_debian.png' alt='debian' width='64' height='64'>Debian-based</strong></em><br>
+<p>Sono disponibili su <a href='http://sourceforge.net/projects/scopy/files/' target='_blank'>sourceforge</a> 
+e su <a href='https://github.com/marcoscarpetta/scopy/releases' target='_blank'>github</a>
+i pacchetti .deb installabili su qualunque sistema basato su debian e derivate. Va ricordato 
+che il programma richiede le GTK+3 (disponibili da debian "wheezy" in poi).</p><br>
+<em><strong><img src='../data/large_ubuntu.png' alt='ubuntu' width='64' height='64'/> Ubuntu</strong></em><br>
+<p>ScoPy è disponibile su Ubuntu attraverso i ppa del progetto. Per installare 
+la <strong>versione stabile</strong> basta dare:</p>
+<div class='code'>sudo add-apt-repository ppa:scopy.team/scopy-stable<br>
+sudo apt-get update<br>
+sudo apt-get install scopy</div><br>
+<p>Per installare la <strong>versione instabile</strong> date:</p>
+<div class='code'>sudo add-apt-repository ppa:scopy.team/scopy-unstable<br>
+sudo apt-get update<br>
+sudo apt-get install scopy</div><br>
+<p>Per installare la <strong>versione di sviluppo</strong> aggiornata quotidianamente date:</p>
+<div class='code'>sudo add-apt-repository ppa:scopy.team/scopy-daily<br>
+sudo apt-get update<br>
+sudo apt-get install scopy</div><br>
+<img src='../data/large_fedora.png' width='64' height='64' alt='fedora'/><em><strong>Fedora / RPM-based</strong></em><br>
+<p><a href='http://sagitter.fedorapeople.org/ScoPy/' target='_blank'>Qui</a> sono disponibili i pacchetti
+RPM di ScoPy. Si ringrazia <a href="http://www.fedoraos.wordpress.com/" target='_blank'>Antonio Trande</a>.</p><br>
+<img src='../data/large_arch.png' width='64' height='64' alt='arch'/><em><strong> Arch Linux</strong></em><br>
+<p>ScoPy è disponibile su <a href='https://aur.archlinux.org/packages.php?ID=49948' target='_blank'>AUR</a>.
+Se usate Arch Linux sapete sicuramente come installarlo ;)</p><br>
+<strong><em><img src='../data/large_windows.png' alt='windows' width='64' height='64'/> Windows</em></strong><br>
+<p>L'ultima versione disponibile per Windows è la <a href='https://sourceforge.net/projects/scopy/files/0.0.5/' target='_blank'>0.0.5<strong><em></em></strong></a>, molto vecchia (non sono presenti le animazioni).<br>
+Non è stato possibile creare pacchetti delle versioni successive perchè le librerie GTK+3 non sono disponibili su questa piattaforma. Nel caso venissero rilasciate ci sarà un immediato aggiornamento.<br>
+Se non riuscite a resistere installate GNU/Linux :)
+</p>
+
+<a id="screenshots" class="title">
+<h2>Screenshots</h2>
+</a><br>
+<p>Ecco alcuni screenshots:<br>
+<img class='screen' src='../data/screen1.jpg' alt='Scopy 1.0 schermata iniziale' title='Scopy 1.0 schermata iniziale'
+ width="400" height="300" onClick="clickOnImage(this)">
+<img class='screen' src='../data/screen2.jpg' alt='Scopy 1.0 partita' title='Scopy 1.0 partita' width="400" height="300" onClick="clickOnImage(this)">
+<img class='screen' src='../data/screen3.jpg' alt='Scopy 1.0 partita' title='Scopy 1.0 partita' width="400" height="300" onClick="clickOnImage(this)">
+<img class='screen' src='../data/screen4.jpg' alt='Scopy 1.0 finestra impostazioni' title='Scopy 1.0 finestra impostazioni' width="400" height="300" onClick="clickOnImage(this)">
+</p>
+
+<a id="partecipa" class="title">
+<h2>Partecipa!</h2>
+</a><br>
+<p>
+Ci sono molti modi per partecipare al progetto:</p><br>
+<strong><em>Scrivi del codice</em></strong><br>
+<p>
+Per contribuire a programmare ScoPy è sufficiente una modesta conoscenza del linguaggio Python,
+per maggiori informazioni potete scrivere a <strong>scopy.software@gmail.com</strong>.</p><br>
+
+<strong><em>Riporta un bug</em></strong><br>
+<p>
+Se riscontrate un problema potete segnalarlo su 
+<a href='https://github.com/marcoscarpetta/scopy/issues' target='_blank'>github</a>
+ o inviare una mail a <strong>scopy.software@gmail.com</strong>.</p><br>
+
+<strong><em>Aiuta a tradurre</em></strong><br>
+<p>
+Su <a href='https://translations.launchpad.net/scopy' target='_blank'>launchpad</a>.</p><br>
+
+<strong><em>Crea nuovi mazzi e sfondi</em></strong><br>
+<p>
+Puoi inviarli a <strong>scopy.software@gmail.com</strong>.<br>
+</p>
+
+<a id="contatti" class="title">
+<h2>Contatti</h2>
+</a><br><p>
+Per segnalare un bug, richiedere una nuova feature, suggerire qualcosa o per avere maggiori 
+informazioni sul programma, scrivete a <strong>scopy.software@gmail.com</strong>.
+</p>
+
+<p id="footer">
+<a href="http://validator.w3.org/check?uri=http%3A%2F%2Fscopy.sourceforge.net%2Fit%2Findex.html" target='_blank'>
+<img src="http://www.w3.org/html/logo/badge/html5-badge-h-css3.png" width="133" height="64" 
+alt="HTML5 Powered with CSS3 / Styling" title="HTML5 Powered with CSS3 / Styling">
+</a>
+
+<a href="http://jigsaw.w3.org/css-validator/validator?uri=http%3A%2F%2Fscopy.sourceforge.net%2Fit%2Findex.html" target='_blank'>
+    <img style="border:0;width:88px;height:31px"
+        src="http://jigsaw.w3.org/css-validator/images/vcss-blue"
+        alt="CSS Valido!" />
+</a>
+</p>
+
+</div>
+   
+</body>
+</html>
