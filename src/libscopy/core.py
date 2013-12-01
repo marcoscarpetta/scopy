@@ -146,7 +146,7 @@ class Match():
 
 	def start(self):
 		self.distribuisci_carte()
-		GLib.timeout_add(2000,self.prossimo_giocatore)
+		self.app.table.timeout_add(2000,self.prossimo_giocatore)
 	
 	#distribuisce le carte ai giocatori e a terra se è la prima mano
 	def distribuisci_carte(self):
@@ -186,7 +186,7 @@ class Match():
 			self.mano += 1
 			if len(self.mazzo.get_list())!=0:
 				self.distribuisci_carte()
-				GLib.timeout_add(2000,self.prossimo_giocatore)
+				self.app.table.timeout_add(2000,self.prossimo_giocatore)
 			else:
 				self.conta_punti()
 		else:
@@ -246,7 +246,7 @@ class Match():
 		self.carte_terra.move_to(carta, self.players[giocatore].carte_prese)
 		for carta in carte:
 			self.carte_terra.move_to(carta, self.players[giocatore].carte_prese)
-		GLib.timeout_add(500,self.prossimo_giocatore)
+		self.app.table.timeout_add(500,self.prossimo_giocatore)
 
 	#gioca la carta indicata del giocatore indicato e prende le carte indicate da terra
 	def gioca_carta(self, giocatore, carta, carte):
@@ -262,9 +262,9 @@ class Match():
 		if len(carte) == 0:
 			self.players[giocatore].mano.move_to(carta, self.carte_terra)
 			if self.next() != 0:
-				GLib.timeout_add(2000+base.get_pause(),self.prossimo_giocatore)
+				self.app.table.timeout_add(2000+base.get_pause(),self.prossimo_giocatore)
 			else:
-				GLib.timeout_add(500,self.prossimo_giocatore)
+				self.app.table.timeout_add(500,self.prossimo_giocatore)
 		#se si prende qualcosa
 		else:
 			self.ult_prende = giocatore
@@ -275,9 +275,9 @@ class Match():
 				pass
 			else:
 				if len(carte) == len(self.carte_terra.get_list()):
-					GLib.timeout_add(2500+base.get_pause(), self.players[giocatore].carte_prese.add_scopa, carta)
+					self.app.table.timeout_add(2500+base.get_pause(), self.players[giocatore].carte_prese.add_scopa, carta)
 			#prende le carte da terra
-			GLib.timeout_add(2000+base.get_pause(), self.presa_da_terra,giocatore,carta,carte)
+			self.app.table.timeout_add(2000+base.get_pause(), self.presa_da_terra,giocatore,carta,carte)
 
 	#valuta la migliore presa che il computer puo' fare
 	def gioca_ai(self):

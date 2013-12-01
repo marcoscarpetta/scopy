@@ -43,6 +43,7 @@ class Table(Clutter.Texture):
 		self._columns = 0
 		self._on_child_added = None
 		self._spacing = spacing
+		self._g_sources_id = []
 	
 	def set_on_child_added_callback(self, callback):
 		self._on_child_added = callback
@@ -140,7 +141,13 @@ class Table(Clutter.Texture):
 			i+=1
 		return (sum(max_width)+(self._columns-1)*self._spacing,sum(max_height)+(self._rows-1)*self._spacing)
 	
+	def timeout_add(self, interval, function, *data):
+		ID = GLib.timeout_add(interval, function, *data)
+		self._g_sources_id.append(ID)
+	
 	def destroy_all_children(self):
+		for source_id in self._g_sources_id:
+			GLib.Source.remove(source_id)
 		for children in self._children:
 			children.destroy()
 		self._children = []
