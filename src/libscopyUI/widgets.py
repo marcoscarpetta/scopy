@@ -27,6 +27,9 @@ from gettext import gettext as _
 
 min_width = 30
 min_height = 1
+#card's shadow parameters
+s=10
+r=10
 
 #funzione per spostamenti
 def go_to(actor,x,y,time):
@@ -150,6 +153,9 @@ class Table(Clutter.Texture):
 			GLib.Source.remove(source_id)
 		for children in self._children:
 			children.destroy()
+		for child in self.get_stage().get_children():
+			if child != self:
+				child.destroy()
 		self._children = []
 		self._children_rows = []
 		self._children_columns = []
@@ -157,13 +163,19 @@ class Table(Clutter.Texture):
 		self._columns = 0
 
 #Clutter actor that showing a card
-class Card(Clutter.CairoTexture):
+class Card(Clutter.Actor):
 	def __init__(self, suit, value):
-		Clutter.CairoTexture.__init__(self)
+		Clutter.Actor.__init__(self)
 		self.settings = Gio.Settings.new(base.SCHEMA_ID)
 		self.suit = suit
 		self.value = value
 		self.mouse_over = False
+		self.face_up = False
+		self.canvas = Clutter.Canvas()
+		self.canvas.connect("draw", self._draw)
+		self.set_content(self.canvas)
+		self.w = 0
+		self.h = 0
 
 	def get_suit(self):
 		return self.suit
@@ -172,55 +184,58 @@ class Card(Clutter.CairoTexture):
 		return self.value
 	
 	def draw_card(self, face_up=True):
-		s=10
-		r=10
-		w,h=base.get_card_size()
+		self.face_up = face_up
+		self.w, self.h=base.get_card_size()
 		if self.get_reactive():
-			self.set_surface_size(w+s,h+s)
-			self.set_size(w+s,h+s)
+			flag = self.canvas.set_size(self.w+s,self.h+s)
+			self.set_size(self.w+s,self.h+s)
 		else:
-			self.set_surface_size(w,h)
-		self.clear()
-		if not face_up:
-			self.set_from_file(base.percorso_carte+self.settings.get_string('cards')+'/'+base.immagini[1][0])
-		else:
-			cr = self.create()
+			flag = self.canvas.set_size(self.w,self.h)
+			self.set_size(self.w,self.h)
+		if (not flag): self.canvas.invalidate()
+		
+	def _draw(self, canvas, cr, width, height):
+		cr.set_operator(cairo.OPERATOR_CLEAR)
+		cr.paint()
+		cr.set_operator(cairo.OPERATOR_OVER)
+		w,h=base.get_card_size()
+		if self.face_up:
 			### Shadow effect using cairo, clutter one doesn't work ###
 			if self.mouse_over:
 				#down-left corner
-				rg = cairo.RadialGradient(s+r, h-r, 0, s+r, h-r, s+r)
+				rg = cairo.RadialGradient(s+r, self.h-r, 0, s+r, self.h-r, s+r)
 				rg.add_color_stop_rgba(0.0, 0.4, 0.4, 0.4, 1.0)
 				rg.add_color_stop_rgba(1.0, 0, 0, 0, 0)  
 				cr.set_source(rg)
-				cr.rectangle(0, h-r, s+r, s+r)
+				cr.rectangle(0, self.h-r, s+r, s+r)
 				cr.fill()
 				#down
-				lg = cairo.LinearGradient(0, h-r, 0, h+s)
+				lg = cairo.LinearGradient(0, self.h-r, 0, self.h+s)
 				lg.add_color_stop_rgba(0.0, 0.4, 0.4, 0.4, 1.0)
 				lg.add_color_stop_rgba(1.0, 0, 0, 0, 0)    
-				cr.rectangle(s+r, h-r, w-s-2*r, s+r)
+				cr.rectangle(s+r, self.h-r, self.w-s-2*r, s+r)
 				cr.set_source(lg)
 				cr.fill()
 				#top-right corner
-				rg = cairo.RadialGradient(w-r, s+r, 0, w-r, s+r, s+r)
+				rg = cairo.RadialGradient(self.w-r, s+r, 0, self.w-r, s+r, s+r)
 				rg.add_color_stop_rgba(0.0, 0.4, 0.4, 0.4, 1.0)
 				rg.add_color_stop_rgba(1.0, 0, 0, 0, 0)  
 				cr.set_source(rg)
-				cr.rectangle(w-r, 0, s+r, s+r)
+				cr.rectangle(self.w-r, 0, s+r, s+r)
 				cr.fill()
 				#up
-				lg = cairo.LinearGradient(w-r, 0, w+s, 0)
+				lg = cairo.LinearGradient(self.w-r, 0, self.w+s, 0)
 				lg.add_color_stop_rgba(0.0, 0.4, 0.4, 0.4, 1.0)
 				lg.add_color_stop_rgba(1.0, 0, 0, 0, 0)    
-				cr.rectangle(w-r, s+r, w+r, h-s-2*r)
+				cr.rectangle(self.w-r, s+r, self.w+r, self.h-s-2*r)
 				cr.set_source(lg)
 				cr.fill()
 				#down-right corner
-				rg = cairo.RadialGradient(w-r, h-r, 0, w-r, h-r, s+r)
+				rg = cairo.RadialGradient(self.w-r, self.h-r, 0, self.w-r, self.h-r, s+r)
 				rg.add_color_stop_rgba(0.0, 0.4, 0.4, 0.4, 1.0)
 				rg.add_color_stop_rgba(1.0, 0, 0, 0, 0)  
 				cr.set_source(rg)
-				cr.rectangle(w-r, h-r, s+r, s+r)
+				cr.rectangle(self.w-r, self.h-r, s+r, s+r)
 				cr.fill()
 			### Now drawing the card ### 
 			surface = cairo.ImageSurface.create_from_png(base.percorso_carte+self.settings.get_string('cards')+'/'+base.immagini[self.suit][self.value])
@@ -240,8 +255,11 @@ class Card(Clutter.CairoTexture):
 				tmp.show_text(str(self.value))
 				cr.set_source_surface(sur,0,0)
 				cr.paint()
-			
-			self.invalidate()
+		else:
+			surface = cairo.ImageSurface.create_from_png(base.percorso_carte+self.settings.get_string('cards')+'/'+base.immagini[1][0])
+			cr.set_source_surface(surface,0,0)
+			cr.paint()
+		return True
 
 	def activate(self, play):
 		self.set_reactive(True)
@@ -259,25 +277,26 @@ class Card(Clutter.CairoTexture):
 		self.draw_card()
 
 #container for Card objects, with fixed number of rows and columns
-class Box(Clutter.CairoTexture):
+class Box(Clutter.Actor):
 	def __init__(self, app, rows, cols, spacing=15):
-		Clutter.CairoTexture.__init__(self)
+		Clutter.Actor.__init__(self)
 		self.settings = Gio.Settings.new(base.SCHEMA_ID)
 		self.settings.connect("changed::cards", self.update_cards)
 		self.settings.connect("changed::show-value-on-cards", self.update_cards)
 		self.app = app
-		if Clutter.VERSION > 1.10:
-			self.set_x_expand(False)
-			self.set_y_expand(False)
+		self.canvas = Clutter.Canvas()
+		self.canvas.connect("draw", self.draw_rect)
+		self.set_content(self.canvas)
+		self.set_x_expand(False)
+		self.set_y_expand(False)
 		self.column_width, self.row_height = base.get_card_size()
-		self.set_surface_size(cols*self.column_width+(cols+1)*spacing,rows*self.row_height+(rows+1)*spacing)
+		self.canvas.set_size(cols*self.column_width+(cols+1)*spacing,rows*self.row_height+(rows+1)*spacing)
 		self.max_height = 0
 		self.max_width = 0
 		self.rows = rows
 		self.cols = cols
 		self.face_up = True
 		self.spacing = spacing
-		self.draw_rect()
 		self.children = []
 		n=0
 		while n<rows:
@@ -296,18 +315,19 @@ class Box(Clutter.CairoTexture):
 					iterable.append(card)
 		return iterable
 		
-	def draw_rect(self):
-		w,h=self.get_surface_size()
-		self.clear()
-		cr = self.create()
+	def draw_rect(self, canvas, cr, width, height):
+		self.set_size(width,height)
+		cr.set_operator(cairo.OPERATOR_CLEAR)
+		cr.paint()
+		cr.set_operator(cairo.OPERATOR_OVER)
 		cr.set_source_rgba(1,1,1,0.1)
 		cr.move_to(0,0)
-		cr.line_to(w,0)
-		cr.line_to(w,h)
-		cr.line_to(0,h)
+		cr.line_to(width,0)
+		cr.line_to(width,height)
+		cr.line_to(0,height)
 		cr.line_to(0,0)
 		cr.fill()
-		self.invalidate()
+		return True
 	
 	def relayout(self):
 		card_w,card_h = base.get_card_size()
@@ -317,8 +337,7 @@ class Box(Clutter.CairoTexture):
 			self.column_width = int((self.max_width-(self.cols+1)*self.spacing-card_w)/(self.cols-1))
 		h=(self.rows+1)*self.spacing+card_h+(self.rows-1)*self.row_height
 		w=(self.cols+1)*self.spacing+card_w+(self.cols-1)*self.column_width
-		self.set_size(w,h)
-		self.draw_rect()
+		self.canvas.set_size(w,h)
 		r=0
 		while r<self.rows:
 			c=0
@@ -460,26 +479,28 @@ class Box(Clutter.CairoTexture):
 		self.show()
 
 #class child of Clutter.CairoTexture that shows a deck, it also contains the list of cards in it
-class Deck(Clutter.CairoTexture):
+class Deck(Clutter.Actor):
 	def __init__(self, app, with_scopa=False, padding=15):
-		Clutter.CairoTexture.__init__(self)
+		Clutter.Actor.__init__(self)
 		self.settings = Gio.Settings.new(base.SCHEMA_ID)
 		self.settings.connect("changed::cards", self.update_cards)
 		self.app = app
+		self.canvas = Clutter.Canvas()
+		self.canvas.connect("draw", self._draw)
+		self.set_content(self.canvas)
 		self.child_w,self.child_h = base.get_card_size()
-		if Clutter.VERSION > 1.10:
-			self.set_x_expand(False)
-			self.set_y_expand(False)
-		if with_scopa:
-			self.set_surface_size(2*(padding+self.child_w),2*padding+self.child_h+20)
-		else:
-			self.set_surface_size(2*padding+self.child_w+20,2*padding+self.child_h+20)
+		self.set_x_expand(False)
+		self.set_y_expand(False)
 		self.padding = padding
 		self.surface = cairo.ImageSurface.create_from_png(base.percorso_carte+self.settings.get_string('cards')+'/'+base.immagini[1][0])
 		self.cards = []
 		self.with_scopa = with_scopa
 		self.scopa_card = None
 		self.scope = 0
+		if with_scopa:
+			self.canvas.set_size(2*(padding+self.child_w),2*padding+self.child_h+20)
+		else:
+			self.canvas.set_size(2*padding+self.child_w+20,2*padding+self.child_h+20)
 	
 	def populate(self):
 		for suit in range(4):
@@ -504,17 +525,20 @@ class Deck(Clutter.CairoTexture):
 	def get_natural_height(self):
 			return 2*self.padding+self.child_h+20
 	
-	def draw(self, actor_box=0, allocation_flag=0, a=0):
-		self.clear()
-		cr = self.create()
+	def draw(self, *data):
+		self.canvas.invalidate()
+	
+	def _draw(self, canvas, cr, width, height):
+		self.set_size(width,height)
+		cr.set_operator(cairo.OPERATOR_CLEAR)
+		cr.paint()
+		cr.set_operator(cairo.OPERATOR_OVER)
 		if self.with_scopa:
 			if self.scopa_card != None:
-				cr = self.create()
 				surface = cairo.ImageSurface.create_from_png(base.percorso_carte+self.settings.get_string('cards')+'/'+base.immagini[self.scopa_card.suit][self.scopa_card.value])
 				cr.set_source_surface(surface,self.padding+self.child_w,self.padding)
 				cr.paint()
 			if self.scope != 0:
-				cr = self.create()
 				cr.set_font_size(15)
 				xb, yb, w, h, xadvance, yadvance = (cr.text_extents(str(self.scope)))
 				w,h=int(w),int(h)
@@ -534,10 +558,15 @@ class Deck(Clutter.CairoTexture):
 			cr.set_source_surface(self.surface,n+self.padding,n+self.padding)
 			cr.paint()
 			n=n+1
-		self.invalidate()
+		return True
 	
 	def update_cards(self, settings=None, key=None):
 		self.surface = cairo.ImageSurface.create_from_png(base.percorso_carte+self.settings.get_string('cards')+'/'+base.immagini[1][0])
+		self.child_w,self.child_h = base.get_card_size()
+		if self.with_scopa:
+			self.canvas.set_size(2*(self.padding+self.child_w),2*self.padding+self.child_h+20)
+		else:
+			self.canvas.set_size(2*self.padding+self.child_w+20,2*self.padding+self.child_h+20)
 		self.draw()
 
 	def mix(self):
@@ -584,13 +613,11 @@ class Deck(Clutter.CairoTexture):
 		self.scope=0
 		self.scopa_card = None
 		self.draw()
-		self.clear()
-		self.invalidate()
 
 #This class handles the notifications
 class NotificationSystem():
-	def __init__(self, stage):
-		self.stage = stage
+	def __init__(self, table):
+		self.table = table
 		self.mesg = [0,0,0,0,0,0]
 
 	def notify(self, messaggio, time):
@@ -607,15 +634,15 @@ class NotificationSystem():
 		while self.mesg[i] != 0:
 			i=i+1
 		text=Clutter.CairoTexture.new(w+20,h+20)
-		text.set_position(self.stage.get_size()[0]-w-30,10+i*(h+30))
-		self.stage.add_actor(text)
+		text.set_position(self.table.get_stage().get_size()[0]-w-30,10+i*(h+30))
+		self.table.get_stage().add_actor(text)
 		self.mesg[i] = text
 		cr = text.create()
 		cr.set_source_surface(sur,0,0)
 		cr.paint()
 		text.invalidate()
 		if time != 0:
-			GLib.timeout_add(time, self.delete, i)
+			self.table.timeout_add(time, self.delete, i)
 		else:
 			return i
 	

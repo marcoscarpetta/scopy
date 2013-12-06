@@ -57,7 +57,7 @@ class Match(core.Match):
 			app.table.pack(self.players[1].carte_prese, 2,0)
 		for i in range(len(players)-1):
 			self.players[i+1].mano.set_face_up(False)
-		self.notifiche = widgets.NotificationSystem(app.stage)
+		self.notifiche = widgets.NotificationSystem(app.table)
 		self.giocatore = random.randrange(len(players))
 		self.punti_vit = 11
 		self.player_can_play = False
