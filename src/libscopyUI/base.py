@@ -3,7 +3,7 @@
 ##
 # Project: ScoPy - The italian card game 'scopa'
 # Author: Marco Scarpetta <marcoscarpetta@mailoo.org>
-# Copyright: 2011-2013 Marco Scarpetta
+# Copyright: 2011-2014 Marco Scarpetta
 # License: GPL-3+
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -24,7 +24,7 @@ import cairo
 import pickle
 from gi.repository import Gio
 
-APP_VERSION = '1.0'
+APP_VERSION = '1.1'
 APP_NAME = 'scopy'
 SCHEMA_ID = 'apps.scopy'
 
@@ -62,8 +62,7 @@ immagini = [
 	["0.png", "1s.png", "2s.png", "3s.png", "4s.png", "5s.png", "6s.png", "7s.png", "8s.png", "9s.png", "10s.png"]
 ]
 
-#varianti
-varianti = [_('Classic scopa'), _('Cirulla'), _('Cucita'), _('Re Bello'),_('Scopone')]
+variants = [_('Classic scopa'), _('Cirulla'), _('Cucita'), _('Re Bello'),_('Scopone')]
 
 def import_variant(variant):
 	if variant == _('Classic scopa'):
@@ -88,11 +87,11 @@ def get_number_of_players(variant_name):
 times=[1,2000,1000,0]
 
 #caricamento tipi di carte
-tipi_di_carte = []
+cards_types = []
 for cartella in os.listdir(percorso_carte):
 	if cartella[0] != '.':
-		tipi_di_carte.append(cartella)
-tipi_di_carte.sort()
+		cards_types.append(cartella)
+cards_types.sort()
 
 def get_card_size():
 	card=cairo.ImageSurface.create_from_png(percorso_carte+settings.get_string('cards')+'/'+immagini[0][1])
