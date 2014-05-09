@@ -573,7 +573,7 @@ class Match():
 			n+=1
 		if giocatore >= 0:
 			self.notifiche.notify(_('%s won!')%self.teams[giocatore][0],2000)
-			self.app.start_function(None)
+			self.app.new_game_menu_item_activate(None)
 		else:
 			self.start()
 	

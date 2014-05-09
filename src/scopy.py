@@ -38,7 +38,6 @@ class Application():
 		
 		#main window
 		self.mainWindow = self.builder.get_object("main-window")
-		self.mainWindow.connect("delete-event", self.quit)
 		self.mainWindow.set_position(Gtk.WindowPosition.CENTER)
 		self.mainWindow.resize(*self.settings.get_value("window-size"))
 

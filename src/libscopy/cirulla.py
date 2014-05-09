@@ -48,8 +48,8 @@ ai_values = (
 	lambda mem: 1, #carta piu' bassa
 	### se si prende qualcosa
 	lambda mem: 1, #ogni carta presa
-	lambda mem: 3, #ogni denaro
-	lambda mem: (mem['7'] > 2)*4, #ogni sette
+	lambda mem: (mem['denari'] < 6)*3, #ogni denaro
+	lambda mem: (mem['7'] < 3)*4, #ogni sette
 	lambda mem: 20, #sette bello
 	lambda mem: 6, #ogni sei
 	lambda mem: 1, #ogni asso

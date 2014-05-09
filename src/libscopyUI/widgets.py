@@ -659,7 +659,7 @@ def destroy_summary(window, event, callback):
 def show_summary(app, callback, *cols):
 	window = Gtk.Dialog()
 	window.set_title(_('Game summary'))
-	window.set_transient_for(app.window)
+	window.set_transient_for(app.mainWindow)
 	window.set_position(Gtk.WindowPosition.CENTER_ON_PARENT)
 	window.set_border_width(10)
 	window.add_button(_('OK'), 0)
