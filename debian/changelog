@@ -1,5 +1,10 @@
-scopy (1.0) precise; urgency=low
+scopy (1.1) precise; urgency=low
 
+  * 1.1
+  * New icon
+  * Use GSettings
+  * Use Glade
+  * Little AI improvements
   * 1.0
   * Added Scopone variant
   * Added 'Number of players' options
