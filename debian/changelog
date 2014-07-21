@@ -1,5 +1,7 @@
-scopy (1.1) precise; urgency=low
+scopy (1.1.1) precise; urgency=low
 
+  * 1.1.1
+  * Fix
   * 1.1
   * New icon
   * Use GSettings

@@ -24,7 +24,7 @@ import cairo
 import pickle
 from gi.repository import Gio
 
-APP_VERSION = '1.1'
+APP_VERSION = '1.1.1'
 APP_NAME = 'scopy'
 SCHEMA_ID = 'apps.scopy'
 
