@@ -82,7 +82,7 @@ class Match(core.Match):
 					uguali += 1
 					valore_uguali = card.value
 				prev.append(card.value)
-				if card.value == 7 and card.suit == 0:
+				if card.value == 7 and card.suit == 1:
 					sette=card
 			if somma <= 9:
 				player.carte_prese.add_scopa(None,3)
